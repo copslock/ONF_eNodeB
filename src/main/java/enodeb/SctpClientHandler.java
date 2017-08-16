@@ -27,12 +27,12 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws IOException {
         byte[] bytes = new byte[]{
-                (byte) 0x00, (byte) 0x01
+                (byte) 0xFF, (byte) 0xFF
         };
         crnti = new CRNTI(bytes, 16);
 
-        mmeues1APID = new MMEUES1APID(1);
-        enbues1APID = new ENBUES1APID(1);
+        mmeues1APID = new MMEUES1APID(12345);
+        enbues1APID = new ENBUES1APID(54321);
 
         pciarfcn = new PCIARFCN();
         pciarfcn.setPci(new PhysCellId(1));
