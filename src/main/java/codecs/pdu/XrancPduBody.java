@@ -20,16 +20,14 @@ public class XrancPduBody implements Serializable {
 	private CellConfigReport cellConfigReport = null;
 	private UEAdmissionRequest uEAdmissionRequest = null;
 	private UEAdmissionResponse uEAdmissionResponse = null;
-	private UEAttachComplete uEAttachComplete = null;
 	private UEAdmissionStatus uEAdmissionStatus = null;
+	private UEContextUpdate uEContextUpdate = null;
 	private UEReconfigInd uEReconfigInd = null;
 	private UEReleaseInd uEReleaseInd = null;
 	private BearerAdmissionRequest bearerAdmissionRequest = null;
 	private BearerAdmissionResponse bearerAdmissionResponse = null;
 	private BearerAdmissionStatus bearerAdmissionStatus = null;
 	private BearerReleaseInd bearerReleaseInd = null;
-	private UECapabilityEnquiry uECapabilityEnquiry = null;
-	private UECapabilityInfo uECapabilityInfo = null;
 	private HORequest hORequest = null;
 	private HOFailure hOFailure = null;
 	private HOComplete hOComplete = null;
@@ -42,16 +40,18 @@ public class XrancPduBody implements Serializable {
 	private SchedMeasReportPerCell schedMeasReportPerCell = null;
 	private PDCPMeasReportPerUe pDCPMeasReportPerUe = null;
 	private XICICConfig xICICConfig = null;
-	private RRMConfig rRMConfig = null;
-	private RRMConfigStatus rRMConfigStatus = null;
+	private UECapabilityInfo uECapabilityInfo = null;
+	private UECapabilityEnquiry uECapabilityEnquiry = null;
 	private ScellAdd scellAdd = null;
 	private ScellAddStatus scellAddStatus = null;
 	private ScellDelete scellDelete = null;
+	private RRMConfig rRMConfig = null;
+	private RRMConfigStatus rRMConfigStatus = null;
 	private SeNBAdd seNBAdd = null;
 	private SeNBAddStatus seNBAddStatus = null;
 	private SeNBDelete seNBDelete = null;
 	private TrafficSplitConfig trafficSplitConfig = null;
-	
+
 	public XrancPduBody() {
 	}
 
@@ -91,20 +91,20 @@ public class XrancPduBody implements Serializable {
 		return uEAdmissionResponse;
 	}
 
-	public void setUEAttachComplete(UEAttachComplete uEAttachComplete) {
-		this.uEAttachComplete = uEAttachComplete;
-	}
-
-	public UEAttachComplete getUEAttachComplete() {
-		return uEAttachComplete;
-	}
-
 	public void setUEAdmissionStatus(UEAdmissionStatus uEAdmissionStatus) {
 		this.uEAdmissionStatus = uEAdmissionStatus;
 	}
 
 	public UEAdmissionStatus getUEAdmissionStatus() {
 		return uEAdmissionStatus;
+	}
+
+	public void setUEContextUpdate(UEContextUpdate uEContextUpdate) {
+		this.uEContextUpdate = uEContextUpdate;
+	}
+
+	public UEContextUpdate getUEContextUpdate() {
+		return uEContextUpdate;
 	}
 
 	public void setUEReconfigInd(UEReconfigInd uEReconfigInd) {
@@ -153,22 +153,6 @@ public class XrancPduBody implements Serializable {
 
 	public BearerReleaseInd getBearerReleaseInd() {
 		return bearerReleaseInd;
-	}
-
-	public void setUECapabilityEnquiry(UECapabilityEnquiry uECapabilityEnquiry) {
-		this.uECapabilityEnquiry = uECapabilityEnquiry;
-	}
-
-	public UECapabilityEnquiry getUECapabilityEnquiry() {
-		return uECapabilityEnquiry;
-	}
-
-	public void setUECapabilityInfo(UECapabilityInfo uECapabilityInfo) {
-		this.uECapabilityInfo = uECapabilityInfo;
-	}
-
-	public UECapabilityInfo getUECapabilityInfo() {
-		return uECapabilityInfo;
 	}
 
 	public void setHORequest(HORequest hORequest) {
@@ -267,20 +251,20 @@ public class XrancPduBody implements Serializable {
 		return xICICConfig;
 	}
 
-	public void setRRMConfig(RRMConfig rRMConfig) {
-		this.rRMConfig = rRMConfig;
+	public void setUECapabilityInfo(UECapabilityInfo uECapabilityInfo) {
+		this.uECapabilityInfo = uECapabilityInfo;
 	}
 
-	public RRMConfig getRRMConfig() {
-		return rRMConfig;
+	public UECapabilityInfo getUECapabilityInfo() {
+		return uECapabilityInfo;
 	}
 
-	public void setRRMConfigStatus(RRMConfigStatus rRMConfigStatus) {
-		this.rRMConfigStatus = rRMConfigStatus;
+	public void setUECapabilityEnquiry(UECapabilityEnquiry uECapabilityEnquiry) {
+		this.uECapabilityEnquiry = uECapabilityEnquiry;
 	}
 
-	public RRMConfigStatus getRRMConfigStatus() {
-		return rRMConfigStatus;
+	public UECapabilityEnquiry getUECapabilityEnquiry() {
+		return uECapabilityEnquiry;
 	}
 
 	public void setScellAdd(ScellAdd scellAdd) {
@@ -305,6 +289,22 @@ public class XrancPduBody implements Serializable {
 
 	public ScellDelete getScellDelete() {
 		return scellDelete;
+	}
+
+	public void setRRMConfig(RRMConfig rRMConfig) {
+		this.rRMConfig = rRMConfig;
+	}
+
+	public RRMConfig getRRMConfig() {
+		return rRMConfig;
+	}
+
+	public void setRRMConfigStatus(RRMConfigStatus rRMConfigStatus) {
+		this.rRMConfigStatus = rRMConfigStatus;
+	}
+
+	public RRMConfigStatus getRRMConfigStatus() {
+		return rRMConfigStatus;
 	}
 
 	public void setSeNBAdd(SeNBAdd seNBAdd) {
@@ -357,7 +357,7 @@ public class XrancPduBody implements Serializable {
 			codeLength += 2;
 			return codeLength;
 		}
-		
+
 		if (seNBDelete != null) {
 			codeLength += seNBDelete.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 33
@@ -366,7 +366,7 @@ public class XrancPduBody implements Serializable {
 			codeLength += 2;
 			return codeLength;
 		}
-		
+
 		if (seNBAddStatus != null) {
 			codeLength += seNBAddStatus.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 32
@@ -375,7 +375,7 @@ public class XrancPduBody implements Serializable {
 			codeLength += 2;
 			return codeLength;
 		}
-		
+
 		if (seNBAdd != null) {
 			codeLength += seNBAdd.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 31
@@ -384,159 +384,159 @@ public class XrancPduBody implements Serializable {
 			codeLength += 2;
 			return codeLength;
 		}
-		
-		if (scellDelete != null) {
-			codeLength += scellDelete.encode(os, false);
+
+		if (rRMConfigStatus != null) {
+			codeLength += rRMConfigStatus.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 30
 			os.write(0xBE);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (scellAddStatus != null) {
-			codeLength += scellAddStatus.encode(os, false);
+
+		if (rRMConfig != null) {
+			codeLength += rRMConfig.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 29
 			os.write(0xBD);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (scellAdd != null) {
-			codeLength += scellAdd.encode(os, false);
+
+		if (scellDelete != null) {
+			codeLength += scellDelete.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 28
 			os.write(0xBC);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (rRMConfigStatus != null) {
-			codeLength += rRMConfigStatus.encode(os, false);
+
+		if (scellAddStatus != null) {
+			codeLength += scellAddStatus.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 27
 			os.write(0xBB);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (rRMConfig != null) {
-			codeLength += rRMConfig.encode(os, false);
+
+		if (scellAdd != null) {
+			codeLength += scellAdd.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 26
 			os.write(0xBA);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (xICICConfig != null) {
-			codeLength += xICICConfig.encode(os, false);
+
+		if (uECapabilityEnquiry != null) {
+			codeLength += uECapabilityEnquiry.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 25
 			os.write(0xB9);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (pDCPMeasReportPerUe != null) {
-			codeLength += pDCPMeasReportPerUe.encode(os, false);
+
+		if (uECapabilityInfo != null) {
+			codeLength += uECapabilityInfo.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 24
 			os.write(0xB8);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (schedMeasReportPerCell != null) {
-			codeLength += schedMeasReportPerCell.encode(os, false);
+
+		if (xICICConfig != null) {
+			codeLength += xICICConfig.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 23
 			os.write(0xB7);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (schedMeasReportPerUE != null) {
-			codeLength += schedMeasReportPerUE.encode(os, false);
+
+		if (pDCPMeasReportPerUe != null) {
+			codeLength += pDCPMeasReportPerUe.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 22
 			os.write(0xB6);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (radioMeasReportPerCell != null) {
-			codeLength += radioMeasReportPerCell.encode(os, false);
+
+		if (schedMeasReportPerCell != null) {
+			codeLength += schedMeasReportPerCell.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 21
 			os.write(0xB5);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (radioMeasReportPerUE != null) {
-			codeLength += radioMeasReportPerUE.encode(os, false);
+
+		if (schedMeasReportPerUE != null) {
+			codeLength += schedMeasReportPerUE.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 20
 			os.write(0xB4);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (l2MeasConfig != null) {
-			codeLength += l2MeasConfig.encode(os, false);
+
+		if (radioMeasReportPerCell != null) {
+			codeLength += radioMeasReportPerCell.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 19
 			os.write(0xB3);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (rXSigMeasReport != null) {
-			codeLength += rXSigMeasReport.encode(os, false);
+
+		if (radioMeasReportPerUE != null) {
+			codeLength += radioMeasReportPerUE.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 18
 			os.write(0xB2);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (rXSigMeasConfig != null) {
-			codeLength += rXSigMeasConfig.encode(os, false);
+
+		if (l2MeasConfig != null) {
+			codeLength += l2MeasConfig.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 17
 			os.write(0xB1);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (hOComplete != null) {
-			codeLength += hOComplete.encode(os, false);
+
+		if (rXSigMeasReport != null) {
+			codeLength += rXSigMeasReport.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 16
 			os.write(0xB0);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (hOFailure != null) {
-			codeLength += hOFailure.encode(os, false);
+
+		if (rXSigMeasConfig != null) {
+			codeLength += rXSigMeasConfig.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 15
 			os.write(0xAF);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (hORequest != null) {
-			codeLength += hORequest.encode(os, false);
+
+		if (hOComplete != null) {
+			codeLength += hOComplete.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 14
 			os.write(0xAE);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (uECapabilityInfo != null) {
-			codeLength += uECapabilityInfo.encode(os, false);
+
+		if (hOFailure != null) {
+			codeLength += hOFailure.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 13
 			os.write(0xAD);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (uECapabilityEnquiry != null) {
-			codeLength += uECapabilityEnquiry.encode(os, false);
+
+		if (hORequest != null) {
+			codeLength += hORequest.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 12
 			os.write(0xAC);
 			codeLength += 1;
 			return codeLength;
 		}
-		
+
 		if (bearerReleaseInd != null) {
 			codeLength += bearerReleaseInd.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 11
@@ -544,7 +544,7 @@ public class XrancPduBody implements Serializable {
 			codeLength += 1;
 			return codeLength;
 		}
-		
+
 		if (bearerAdmissionStatus != null) {
 			codeLength += bearerAdmissionStatus.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 10
@@ -552,7 +552,7 @@ public class XrancPduBody implements Serializable {
 			codeLength += 1;
 			return codeLength;
 		}
-		
+
 		if (bearerAdmissionResponse != null) {
 			codeLength += bearerAdmissionResponse.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 9
@@ -560,7 +560,7 @@ public class XrancPduBody implements Serializable {
 			codeLength += 1;
 			return codeLength;
 		}
-		
+
 		if (bearerAdmissionRequest != null) {
 			codeLength += bearerAdmissionRequest.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 8
@@ -568,7 +568,7 @@ public class XrancPduBody implements Serializable {
 			codeLength += 1;
 			return codeLength;
 		}
-		
+
 		if (uEReleaseInd != null) {
 			codeLength += uEReleaseInd.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 7
@@ -576,7 +576,7 @@ public class XrancPduBody implements Serializable {
 			codeLength += 1;
 			return codeLength;
 		}
-		
+
 		if (uEReconfigInd != null) {
 			codeLength += uEReconfigInd.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 6
@@ -584,23 +584,23 @@ public class XrancPduBody implements Serializable {
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (uEAdmissionStatus != null) {
-			codeLength += uEAdmissionStatus.encode(os, false);
+
+		if (uEContextUpdate != null) {
+			codeLength += uEContextUpdate.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
 			os.write(0xA5);
 			codeLength += 1;
 			return codeLength;
 		}
-		
-		if (uEAttachComplete != null) {
-			codeLength += uEAttachComplete.encode(os, false);
+
+		if (uEAdmissionStatus != null) {
+			codeLength += uEAdmissionStatus.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 4
 			os.write(0xA4);
 			codeLength += 1;
 			return codeLength;
 		}
-		
+
 		if (uEAdmissionResponse != null) {
 			codeLength += uEAdmissionResponse.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
@@ -608,7 +608,7 @@ public class XrancPduBody implements Serializable {
 			codeLength += 1;
 			return codeLength;
 		}
-		
+
 		if (uEAdmissionRequest != null) {
 			codeLength += uEAdmissionRequest.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
@@ -616,7 +616,7 @@ public class XrancPduBody implements Serializable {
 			codeLength += 1;
 			return codeLength;
 		}
-		
+
 		if (cellConfigReport != null) {
 			codeLength += cellConfigReport.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
@@ -624,7 +624,7 @@ public class XrancPduBody implements Serializable {
 			codeLength += 1;
 			return codeLength;
 		}
-		
+
 		if (cellConfigRequest != null) {
 			codeLength += cellConfigRequest.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
@@ -632,7 +632,7 @@ public class XrancPduBody implements Serializable {
 			codeLength += 1;
 			return codeLength;
 		}
-		
+
 		throw new IOException("Error encoding CHOICE: No element of CHOICE was selected.");
 	}
 
@@ -675,14 +675,14 @@ public class XrancPduBody implements Serializable {
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
-			uEAttachComplete = new UEAttachComplete();
-			codeLength += uEAttachComplete.decode(is, false);
+			uEAdmissionStatus = new UEAdmissionStatus();
+			codeLength += uEAdmissionStatus.decode(is, false);
 			return codeLength;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
-			uEAdmissionStatus = new UEAdmissionStatus();
-			codeLength += uEAdmissionStatus.decode(is, false);
+			uEContextUpdate = new UEContextUpdate();
+			codeLength += uEContextUpdate.decode(is, false);
 			return codeLength;
 		}
 
@@ -723,116 +723,116 @@ public class XrancPduBody implements Serializable {
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 12)) {
-			uECapabilityEnquiry = new UECapabilityEnquiry();
-			codeLength += uECapabilityEnquiry.decode(is, false);
-			return codeLength;
-		}
-
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 13)) {
-			uECapabilityInfo = new UECapabilityInfo();
-			codeLength += uECapabilityInfo.decode(is, false);
-			return codeLength;
-		}
-
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 14)) {
 			hORequest = new HORequest();
 			codeLength += hORequest.decode(is, false);
 			return codeLength;
 		}
 
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 15)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 13)) {
 			hOFailure = new HOFailure();
 			codeLength += hOFailure.decode(is, false);
 			return codeLength;
 		}
 
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 16)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 14)) {
 			hOComplete = new HOComplete();
 			codeLength += hOComplete.decode(is, false);
 			return codeLength;
 		}
 
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 17)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 15)) {
 			rXSigMeasConfig = new RXSigMeasConfig();
 			codeLength += rXSigMeasConfig.decode(is, false);
 			return codeLength;
 		}
 
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 18)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 16)) {
 			rXSigMeasReport = new RXSigMeasReport();
 			codeLength += rXSigMeasReport.decode(is, false);
 			return codeLength;
 		}
 
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 19)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 17)) {
 			l2MeasConfig = new L2MeasConfig();
 			codeLength += l2MeasConfig.decode(is, false);
 			return codeLength;
 		}
 
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 20)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 18)) {
 			radioMeasReportPerUE = new RadioMeasReportPerUE();
 			codeLength += radioMeasReportPerUE.decode(is, false);
 			return codeLength;
 		}
 
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 19)) {
 			radioMeasReportPerCell = new RadioMeasReportPerCell();
 			codeLength += radioMeasReportPerCell.decode(is, false);
 			return codeLength;
 		}
 
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 22)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 20)) {
 			schedMeasReportPerUE = new SchedMeasReportPerUE();
 			codeLength += schedMeasReportPerUE.decode(is, false);
 			return codeLength;
 		}
 
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 23)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
 			schedMeasReportPerCell = new SchedMeasReportPerCell();
 			codeLength += schedMeasReportPerCell.decode(is, false);
 			return codeLength;
 		}
 
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 24)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 22)) {
 			pDCPMeasReportPerUe = new PDCPMeasReportPerUe();
 			codeLength += pDCPMeasReportPerUe.decode(is, false);
 			return codeLength;
 		}
 
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 25)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 23)) {
 			xICICConfig = new XICICConfig();
 			codeLength += xICICConfig.decode(is, false);
 			return codeLength;
 		}
 
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 24)) {
+			uECapabilityInfo = new UECapabilityInfo();
+			codeLength += uECapabilityInfo.decode(is, false);
+			return codeLength;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 25)) {
+			uECapabilityEnquiry = new UECapabilityEnquiry();
+			codeLength += uECapabilityEnquiry.decode(is, false);
+			return codeLength;
+		}
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 26)) {
-			rRMConfig = new RRMConfig();
-			codeLength += rRMConfig.decode(is, false);
-			return codeLength;
-		}
-
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 27)) {
-			rRMConfigStatus = new RRMConfigStatus();
-			codeLength += rRMConfigStatus.decode(is, false);
-			return codeLength;
-		}
-
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 28)) {
 			scellAdd = new ScellAdd();
 			codeLength += scellAdd.decode(is, false);
 			return codeLength;
 		}
 
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 29)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 27)) {
 			scellAddStatus = new ScellAddStatus();
 			codeLength += scellAddStatus.decode(is, false);
 			return codeLength;
 		}
 
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 30)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 28)) {
 			scellDelete = new ScellDelete();
 			codeLength += scellDelete.decode(is, false);
+			return codeLength;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 29)) {
+			rRMConfig = new RRMConfig();
+			codeLength += rRMConfig.decode(is, false);
+			return codeLength;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 30)) {
+			rRMConfigStatus = new RRMConfigStatus();
+			codeLength += rRMConfigStatus.decode(is, false);
 			return codeLength;
 		}
 
@@ -905,9 +905,9 @@ public class XrancPduBody implements Serializable {
 			return;
 		}
 
-		if (uEAttachComplete != null) {
-			sb.append("\"uEAttachComplete\": ");
-			uEAttachComplete.appendAsString(sb, indentLevel + 1);
+		if (uEContextUpdate != null) {
+			sb.append("\"uEContextUpdate\": ");
+			uEContextUpdate.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 

@@ -9,10 +9,12 @@ import codecs.api.ECGI;
 import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
+import org.openmuc.jasn1.ber.types.string.BerUTF8String;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 
 public class HORequest implements Serializable {
 
@@ -194,6 +196,30 @@ public class HORequest implements Serializable {
 			sb.append("\t");
 		}
 		sb.append("}");
+	}
+
+	public static XrancPdu constructPacket(CRNTI crnti, ECGI ecgis, ECGI ecgit) throws UnsupportedEncodingException {
+		HORequest hoRequest = new HORequest();
+
+		hoRequest.setCrnti(crnti);
+		hoRequest.setEcgiS(ecgis);
+		hoRequest.setEcgiT(ecgit);
+
+		BerUTF8String ver = new BerUTF8String("3");
+
+		XrancApiID apiID = new XrancApiID(12);
+		XrancPduBody body = new XrancPduBody();
+		body.setHORequest(hoRequest);
+
+		XrancPduHdr hdr = new XrancPduHdr();
+		hdr.setVer(ver);
+		hdr.setApiId(apiID);
+
+		XrancPdu pdu = new XrancPdu();
+		pdu.setBody(body);
+		pdu.setHdr(hdr);
+
+		return pdu;
 	}
 
 }

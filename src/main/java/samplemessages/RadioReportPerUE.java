@@ -196,7 +196,7 @@ public class RadioReportPerUE {
             e.printStackTrace();
         }
 
-        XrancApiID apiID = new XrancApiID(20);
+        XrancApiID apiID = new XrancApiID(18);
         XrancPduHdr hdr = new XrancPduHdr();
         hdr.setVer(ver);
         hdr.setApiId(apiID);

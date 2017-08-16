@@ -4,16 +4,18 @@
 
 package codecs.api;
 
+import java.io.IOException;
+import java.io.EOFException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.io.Serializable;
 import org.openmuc.jasn1.ber.*;
 import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 
 public class ERABParams implements Serializable {
@@ -39,7 +41,11 @@ public class ERABParams implements Serializable {
 		return seqOf;
 	}
 
-	public void setERABParamsItem(ERABParamsItem erabParamsItem) {
+	public void setERABParamsItem(ArrayList<ERABParamsItem> erabParamsItem) {
+		seqOf = erabParamsItem;
+	}
+
+	public void addERABParamsItem(ERABParamsItem erabParamsItem) {
 		seqOf.add(erabParamsItem);
 	}
 

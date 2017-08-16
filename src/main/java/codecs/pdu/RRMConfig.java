@@ -12,1575 +12,1630 @@ import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
 import org.openmuc.jasn1.ber.types.BerBitString;
 import org.openmuc.jasn1.ber.types.BerInteger;
+import org.openmuc.jasn1.ber.types.string.BerUTF8String;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class RRMConfig implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+    private static final long serialVersionUID = 1L;
+    public byte[] code = null;
+    private ECGI ecgi = null;
+    private Crnti crnti = null;
+    private Pa pa = null;
+    private StartPrbDl startPrbDl = null;
+    private EndPrbDl endPrbDl = null;
+    private SubframeBitmaskDl subframeBitmaskDl = null;
+    private P0UePusch p0UePusch = null;
+    private StartPrbUl startPrbUl = null;
+    private EndPrbUl endPrbUl = null;
+    private SubframeBitmaskUl subframeBitmaskUl = null;
 
-	public static class Crnti implements Serializable {
+    public RRMConfig() {
+    }
 
-		private static final long serialVersionUID = 1L;
+    public RRMConfig(byte[] code) {
+        this.code = code;
+    }
 
-		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
-		private List<CRNTI> seqOf = null;
+    public ECGI getEcgi() {
+        return ecgi;
+    }
 
-		public Crnti() {
-			seqOf = new ArrayList<CRNTI>();
-		}
+    public void setEcgi(ECGI ecgi) {
+        this.ecgi = ecgi;
+    }
 
-		public Crnti(byte[] code) {
-			this.code = code;
-		}
+    public Crnti getCrnti() {
+        return crnti;
+    }
 
-		public List<CRNTI> getCRNTI() {
-			if (seqOf == null) {
-				seqOf = new ArrayList<CRNTI>();
-			}
-			return seqOf;
-		}
+    public void setCrnti(Crnti crnti) {
+        this.crnti = crnti;
+    }
 
-		public int encode(BerByteArrayOutputStream os) throws IOException {
-			return encode(os, true);
-		}
+    public Pa getPa() {
+        return pa;
+    }
 
-		public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+    public void setPa(Pa pa) {
+        this.pa = pa;
+    }
 
-			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
-				}
-				if (withTag) {
-					return tag.encode(os) + code.length;
-				}
-				return code.length;
-			}
+    public StartPrbDl getStartPrbDl() {
+        return startPrbDl;
+    }
 
-			int codeLength = 0;
-			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
-			}
+    public void setStartPrbDl(StartPrbDl startPrbDl) {
+        this.startPrbDl = startPrbDl;
+    }
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+    public EndPrbDl getEndPrbDl() {
+        return endPrbDl;
+    }
 
-			if (withTag) {
-				codeLength += tag.encode(os);
-			}
+    public void setEndPrbDl(EndPrbDl endPrbDl) {
+        this.endPrbDl = endPrbDl;
+    }
 
-			return codeLength;
-		}
+    public SubframeBitmaskDl getSubframeBitmaskDl() {
+        return subframeBitmaskDl;
+    }
 
-		public int decode(InputStream is) throws IOException {
-			return decode(is, true);
-		}
+    public void setSubframeBitmaskDl(SubframeBitmaskDl subframeBitmaskDl) {
+        this.subframeBitmaskDl = subframeBitmaskDl;
+    }
 
-		public int decode(InputStream is, boolean withTag) throws IOException {
-			int codeLength = 0;
-			int subCodeLength = 0;
-			if (withTag) {
-				codeLength += tag.decodeAndCheck(is);
-			}
+    public P0UePusch getP0UePusch() {
+        return p0UePusch;
+    }
 
-			BerLength length = new BerLength();
-			codeLength += length.decode(is);
-			int totalLength = length.val;
+    public void setP0UePusch(P0UePusch p0UePusch) {
+        this.p0UePusch = p0UePusch;
+    }
 
-			while (subCodeLength < totalLength) {
-				CRNTI element = new CRNTI();
-				subCodeLength += element.decode(is, true);
-				seqOf.add(element);
-			}
-			if (subCodeLength != totalLength) {
-				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+    public StartPrbUl getStartPrbUl() {
+        return startPrbUl;
+    }
 
-			}
-			codeLength += subCodeLength;
+    public void setStartPrbUl(StartPrbUl startPrbUl) {
+        this.startPrbUl = startPrbUl;
+    }
 
-			return codeLength;
-		}
+    public EndPrbUl getEndPrbUl() {
+        return endPrbUl;
+    }
 
-		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
-		}
+    public void setEndPrbUl(EndPrbUl endPrbUl) {
+        this.endPrbUl = endPrbUl;
+    }
 
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			appendAsString(sb, 0);
-			return sb.toString();
-		}
+    public SubframeBitmaskUl getSubframeBitmaskUl() {
+        return subframeBitmaskUl;
+    }
 
-		public void appendAsString(StringBuilder sb, int indentLevel) {
+    public void setSubframeBitmaskUl(SubframeBitmaskUl subframeBitmaskUl) {
+        this.subframeBitmaskUl = subframeBitmaskUl;
+    }
 
-			sb.append("[\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			if (seqOf == null) {
+    public int encode(BerByteArrayOutputStream os) throws IOException {
+        return encode(os, true);
+    }
+
+    public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+
+        if (code != null) {
+            for (int i = code.length - 1; i >= 0; i--) {
+                os.write(code[i]);
+            }
+            if (withTag) {
+                return tag.encode(os) + code.length;
+            }
+            return code.length;
+        }
+
+        int codeLength = 0;
+        if (subframeBitmaskUl != null) {
+            codeLength += subframeBitmaskUl.encode(os, false);
+            // write tag: CONTEXT_CLASS, CONSTRUCTED, 9
+            os.write(0xA9);
+            codeLength += 1;
+        }
+
+        if (endPrbUl != null) {
+            codeLength += endPrbUl.encode(os, false);
+            // write tag: CONTEXT_CLASS, CONSTRUCTED, 8
+            os.write(0xA8);
+            codeLength += 1;
+        }
+
+        if (startPrbUl != null) {
+            codeLength += startPrbUl.encode(os, false);
+            // write tag: CONTEXT_CLASS, CONSTRUCTED, 7
+            os.write(0xA7);
+            codeLength += 1;
+        }
+
+        if (p0UePusch != null) {
+            codeLength += p0UePusch.encode(os, false);
+            // write tag: CONTEXT_CLASS, CONSTRUCTED, 6
+            os.write(0xA6);
+            codeLength += 1;
+        }
+
+        if (subframeBitmaskDl != null) {
+            codeLength += subframeBitmaskDl.encode(os, false);
+            // write tag: CONTEXT_CLASS, CONSTRUCTED, 5
+            os.write(0xA5);
+            codeLength += 1;
+        }
+
+        if (endPrbDl != null) {
+            codeLength += endPrbDl.encode(os, false);
+            // write tag: CONTEXT_CLASS, CONSTRUCTED, 4
+            os.write(0xA4);
+            codeLength += 1;
+        }
+
+        if (startPrbDl != null) {
+            codeLength += startPrbDl.encode(os, false);
+            // write tag: CONTEXT_CLASS, CONSTRUCTED, 3
+            os.write(0xA3);
+            codeLength += 1;
+        }
+
+        if (pa != null) {
+            codeLength += pa.encode(os, false);
+            // write tag: CONTEXT_CLASS, CONSTRUCTED, 2
+            os.write(0xA2);
+            codeLength += 1;
+        }
+
+        if (crnti != null) {
+            codeLength += crnti.encode(os, false);
+            // write tag: CONTEXT_CLASS, CONSTRUCTED, 1
+            os.write(0xA1);
+            codeLength += 1;
+        }
+
+        codeLength += ecgi.encode(os, false);
+        // write tag: CONTEXT_CLASS, CONSTRUCTED, 0
+        os.write(0xA0);
+        codeLength += 1;
+
+        codeLength += BerLength.encodeLength(os, codeLength);
+
+        if (withTag) {
+            codeLength += tag.encode(os);
+        }
+
+        return codeLength;
+
+    }
+
+    public int decode(InputStream is) throws IOException {
+        return decode(is, true);
+    }
+
+    public int decode(InputStream is, boolean withTag) throws IOException {
+        int codeLength = 0;
+        int subCodeLength = 0;
+        BerTag berTag = new BerTag();
+
+        if (withTag) {
+            codeLength += tag.decodeAndCheck(is);
+        }
+
+        BerLength length = new BerLength();
+        codeLength += length.decode(is);
+
+        int totalLength = length.val;
+        codeLength += totalLength;
+
+        subCodeLength += berTag.decode(is);
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
+            ecgi = new ECGI();
+            subCodeLength += ecgi.decode(is, false);
+            if (subCodeLength == totalLength) {
+                return codeLength;
+            }
+            subCodeLength += berTag.decode(is);
+        } else {
+            throw new IOException("Tag does not match the mandatory sequence element tag.");
+        }
+
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
+            crnti = new Crnti();
+            subCodeLength += crnti.decode(is, false);
+            if (subCodeLength == totalLength) {
+                return codeLength;
+            }
+            subCodeLength += berTag.decode(is);
+        }
+
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
+            pa = new Pa();
+            subCodeLength += pa.decode(is, false);
+            if (subCodeLength == totalLength) {
+                return codeLength;
+            }
+            subCodeLength += berTag.decode(is);
+        }
+
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
+            startPrbDl = new StartPrbDl();
+            subCodeLength += startPrbDl.decode(is, false);
+            if (subCodeLength == totalLength) {
+                return codeLength;
+            }
+            subCodeLength += berTag.decode(is);
+        }
+
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
+            endPrbDl = new EndPrbDl();
+            subCodeLength += endPrbDl.decode(is, false);
+            if (subCodeLength == totalLength) {
+                return codeLength;
+            }
+            subCodeLength += berTag.decode(is);
+        }
+
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
+            subframeBitmaskDl = new SubframeBitmaskDl();
+            subCodeLength += subframeBitmaskDl.decode(is, false);
+            if (subCodeLength == totalLength) {
+                return codeLength;
+            }
+            subCodeLength += berTag.decode(is);
+        }
+
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
+            p0UePusch = new P0UePusch();
+            subCodeLength += p0UePusch.decode(is, false);
+            if (subCodeLength == totalLength) {
+                return codeLength;
+            }
+            subCodeLength += berTag.decode(is);
+        }
+
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
+            startPrbUl = new StartPrbUl();
+            subCodeLength += startPrbUl.decode(is, false);
+            if (subCodeLength == totalLength) {
+                return codeLength;
+            }
+            subCodeLength += berTag.decode(is);
+        }
+
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
+            endPrbUl = new EndPrbUl();
+            subCodeLength += endPrbUl.decode(is, false);
+            if (subCodeLength == totalLength) {
+                return codeLength;
+            }
+            subCodeLength += berTag.decode(is);
+        }
+
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
+            subframeBitmaskUl = new SubframeBitmaskUl();
+            subCodeLength += subframeBitmaskUl.decode(is, false);
+            if (subCodeLength == totalLength) {
+                return codeLength;
+            }
+        }
+        throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
+
+
+    }
+
+    public void encodeAndSave(int encodingSizeGuess) throws IOException {
+        BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+        encode(os, false);
+        code = os.getArray();
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        appendAsString(sb, 0);
+        return sb.toString();
+    }
+
+    public void appendAsString(StringBuilder sb, int indentLevel) {
+
+        sb.append("{");
+        sb.append("\n");
+        for (int i = 0; i < indentLevel + 1; i++) {
+            sb.append("\t");
+        }
+        if (ecgi != null) {
+            sb.append("\"ecgi\": ");
+            ecgi.appendAsString(sb, indentLevel + 1);
+        }
+
+        if (crnti != null) {
+            sb.append(",\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            sb.append("\"crnti\": ");
+            crnti.appendAsString(sb, indentLevel + 1);
+        }
+
+        if (pa != null) {
+            sb.append(",\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            sb.append("\"pa\": ");
+            pa.appendAsString(sb, indentLevel + 1);
+        }
+
+        if (startPrbDl != null) {
+            sb.append(",\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            sb.append("\"startPrbDl\": ");
+            startPrbDl.appendAsString(sb, indentLevel + 1);
+        }
+
+        if (endPrbDl != null) {
+            sb.append(",\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            sb.append("\"endPrbDl\": ");
+            endPrbDl.appendAsString(sb, indentLevel + 1);
+        }
+
+        if (subframeBitmaskDl != null) {
+            sb.append(",\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            sb.append("\"subframeBitmaskDl\": ");
+            subframeBitmaskDl.appendAsString(sb, indentLevel + 1);
+        }
+
+        if (p0UePusch != null) {
+            sb.append(",\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            sb.append("\"p0UePusch\": ");
+            p0UePusch.appendAsString(sb, indentLevel + 1);
+        }
+
+        if (startPrbUl != null) {
+            sb.append(",\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            sb.append("\"startPrbUl\": ");
+            startPrbUl.appendAsString(sb, indentLevel + 1);
+        }
+
+        if (endPrbUl != null) {
+            sb.append(",\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            sb.append("\"endPrbUl\": ");
+            endPrbUl.appendAsString(sb, indentLevel + 1);
+        }
+
+        if (subframeBitmaskUl != null) {
+            sb.append(",\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            sb.append("\"subframeBitmaskUl\": ");
+            subframeBitmaskUl.appendAsString(sb, indentLevel + 1);
+        }
+
+        sb.append("\n");
+        for (int i = 0; i < indentLevel; i++) {
+            sb.append("\t");
+        }
+        sb.append("}");
+    }
+
+    public static class Crnti implements Serializable {
+
+        public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+        private static final long serialVersionUID = 1L;
+        public byte[] code = null;
+        private List<CRNTI> seqOf = null;
+
+        public Crnti() {
+            seqOf = new ArrayList<CRNTI>();
+        }
+
+        public Crnti(byte[] code) {
+            this.code = code;
+        }
+
+        public List<CRNTI> getCRNTI() {
+            if (seqOf == null) {
+                seqOf = new ArrayList<CRNTI>();
+            }
+            return seqOf;
+        }
+
+        public void addCRNTI(CRNTI crnti) {
+            seqOf.add(crnti);
+        }
+
+        public int encode(BerByteArrayOutputStream os) throws IOException {
+            return encode(os, true);
+        }
+
+        public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+
+            if (code != null) {
+                for (int i = code.length - 1; i >= 0; i--) {
+                    os.write(code[i]);
+                }
+                if (withTag) {
+                    return tag.encode(os) + code.length;
+                }
+                return code.length;
+            }
+
+            int codeLength = 0;
+            for (int i = (seqOf.size() - 1); i >= 0; i--) {
+                codeLength += seqOf.get(i).encode(os, true);
+            }
+
+            codeLength += BerLength.encodeLength(os, codeLength);
+
+            if (withTag) {
+                codeLength += tag.encode(os);
+            }
+
+            return codeLength;
+        }
+
+        public int decode(InputStream is) throws IOException {
+            return decode(is, true);
+        }
+
+        public int decode(InputStream is, boolean withTag) throws IOException {
+            int codeLength = 0;
+            int subCodeLength = 0;
+            if (withTag) {
+                codeLength += tag.decodeAndCheck(is);
+            }
+
+            BerLength length = new BerLength();
+            codeLength += length.decode(is);
+            int totalLength = length.val;
+
+            while (subCodeLength < totalLength) {
+                CRNTI element = new CRNTI();
+                subCodeLength += element.decode(is, true);
+                seqOf.add(element);
+            }
+            if (subCodeLength != totalLength) {
+                throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+
+            }
+            codeLength += subCodeLength;
+
+            return codeLength;
+        }
+
+        public void encodeAndSave(int encodingSizeGuess) throws IOException {
+            BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+            encode(os, false);
+            code = os.getArray();
+        }
+
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            appendAsString(sb, 0);
+            return sb.toString();
+        }
+
+        public void appendAsString(StringBuilder sb, int indentLevel) {
+
+            sb.append("[\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            if (seqOf == null) {
 //				sb.append("null");
-			}
-			else {
-				Iterator<CRNTI> it = seqOf.iterator();
-				if (it.hasNext()) {
-					sb.append(it.next());
-					while (it.hasNext()) {
-						sb.append(",\n");
-						for (int i = 0; i < indentLevel + 1; i++) {
-							sb.append("\t");
-						}
-						sb.append(it.next());
-					}
-				}
-			}
+            } else {
+                Iterator<CRNTI> it = seqOf.iterator();
+                if (it.hasNext()) {
+                    sb.append(it.next());
+                    while (it.hasNext()) {
+                        sb.append(",\n");
+                        for (int i = 0; i < indentLevel + 1; i++) {
+                            sb.append("\t");
+                        }
+                        sb.append(it.next());
+                    }
+                }
+            }
 
-			sb.append("\n");
-			for (int i = 0; i < indentLevel; i++) {
-				sb.append("\t");
-			}
-			sb.append("]");
-		}
+            sb.append("\n");
+            for (int i = 0; i < indentLevel; i++) {
+                sb.append("\t");
+            }
+            sb.append("]");
+        }
 
-	}
+    }
 
-	public static class Pa implements Serializable {
+    public static class Pa implements Serializable {
 
-		private static final long serialVersionUID = 1L;
+        public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+        private static final long serialVersionUID = 1L;
+        public byte[] code = null;
+        private List<XICICPA> seqOf = null;
 
-		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
-		private List<XICICPA> seqOf = null;
+        public Pa() {
+            seqOf = new ArrayList<XICICPA>();
+        }
 
-		public Pa() {
-			seqOf = new ArrayList<XICICPA>();
-		}
+        public Pa(byte[] code) {
+            this.code = code;
+        }
 
-		public Pa(byte[] code) {
-			this.code = code;
-		}
+        public List<XICICPA> getXICICPA() {
+            if (seqOf == null) {
+                seqOf = new ArrayList<XICICPA>();
+            }
+            return seqOf;
+        }
 
-		public List<XICICPA> getXICICPA() {
-			if (seqOf == null) {
-				seqOf = new ArrayList<XICICPA>();
-			}
-			return seqOf;
-		}
+        public int encode(BerByteArrayOutputStream os) throws IOException {
+            return encode(os, true);
+        }
 
-		public int encode(BerByteArrayOutputStream os) throws IOException {
-			return encode(os, true);
-		}
+        public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
 
-		public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+            if (code != null) {
+                for (int i = code.length - 1; i >= 0; i--) {
+                    os.write(code[i]);
+                }
+                if (withTag) {
+                    return tag.encode(os) + code.length;
+                }
+                return code.length;
+            }
 
-			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
-				}
-				if (withTag) {
-					return tag.encode(os) + code.length;
-				}
-				return code.length;
-			}
+            int codeLength = 0;
+            for (int i = (seqOf.size() - 1); i >= 0; i--) {
+                codeLength += seqOf.get(i).encode(os, true);
+            }
 
-			int codeLength = 0;
-			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
-			}
+            codeLength += BerLength.encodeLength(os, codeLength);
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+            if (withTag) {
+                codeLength += tag.encode(os);
+            }
 
-			if (withTag) {
-				codeLength += tag.encode(os);
-			}
+            return codeLength;
+        }
 
-			return codeLength;
-		}
+        public int decode(InputStream is) throws IOException {
+            return decode(is, true);
+        }
 
-		public int decode(InputStream is) throws IOException {
-			return decode(is, true);
-		}
+        public int decode(InputStream is, boolean withTag) throws IOException {
+            int codeLength = 0;
+            int subCodeLength = 0;
+            if (withTag) {
+                codeLength += tag.decodeAndCheck(is);
+            }
 
-		public int decode(InputStream is, boolean withTag) throws IOException {
-			int codeLength = 0;
-			int subCodeLength = 0;
-			if (withTag) {
-				codeLength += tag.decodeAndCheck(is);
-			}
+            BerLength length = new BerLength();
+            codeLength += length.decode(is);
+            int totalLength = length.val;
 
-			BerLength length = new BerLength();
-			codeLength += length.decode(is);
-			int totalLength = length.val;
+            while (subCodeLength < totalLength) {
+                XICICPA element = new XICICPA();
+                subCodeLength += element.decode(is, true);
+                seqOf.add(element);
+            }
+            if (subCodeLength != totalLength) {
+                throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
 
-			while (subCodeLength < totalLength) {
-				XICICPA element = new XICICPA();
-				subCodeLength += element.decode(is, true);
-				seqOf.add(element);
-			}
-			if (subCodeLength != totalLength) {
-				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+            }
+            codeLength += subCodeLength;
 
-			}
-			codeLength += subCodeLength;
+            return codeLength;
+        }
 
-			return codeLength;
-		}
+        public void encodeAndSave(int encodingSizeGuess) throws IOException {
+            BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+            encode(os, false);
+            code = os.getArray();
+        }
 
-		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
-		}
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            appendAsString(sb, 0);
+            return sb.toString();
+        }
 
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			appendAsString(sb, 0);
-			return sb.toString();
-		}
+        public void appendAsString(StringBuilder sb, int indentLevel) {
 
-		public void appendAsString(StringBuilder sb, int indentLevel) {
-
-			sb.append("[\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			if (seqOf == null) {
+            sb.append("[\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            if (seqOf == null) {
 //				sb.append("null");
-			}
-			else {
-				Iterator<XICICPA> it = seqOf.iterator();
-				if (it.hasNext()) {
-					sb.append(it.next());
-					while (it.hasNext()) {
-						sb.append(",\n");
-						for (int i = 0; i < indentLevel + 1; i++) {
-							sb.append("\t");
-						}
-						sb.append(it.next());
-					}
-				}
-			}
+            } else {
+                Iterator<XICICPA> it = seqOf.iterator();
+                if (it.hasNext()) {
+                    sb.append(it.next());
+                    while (it.hasNext()) {
+                        sb.append(",\n");
+                        for (int i = 0; i < indentLevel + 1; i++) {
+                            sb.append("\t");
+                        }
+                        sb.append(it.next());
+                    }
+                }
+            }
 
-			sb.append("\n");
-			for (int i = 0; i < indentLevel; i++) {
-				sb.append("\t");
-			}
-			sb.append("]");
-		}
+            sb.append("\n");
+            for (int i = 0; i < indentLevel; i++) {
+                sb.append("\t");
+            }
+            sb.append("]");
+        }
 
-	}
+    }
 
-	public static class StartPrbDl implements Serializable {
+    public static class StartPrbDl implements Serializable {
 
-		private static final long serialVersionUID = 1L;
+        public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+        private static final long serialVersionUID = 1L;
+        public byte[] code = null;
+        private List<BerInteger> seqOf = null;
 
-		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
-		private List<BerInteger> seqOf = null;
+        public StartPrbDl() {
+            seqOf = new ArrayList<BerInteger>();
+        }
 
-		public StartPrbDl() {
-			seqOf = new ArrayList<BerInteger>();
-		}
+        public StartPrbDl(byte[] code) {
+            this.code = code;
+        }
 
-		public StartPrbDl(byte[] code) {
-			this.code = code;
-		}
+        public List<BerInteger> getSeqOf() {
+            return seqOf;
+        }
 
-		public List<BerInteger> getBerInteger() {
-			if (seqOf == null) {
-				seqOf = new ArrayList<BerInteger>();
-			}
-			return seqOf;
-		}
+        public void setSeqOf(List<BerInteger> seqOf) {
+            this.seqOf = seqOf;
+        }
 
-		public int encode(BerByteArrayOutputStream os) throws IOException {
-			return encode(os, true);
-		}
+        public List<BerInteger> getBerInteger() {
+            if (seqOf == null) {
+                seqOf = new ArrayList<BerInteger>();
+            }
+            return seqOf;
+        }
 
-		public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+        public int encode(BerByteArrayOutputStream os) throws IOException {
+            return encode(os, true);
+        }
 
-			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
-				}
-				if (withTag) {
-					return tag.encode(os) + code.length;
-				}
-				return code.length;
-			}
+        public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
 
-			int codeLength = 0;
-			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
-			}
+            if (code != null) {
+                for (int i = code.length - 1; i >= 0; i--) {
+                    os.write(code[i]);
+                }
+                if (withTag) {
+                    return tag.encode(os) + code.length;
+                }
+                return code.length;
+            }
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+            int codeLength = 0;
+            for (int i = (seqOf.size() - 1); i >= 0; i--) {
+                codeLength += seqOf.get(i).encode(os, true);
+            }
 
-			if (withTag) {
-				codeLength += tag.encode(os);
-			}
+            codeLength += BerLength.encodeLength(os, codeLength);
 
-			return codeLength;
-		}
+            if (withTag) {
+                codeLength += tag.encode(os);
+            }
 
-		public int decode(InputStream is) throws IOException {
-			return decode(is, true);
-		}
+            return codeLength;
+        }
 
-		public int decode(InputStream is, boolean withTag) throws IOException {
-			int codeLength = 0;
-			int subCodeLength = 0;
-			if (withTag) {
-				codeLength += tag.decodeAndCheck(is);
-			}
+        public int decode(InputStream is) throws IOException {
+            return decode(is, true);
+        }
 
-			BerLength length = new BerLength();
-			codeLength += length.decode(is);
-			int totalLength = length.val;
+        public int decode(InputStream is, boolean withTag) throws IOException {
+            int codeLength = 0;
+            int subCodeLength = 0;
+            if (withTag) {
+                codeLength += tag.decodeAndCheck(is);
+            }
 
-			while (subCodeLength < totalLength) {
-				BerInteger element = new BerInteger();
-				subCodeLength += element.decode(is, true);
-				seqOf.add(element);
-			}
-			if (subCodeLength != totalLength) {
-				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+            BerLength length = new BerLength();
+            codeLength += length.decode(is);
+            int totalLength = length.val;
 
-			}
-			codeLength += subCodeLength;
+            while (subCodeLength < totalLength) {
+                BerInteger element = new BerInteger();
+                subCodeLength += element.decode(is, true);
+                seqOf.add(element);
+            }
+            if (subCodeLength != totalLength) {
+                throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
 
-			return codeLength;
-		}
+            }
+            codeLength += subCodeLength;
 
-		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
-		}
+            return codeLength;
+        }
 
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			appendAsString(sb, 0);
-			return sb.toString();
-		}
+        public void encodeAndSave(int encodingSizeGuess) throws IOException {
+            BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+            encode(os, false);
+            code = os.getArray();
+        }
 
-		public void appendAsString(StringBuilder sb, int indentLevel) {
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            appendAsString(sb, 0);
+            return sb.toString();
+        }
 
-			sb.append("[\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			if (seqOf == null) {
+        public void appendAsString(StringBuilder sb, int indentLevel) {
+
+            sb.append("[\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            if (seqOf == null) {
 //				sb.append("null");
-			}
-			else {
-				Iterator<BerInteger> it = seqOf.iterator();
-				if (it.hasNext()) {
-					sb.append(it.next());
-					while (it.hasNext()) {
-						sb.append(",\n");
-						for (int i = 0; i < indentLevel + 1; i++) {
-							sb.append("\t");
-						}
-						sb.append(it.next());
-					}
-				}
-			}
+            } else {
+                Iterator<BerInteger> it = seqOf.iterator();
+                if (it.hasNext()) {
+                    sb.append(it.next());
+                    while (it.hasNext()) {
+                        sb.append(",\n");
+                        for (int i = 0; i < indentLevel + 1; i++) {
+                            sb.append("\t");
+                        }
+                        sb.append(it.next());
+                    }
+                }
+            }
 
-			sb.append("\n");
-			for (int i = 0; i < indentLevel; i++) {
-				sb.append("\t");
-			}
-			sb.append("]");
-		}
+            sb.append("\n");
+            for (int i = 0; i < indentLevel; i++) {
+                sb.append("\t");
+            }
+            sb.append("]");
+        }
 
-	}
+        public void addBerInteger(BerInteger berInteger) {
+            seqOf.add(berInteger);
+        }
+    }
 
-	public static class EndPrbDl implements Serializable {
+    public static class EndPrbDl implements Serializable {
 
-		private static final long serialVersionUID = 1L;
+        public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+        private static final long serialVersionUID = 1L;
+        public byte[] code = null;
+        private List<BerInteger> seqOf = null;
 
-		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
-		private List<BerInteger> seqOf = null;
+        public EndPrbDl() {
+            seqOf = new ArrayList<BerInteger>();
+        }
 
-		public EndPrbDl() {
-			seqOf = new ArrayList<BerInteger>();
-		}
+        public EndPrbDl(byte[] code) {
+            this.code = code;
+        }
 
-		public EndPrbDl(byte[] code) {
-			this.code = code;
-		}
+        public List<BerInteger> getBerInteger() {
+            if (seqOf == null) {
+                seqOf = new ArrayList<BerInteger>();
+            }
+            return seqOf;
+        }
 
-		public List<BerInteger> getBerInteger() {
-			if (seqOf == null) {
-				seqOf = new ArrayList<BerInteger>();
-			}
-			return seqOf;
-		}
+        public int encode(BerByteArrayOutputStream os) throws IOException {
+            return encode(os, true);
+        }
 
-		public int encode(BerByteArrayOutputStream os) throws IOException {
-			return encode(os, true);
-		}
+        public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
 
-		public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+            if (code != null) {
+                for (int i = code.length - 1; i >= 0; i--) {
+                    os.write(code[i]);
+                }
+                if (withTag) {
+                    return tag.encode(os) + code.length;
+                }
+                return code.length;
+            }
 
-			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
-				}
-				if (withTag) {
-					return tag.encode(os) + code.length;
-				}
-				return code.length;
-			}
+            int codeLength = 0;
+            for (int i = (seqOf.size() - 1); i >= 0; i--) {
+                codeLength += seqOf.get(i).encode(os, true);
+            }
 
-			int codeLength = 0;
-			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
-			}
+            codeLength += BerLength.encodeLength(os, codeLength);
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+            if (withTag) {
+                codeLength += tag.encode(os);
+            }
 
-			if (withTag) {
-				codeLength += tag.encode(os);
-			}
+            return codeLength;
+        }
 
-			return codeLength;
-		}
+        public int decode(InputStream is) throws IOException {
+            return decode(is, true);
+        }
 
-		public int decode(InputStream is) throws IOException {
-			return decode(is, true);
-		}
+        public int decode(InputStream is, boolean withTag) throws IOException {
+            int codeLength = 0;
+            int subCodeLength = 0;
+            if (withTag) {
+                codeLength += tag.decodeAndCheck(is);
+            }
 
-		public int decode(InputStream is, boolean withTag) throws IOException {
-			int codeLength = 0;
-			int subCodeLength = 0;
-			if (withTag) {
-				codeLength += tag.decodeAndCheck(is);
-			}
+            BerLength length = new BerLength();
+            codeLength += length.decode(is);
+            int totalLength = length.val;
 
-			BerLength length = new BerLength();
-			codeLength += length.decode(is);
-			int totalLength = length.val;
+            while (subCodeLength < totalLength) {
+                BerInteger element = new BerInteger();
+                subCodeLength += element.decode(is, true);
+                seqOf.add(element);
+            }
+            if (subCodeLength != totalLength) {
+                throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
 
-			while (subCodeLength < totalLength) {
-				BerInteger element = new BerInteger();
-				subCodeLength += element.decode(is, true);
-				seqOf.add(element);
-			}
-			if (subCodeLength != totalLength) {
-				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+            }
+            codeLength += subCodeLength;
 
-			}
-			codeLength += subCodeLength;
+            return codeLength;
+        }
 
-			return codeLength;
-		}
+        public void encodeAndSave(int encodingSizeGuess) throws IOException {
+            BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+            encode(os, false);
+            code = os.getArray();
+        }
 
-		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
-		}
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            appendAsString(sb, 0);
+            return sb.toString();
+        }
 
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			appendAsString(sb, 0);
-			return sb.toString();
-		}
+        public void appendAsString(StringBuilder sb, int indentLevel) {
 
-		public void appendAsString(StringBuilder sb, int indentLevel) {
-
-			sb.append("[\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			if (seqOf == null) {
+            sb.append("[\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            if (seqOf == null) {
 //				sb.append("null");
-			}
-			else {
-				Iterator<BerInteger> it = seqOf.iterator();
-				if (it.hasNext()) {
-					sb.append(it.next());
-					while (it.hasNext()) {
-						sb.append(",\n");
-						for (int i = 0; i < indentLevel + 1; i++) {
-							sb.append("\t");
-						}
-						sb.append(it.next());
-					}
-				}
-			}
+            } else {
+                Iterator<BerInteger> it = seqOf.iterator();
+                if (it.hasNext()) {
+                    sb.append(it.next());
+                    while (it.hasNext()) {
+                        sb.append(",\n");
+                        for (int i = 0; i < indentLevel + 1; i++) {
+                            sb.append("\t");
+                        }
+                        sb.append(it.next());
+                    }
+                }
+            }
 
-			sb.append("\n");
-			for (int i = 0; i < indentLevel; i++) {
-				sb.append("\t");
-			}
-			sb.append("]");
-		}
+            sb.append("\n");
+            for (int i = 0; i < indentLevel; i++) {
+                sb.append("\t");
+            }
+            sb.append("]");
+        }
 
-	}
+        public void addBerInteger(BerInteger berInteger) {
+            seqOf.add(berInteger);
+        }
 
-	public static class SubframeBitmaskDl implements Serializable {
+        public List<BerInteger> getSeqOf() {
+            return seqOf;
+        }
 
-		private static final long serialVersionUID = 1L;
+        public void setSeqOf(List<BerInteger> seqOf) {
+            this.seqOf = seqOf;
+        }
+    }
 
-		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
-		private List<BerBitString> seqOf = null;
+    public static class SubframeBitmaskDl implements Serializable {
 
-		public SubframeBitmaskDl() {
-			seqOf = new ArrayList<BerBitString>();
-		}
+        public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+        private static final long serialVersionUID = 1L;
+        public byte[] code = null;
+        private List<BerBitString> seqOf = null;
 
-		public SubframeBitmaskDl(byte[] code) {
-			this.code = code;
-		}
+        public SubframeBitmaskDl() {
+            seqOf = new ArrayList<BerBitString>();
+        }
 
-		public List<BerBitString> getBerBitString() {
-			if (seqOf == null) {
-				seqOf = new ArrayList<BerBitString>();
-			}
-			return seqOf;
-		}
+        public SubframeBitmaskDl(byte[] code) {
+            this.code = code;
+        }
 
-		public int encode(BerByteArrayOutputStream os) throws IOException {
-			return encode(os, true);
-		}
+        public List<BerBitString> getBerBitString() {
+            if (seqOf == null) {
+                seqOf = new ArrayList<BerBitString>();
+            }
+            return seqOf;
+        }
 
-		public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+        public void addBerBitString(BerBitString berBitString) {
+            seqOf.add(berBitString);
+        }
 
-			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
-				}
-				if (withTag) {
-					return tag.encode(os) + code.length;
-				}
-				return code.length;
-			}
+        public int encode(BerByteArrayOutputStream os) throws IOException {
+            return encode(os, true);
+        }
 
-			int codeLength = 0;
-			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
-			}
+        public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+            if (code != null) {
+                for (int i = code.length - 1; i >= 0; i--) {
+                    os.write(code[i]);
+                }
+                if (withTag) {
+                    return tag.encode(os) + code.length;
+                }
+                return code.length;
+            }
 
-			if (withTag) {
-				codeLength += tag.encode(os);
-			}
+            int codeLength = 0;
+            for (int i = (seqOf.size() - 1); i >= 0; i--) {
+                codeLength += seqOf.get(i).encode(os, true);
+            }
 
-			return codeLength;
-		}
+            codeLength += BerLength.encodeLength(os, codeLength);
 
-		public int decode(InputStream is) throws IOException {
-			return decode(is, true);
-		}
+            if (withTag) {
+                codeLength += tag.encode(os);
+            }
 
-		public int decode(InputStream is, boolean withTag) throws IOException {
-			int codeLength = 0;
-			int subCodeLength = 0;
-			if (withTag) {
-				codeLength += tag.decodeAndCheck(is);
-			}
+            return codeLength;
+        }
 
-			BerLength length = new BerLength();
-			codeLength += length.decode(is);
-			int totalLength = length.val;
+        public int decode(InputStream is) throws IOException {
+            return decode(is, true);
+        }
 
-			while (subCodeLength < totalLength) {
-				BerBitString element = new BerBitString();
-				subCodeLength += element.decode(is, true);
-				seqOf.add(element);
-			}
-			if (subCodeLength != totalLength) {
-				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+        public int decode(InputStream is, boolean withTag) throws IOException {
+            int codeLength = 0;
+            int subCodeLength = 0;
+            if (withTag) {
+                codeLength += tag.decodeAndCheck(is);
+            }
 
-			}
-			codeLength += subCodeLength;
+            BerLength length = new BerLength();
+            codeLength += length.decode(is);
+            int totalLength = length.val;
 
-			return codeLength;
-		}
+            while (subCodeLength < totalLength) {
+                BerBitString element = new BerBitString();
+                subCodeLength += element.decode(is, true);
+                seqOf.add(element);
+            }
+            if (subCodeLength != totalLength) {
+                throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
 
-		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
-		}
+            }
+            codeLength += subCodeLength;
 
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			appendAsString(sb, 0);
-			return sb.toString();
-		}
+            return codeLength;
+        }
 
-		public void appendAsString(StringBuilder sb, int indentLevel) {
+        public void encodeAndSave(int encodingSizeGuess) throws IOException {
+            BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+            encode(os, false);
+            code = os.getArray();
+        }
 
-			sb.append("[\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			if (seqOf == null) {
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            appendAsString(sb, 0);
+            return sb.toString();
+        }
+
+        public void appendAsString(StringBuilder sb, int indentLevel) {
+
+            sb.append("[\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            if (seqOf == null) {
 //				sb.append("null");
-			}
-			else {
-				Iterator<BerBitString> it = seqOf.iterator();
-				if (it.hasNext()) {
-					sb.append(it.next());
-					while (it.hasNext()) {
-						sb.append(",\n");
-						for (int i = 0; i < indentLevel + 1; i++) {
-							sb.append("\t");
-						}
-						sb.append(it.next());
-					}
-				}
-			}
+            } else {
+                Iterator<BerBitString> it = seqOf.iterator();
+                if (it.hasNext()) {
+                    sb.append("\"" + it.next() + "\"");
+                    while (it.hasNext()) {
+                        sb.append(",\n");
+                        for (int i = 0; i < indentLevel + 1; i++) {
+                            sb.append("\t");
+                        }
+                        sb.append("\"" + it.next() + "\"");
+                    }
+                }
+            }
 
-			sb.append("\n");
-			for (int i = 0; i < indentLevel; i++) {
-				sb.append("\t");
-			}
-			sb.append("]");
-		}
+            sb.append("\n");
+            for (int i = 0; i < indentLevel; i++) {
+                sb.append("\t");
+            }
+            sb.append("]");
+        }
 
-	}
+    }
 
-	public static class P0UePusch implements Serializable {
+    public static class P0UePusch implements Serializable {
 
-		private static final long serialVersionUID = 1L;
+        public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+        private static final long serialVersionUID = 1L;
+        public byte[] code = null;
+        private List<BerInteger> seqOf = null;
 
-		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
-		private List<BerInteger> seqOf = null;
+        public P0UePusch() {
+            seqOf = new ArrayList<BerInteger>();
+        }
 
-		public P0UePusch() {
-			seqOf = new ArrayList<BerInteger>();
-		}
+        public P0UePusch(byte[] code) {
+            this.code = code;
+        }
 
-		public P0UePusch(byte[] code) {
-			this.code = code;
-		}
+        public List<BerInteger> getBerInteger() {
+            if (seqOf == null) {
+                seqOf = new ArrayList<BerInteger>();
+            }
+            return seqOf;
+        }
 
-		public List<BerInteger> getBerInteger() {
-			if (seqOf == null) {
-				seqOf = new ArrayList<BerInteger>();
-			}
-			return seqOf;
-		}
+        public int encode(BerByteArrayOutputStream os) throws IOException {
+            return encode(os, true);
+        }
 
-		public int encode(BerByteArrayOutputStream os) throws IOException {
-			return encode(os, true);
-		}
+        public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
 
-		public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+            if (code != null) {
+                for (int i = code.length - 1; i >= 0; i--) {
+                    os.write(code[i]);
+                }
+                if (withTag) {
+                    return tag.encode(os) + code.length;
+                }
+                return code.length;
+            }
 
-			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
-				}
-				if (withTag) {
-					return tag.encode(os) + code.length;
-				}
-				return code.length;
-			}
+            int codeLength = 0;
+            for (int i = (seqOf.size() - 1); i >= 0; i--) {
+                codeLength += seqOf.get(i).encode(os, true);
+            }
 
-			int codeLength = 0;
-			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
-			}
+            codeLength += BerLength.encodeLength(os, codeLength);
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+            if (withTag) {
+                codeLength += tag.encode(os);
+            }
 
-			if (withTag) {
-				codeLength += tag.encode(os);
-			}
+            return codeLength;
+        }
 
-			return codeLength;
-		}
+        public int decode(InputStream is) throws IOException {
+            return decode(is, true);
+        }
 
-		public int decode(InputStream is) throws IOException {
-			return decode(is, true);
-		}
+        public int decode(InputStream is, boolean withTag) throws IOException {
+            int codeLength = 0;
+            int subCodeLength = 0;
+            if (withTag) {
+                codeLength += tag.decodeAndCheck(is);
+            }
 
-		public int decode(InputStream is, boolean withTag) throws IOException {
-			int codeLength = 0;
-			int subCodeLength = 0;
-			if (withTag) {
-				codeLength += tag.decodeAndCheck(is);
-			}
+            BerLength length = new BerLength();
+            codeLength += length.decode(is);
+            int totalLength = length.val;
 
-			BerLength length = new BerLength();
-			codeLength += length.decode(is);
-			int totalLength = length.val;
+            while (subCodeLength < totalLength) {
+                BerInteger element = new BerInteger();
+                subCodeLength += element.decode(is, true);
+                seqOf.add(element);
+            }
+            if (subCodeLength != totalLength) {
+                throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
 
-			while (subCodeLength < totalLength) {
-				BerInteger element = new BerInteger();
-				subCodeLength += element.decode(is, true);
-				seqOf.add(element);
-			}
-			if (subCodeLength != totalLength) {
-				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+            }
+            codeLength += subCodeLength;
 
-			}
-			codeLength += subCodeLength;
+            return codeLength;
+        }
 
-			return codeLength;
-		}
+        public void encodeAndSave(int encodingSizeGuess) throws IOException {
+            BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+            encode(os, false);
+            code = os.getArray();
+        }
 
-		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
-		}
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            appendAsString(sb, 0);
+            return sb.toString();
+        }
 
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			appendAsString(sb, 0);
-			return sb.toString();
-		}
+        public void appendAsString(StringBuilder sb, int indentLevel) {
 
-		public void appendAsString(StringBuilder sb, int indentLevel) {
-
-			sb.append("[\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			if (seqOf == null) {
+            sb.append("[\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            if (seqOf == null) {
 //				sb.append("null");
-			}
-			else {
-				Iterator<BerInteger> it = seqOf.iterator();
-				if (it.hasNext()) {
-					sb.append(it.next());
-					while (it.hasNext()) {
-						sb.append(",\n");
-						for (int i = 0; i < indentLevel + 1; i++) {
-							sb.append("\t");
-						}
-						sb.append(it.next());
-					}
-				}
-			}
+            } else {
+                Iterator<BerInteger> it = seqOf.iterator();
+                if (it.hasNext()) {
+                    sb.append(it.next());
+                    while (it.hasNext()) {
+                        sb.append(",\n");
+                        for (int i = 0; i < indentLevel + 1; i++) {
+                            sb.append("\t");
+                        }
+                        sb.append(it.next());
+                    }
+                }
+            }
 
-			sb.append("\n");
-			for (int i = 0; i < indentLevel; i++) {
-				sb.append("\t");
-			}
-			sb.append("]");
-		}
+            sb.append("\n");
+            for (int i = 0; i < indentLevel; i++) {
+                sb.append("\t");
+            }
+            sb.append("]");
+        }
 
-	}
+    }
 
-	public static class StartPrbUl implements Serializable {
+    public static class StartPrbUl implements Serializable {
 
-		private static final long serialVersionUID = 1L;
+        public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+        private static final long serialVersionUID = 1L;
+        public byte[] code = null;
+        private List<BerInteger> seqOf = null;
 
-		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
-		private List<BerInteger> seqOf = null;
+        public StartPrbUl() {
+            seqOf = new ArrayList<BerInteger>();
+        }
 
-		public StartPrbUl() {
-			seqOf = new ArrayList<BerInteger>();
-		}
+        public StartPrbUl(byte[] code) {
+            this.code = code;
+        }
 
-		public StartPrbUl(byte[] code) {
-			this.code = code;
-		}
+        public List<BerInteger> getBerInteger() {
+            if (seqOf == null) {
+                seqOf = new ArrayList<BerInteger>();
+            }
+            return seqOf;
+        }
 
-		public List<BerInteger> getBerInteger() {
-			if (seqOf == null) {
-				seqOf = new ArrayList<BerInteger>();
-			}
-			return seqOf;
-		}
+        public int encode(BerByteArrayOutputStream os) throws IOException {
+            return encode(os, true);
+        }
 
-		public int encode(BerByteArrayOutputStream os) throws IOException {
-			return encode(os, true);
-		}
+        public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
 
-		public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+            if (code != null) {
+                for (int i = code.length - 1; i >= 0; i--) {
+                    os.write(code[i]);
+                }
+                if (withTag) {
+                    return tag.encode(os) + code.length;
+                }
+                return code.length;
+            }
 
-			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
-				}
-				if (withTag) {
-					return tag.encode(os) + code.length;
-				}
-				return code.length;
-			}
+            int codeLength = 0;
+            for (int i = (seqOf.size() - 1); i >= 0; i--) {
+                codeLength += seqOf.get(i).encode(os, true);
+            }
 
-			int codeLength = 0;
-			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
-			}
+            codeLength += BerLength.encodeLength(os, codeLength);
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+            if (withTag) {
+                codeLength += tag.encode(os);
+            }
 
-			if (withTag) {
-				codeLength += tag.encode(os);
-			}
+            return codeLength;
+        }
 
-			return codeLength;
-		}
+        public int decode(InputStream is) throws IOException {
+            return decode(is, true);
+        }
 
-		public int decode(InputStream is) throws IOException {
-			return decode(is, true);
-		}
+        public int decode(InputStream is, boolean withTag) throws IOException {
+            int codeLength = 0;
+            int subCodeLength = 0;
+            if (withTag) {
+                codeLength += tag.decodeAndCheck(is);
+            }
 
-		public int decode(InputStream is, boolean withTag) throws IOException {
-			int codeLength = 0;
-			int subCodeLength = 0;
-			if (withTag) {
-				codeLength += tag.decodeAndCheck(is);
-			}
+            BerLength length = new BerLength();
+            codeLength += length.decode(is);
+            int totalLength = length.val;
 
-			BerLength length = new BerLength();
-			codeLength += length.decode(is);
-			int totalLength = length.val;
+            while (subCodeLength < totalLength) {
+                BerInteger element = new BerInteger();
+                subCodeLength += element.decode(is, true);
+                seqOf.add(element);
+            }
+            if (subCodeLength != totalLength) {
+                throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
 
-			while (subCodeLength < totalLength) {
-				BerInteger element = new BerInteger();
-				subCodeLength += element.decode(is, true);
-				seqOf.add(element);
-			}
-			if (subCodeLength != totalLength) {
-				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+            }
+            codeLength += subCodeLength;
 
-			}
-			codeLength += subCodeLength;
+            return codeLength;
+        }
 
-			return codeLength;
-		}
+        public void encodeAndSave(int encodingSizeGuess) throws IOException {
+            BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+            encode(os, false);
+            code = os.getArray();
+        }
 
-		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
-		}
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            appendAsString(sb, 0);
+            return sb.toString();
+        }
 
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			appendAsString(sb, 0);
-			return sb.toString();
-		}
+        public void appendAsString(StringBuilder sb, int indentLevel) {
 
-		public void appendAsString(StringBuilder sb, int indentLevel) {
-
-			sb.append("[\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			if (seqOf == null) {
+            sb.append("[\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            if (seqOf == null) {
 //				sb.append("null");
-			}
-			else {
-				Iterator<BerInteger> it = seqOf.iterator();
-				if (it.hasNext()) {
-					sb.append(it.next());
-					while (it.hasNext()) {
-						sb.append(",\n");
-						for (int i = 0; i < indentLevel + 1; i++) {
-							sb.append("\t");
-						}
-						sb.append(it.next());
-					}
-				}
-			}
+            } else {
+                Iterator<BerInteger> it = seqOf.iterator();
+                if (it.hasNext()) {
+                    sb.append(it.next());
+                    while (it.hasNext()) {
+                        sb.append(",\n");
+                        for (int i = 0; i < indentLevel + 1; i++) {
+                            sb.append("\t");
+                        }
+                        sb.append(it.next());
+                    }
+                }
+            }
 
-			sb.append("\n");
-			for (int i = 0; i < indentLevel; i++) {
-				sb.append("\t");
-			}
-			sb.append("]");
-		}
+            sb.append("\n");
+            for (int i = 0; i < indentLevel; i++) {
+                sb.append("\t");
+            }
+            sb.append("]");
+        }
 
-	}
+        public void addBerInteger(BerInteger berInteger) {
+            seqOf.add(berInteger);
+        }
 
-	public static class EndPrbUl implements Serializable {
+        public List<BerInteger> getSeqOf() {
+            return seqOf;
+        }
 
-		private static final long serialVersionUID = 1L;
+        public void setSeqOf(List<BerInteger> seqOf) {
+            this.seqOf = seqOf;
+        }
+    }
 
-		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
-		private List<BerInteger> seqOf = null;
+    public static class EndPrbUl implements Serializable {
 
-		public EndPrbUl() {
-			seqOf = new ArrayList<BerInteger>();
-		}
+        public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+        private static final long serialVersionUID = 1L;
+        public byte[] code = null;
+        private List<BerInteger> seqOf = null;
 
-		public EndPrbUl(byte[] code) {
-			this.code = code;
-		}
+        public EndPrbUl() {
+            seqOf = new ArrayList<BerInteger>();
+        }
 
-		public List<BerInteger> getBerInteger() {
-			if (seqOf == null) {
-				seqOf = new ArrayList<BerInteger>();
-			}
-			return seqOf;
-		}
+        public EndPrbUl(byte[] code) {
+            this.code = code;
+        }
 
-		public int encode(BerByteArrayOutputStream os) throws IOException {
-			return encode(os, true);
-		}
+        public List<BerInteger> getBerInteger() {
+            if (seqOf == null) {
+                seqOf = new ArrayList<BerInteger>();
+            }
+            return seqOf;
+        }
 
-		public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+        public int encode(BerByteArrayOutputStream os) throws IOException {
+            return encode(os, true);
+        }
 
-			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
-				}
-				if (withTag) {
-					return tag.encode(os) + code.length;
-				}
-				return code.length;
-			}
+        public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
 
-			int codeLength = 0;
-			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
-			}
+            if (code != null) {
+                for (int i = code.length - 1; i >= 0; i--) {
+                    os.write(code[i]);
+                }
+                if (withTag) {
+                    return tag.encode(os) + code.length;
+                }
+                return code.length;
+            }
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+            int codeLength = 0;
+            for (int i = (seqOf.size() - 1); i >= 0; i--) {
+                codeLength += seqOf.get(i).encode(os, true);
+            }
 
-			if (withTag) {
-				codeLength += tag.encode(os);
-			}
+            codeLength += BerLength.encodeLength(os, codeLength);
 
-			return codeLength;
-		}
+            if (withTag) {
+                codeLength += tag.encode(os);
+            }
 
-		public int decode(InputStream is) throws IOException {
-			return decode(is, true);
-		}
+            return codeLength;
+        }
 
-		public int decode(InputStream is, boolean withTag) throws IOException {
-			int codeLength = 0;
-			int subCodeLength = 0;
-			if (withTag) {
-				codeLength += tag.decodeAndCheck(is);
-			}
+        public int decode(InputStream is) throws IOException {
+            return decode(is, true);
+        }
 
-			BerLength length = new BerLength();
-			codeLength += length.decode(is);
-			int totalLength = length.val;
+        public int decode(InputStream is, boolean withTag) throws IOException {
+            int codeLength = 0;
+            int subCodeLength = 0;
+            if (withTag) {
+                codeLength += tag.decodeAndCheck(is);
+            }
 
-			while (subCodeLength < totalLength) {
-				BerInteger element = new BerInteger();
-				subCodeLength += element.decode(is, true);
-				seqOf.add(element);
-			}
-			if (subCodeLength != totalLength) {
-				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+            BerLength length = new BerLength();
+            codeLength += length.decode(is);
+            int totalLength = length.val;
 
-			}
-			codeLength += subCodeLength;
+            while (subCodeLength < totalLength) {
+                BerInteger element = new BerInteger();
+                subCodeLength += element.decode(is, true);
+                seqOf.add(element);
+            }
+            if (subCodeLength != totalLength) {
+                throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
 
-			return codeLength;
-		}
+            }
+            codeLength += subCodeLength;
 
-		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
-		}
+            return codeLength;
+        }
 
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			appendAsString(sb, 0);
-			return sb.toString();
-		}
+        public void encodeAndSave(int encodingSizeGuess) throws IOException {
+            BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+            encode(os, false);
+            code = os.getArray();
+        }
 
-		public void appendAsString(StringBuilder sb, int indentLevel) {
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            appendAsString(sb, 0);
+            return sb.toString();
+        }
 
-			sb.append("[\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			if (seqOf == null) {
+        public void appendAsString(StringBuilder sb, int indentLevel) {
+
+            sb.append("[\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            if (seqOf == null) {
 //				sb.append("null");
-			}
-			else {
-				Iterator<BerInteger> it = seqOf.iterator();
-				if (it.hasNext()) {
-					sb.append(it.next());
-					while (it.hasNext()) {
-						sb.append(",\n");
-						for (int i = 0; i < indentLevel + 1; i++) {
-							sb.append("\t");
-						}
-						sb.append(it.next());
-					}
-				}
-			}
+            } else {
+                Iterator<BerInteger> it = seqOf.iterator();
+                if (it.hasNext()) {
+                    sb.append(it.next());
+                    while (it.hasNext()) {
+                        sb.append(",\n");
+                        for (int i = 0; i < indentLevel + 1; i++) {
+                            sb.append("\t");
+                        }
+                        sb.append(it.next());
+                    }
+                }
+            }
 
-			sb.append("\n");
-			for (int i = 0; i < indentLevel; i++) {
-				sb.append("\t");
-			}
-			sb.append("]");
-		}
+            sb.append("\n");
+            for (int i = 0; i < indentLevel; i++) {
+                sb.append("\t");
+            }
+            sb.append("]");
+        }
 
-	}
+        public void addBerInteger(BerInteger berInteger) {
+            seqOf.add(berInteger);
+        }
 
-	public static class SubframeBitmaskUl implements Serializable {
+        public List<BerInteger> getSeqOf() {
+            return seqOf;
+        }
 
-		private static final long serialVersionUID = 1L;
+        public void setSeqOf(List<BerInteger> seqOf) {
+            this.seqOf = seqOf;
+        }
+    }
 
-		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
-		private List<BerBitString> seqOf = null;
+    public static class SubframeBitmaskUl implements Serializable {
 
-		public SubframeBitmaskUl() {
-			seqOf = new ArrayList<BerBitString>();
-		}
+        public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+        private static final long serialVersionUID = 1L;
+        public byte[] code = null;
+        private List<BerBitString> seqOf = null;
 
-		public SubframeBitmaskUl(byte[] code) {
-			this.code = code;
-		}
+        public SubframeBitmaskUl() {
+            seqOf = new ArrayList<BerBitString>();
+        }
 
-		public List<BerBitString> getBerBitString() {
-			if (seqOf == null) {
-				seqOf = new ArrayList<BerBitString>();
-			}
-			return seqOf;
-		}
+        public SubframeBitmaskUl(byte[] code) {
+            this.code = code;
+        }
 
-		public int encode(BerByteArrayOutputStream os) throws IOException {
-			return encode(os, true);
-		}
+        public List<BerBitString> getBerBitString() {
+            if (seqOf == null) {
+                seqOf = new ArrayList<BerBitString>();
+            }
+            return seqOf;
+        }
 
-		public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+        public int encode(BerByteArrayOutputStream os) throws IOException {
+            return encode(os, true);
+        }
 
-			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
-				}
-				if (withTag) {
-					return tag.encode(os) + code.length;
-				}
-				return code.length;
-			}
+        public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
 
-			int codeLength = 0;
-			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
-			}
+            if (code != null) {
+                for (int i = code.length - 1; i >= 0; i--) {
+                    os.write(code[i]);
+                }
+                if (withTag) {
+                    return tag.encode(os) + code.length;
+                }
+                return code.length;
+            }
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+            int codeLength = 0;
+            for (int i = (seqOf.size() - 1); i >= 0; i--) {
+                codeLength += seqOf.get(i).encode(os, true);
+            }
 
-			if (withTag) {
-				codeLength += tag.encode(os);
-			}
+            codeLength += BerLength.encodeLength(os, codeLength);
 
-			return codeLength;
-		}
+            if (withTag) {
+                codeLength += tag.encode(os);
+            }
 
-		public int decode(InputStream is) throws IOException {
-			return decode(is, true);
-		}
+            return codeLength;
+        }
 
-		public int decode(InputStream is, boolean withTag) throws IOException {
-			int codeLength = 0;
-			int subCodeLength = 0;
-			if (withTag) {
-				codeLength += tag.decodeAndCheck(is);
-			}
+        public int decode(InputStream is) throws IOException {
+            return decode(is, true);
+        }
 
-			BerLength length = new BerLength();
-			codeLength += length.decode(is);
-			int totalLength = length.val;
+        public int decode(InputStream is, boolean withTag) throws IOException {
+            int codeLength = 0;
+            int subCodeLength = 0;
+            if (withTag) {
+                codeLength += tag.decodeAndCheck(is);
+            }
 
-			while (subCodeLength < totalLength) {
-				BerBitString element = new BerBitString();
-				subCodeLength += element.decode(is, true);
-				seqOf.add(element);
-			}
-			if (subCodeLength != totalLength) {
-				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+            BerLength length = new BerLength();
+            codeLength += length.decode(is);
+            int totalLength = length.val;
 
-			}
-			codeLength += subCodeLength;
+            while (subCodeLength < totalLength) {
+                BerBitString element = new BerBitString();
+                subCodeLength += element.decode(is, true);
+                seqOf.add(element);
+            }
+            if (subCodeLength != totalLength) {
+                throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
 
-			return codeLength;
-		}
+            }
+            codeLength += subCodeLength;
 
-		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
-		}
+            return codeLength;
+        }
 
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			appendAsString(sb, 0);
-			return sb.toString();
-		}
+        public void encodeAndSave(int encodingSizeGuess) throws IOException {
+            BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+            encode(os, false);
+            code = os.getArray();
+        }
 
-		public void appendAsString(StringBuilder sb, int indentLevel) {
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            appendAsString(sb, 0);
+            return sb.toString();
+        }
 
-			sb.append("[\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			if (seqOf == null) {
+        public void appendAsString(StringBuilder sb, int indentLevel) {
+
+            sb.append("[\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            if (seqOf == null) {
 //				sb.append("null");
-			}
-			else {
-				Iterator<BerBitString> it = seqOf.iterator();
-				if (it.hasNext()) {
-					sb.append(it.next());
-					while (it.hasNext()) {
-						sb.append(",\n");
-						for (int i = 0; i < indentLevel + 1; i++) {
-							sb.append("\t");
-						}
-						sb.append(it.next());
-					}
-				}
-			}
+            } else {
+                Iterator<BerBitString> it = seqOf.iterator();
+                if (it.hasNext()) {
+                    sb.append(it.next());
+                    while (it.hasNext()) {
+                        sb.append(",\n");
+                        for (int i = 0; i < indentLevel + 1; i++) {
+                            sb.append("\t");
+                        }
+                        sb.append(it.next());
+                    }
+                }
+            }
 
-			sb.append("\n");
-			for (int i = 0; i < indentLevel; i++) {
-				sb.append("\t");
-			}
-			sb.append("]");
-		}
+            sb.append("\n");
+            for (int i = 0; i < indentLevel; i++) {
+                sb.append("\t");
+            }
+            sb.append("]");
+        }
 
-	}
+    }
 
-	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+    public static XrancPdu constructPacket(RRMConfig config) {
+        XrancPduBody body = new XrancPduBody();
+        body.setRRMConfig(config);
 
-	public byte[] code = null;
-	private ECGI ecgi = null;
-	private Crnti crnti = null;
-	private Pa pa = null;
-	private StartPrbDl startPrbDl = null;
-	private EndPrbDl endPrbDl = null;
-	private SubframeBitmaskDl subframeBitmaskDl = null;
-	private P0UePusch p0UePusch = null;
-	private StartPrbUl startPrbUl = null;
-	private EndPrbUl endPrbUl = null;
-	private SubframeBitmaskUl subframeBitmaskUl = null;
-	
-	public RRMConfig() {
-	}
+        BerUTF8String ver = null;
+        try {
+            ver = new BerUTF8String("3");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
-	public RRMConfig(byte[] code) {
-		this.code = code;
-	}
+        XrancApiID apiID = new XrancApiID(29);
+        XrancPduHdr hdr = new XrancPduHdr();
+        hdr.setVer(ver);
+        hdr.setApiId(apiID);
 
-	public void setEcgi(ECGI ecgi) {
-		this.ecgi = ecgi;
-	}
-
-	public ECGI getEcgi() {
-		return ecgi;
-	}
-
-	public void setCrnti(Crnti crnti) {
-		this.crnti = crnti;
-	}
-
-	public Crnti getCrnti() {
-		return crnti;
-	}
-
-	public void setPa(Pa pa) {
-		this.pa = pa;
-	}
-
-	public Pa getPa() {
-		return pa;
-	}
-
-	public void setStartPrbDl(StartPrbDl startPrbDl) {
-		this.startPrbDl = startPrbDl;
-	}
-
-	public StartPrbDl getStartPrbDl() {
-		return startPrbDl;
-	}
-
-	public void setEndPrbDl(EndPrbDl endPrbDl) {
-		this.endPrbDl = endPrbDl;
-	}
-
-	public EndPrbDl getEndPrbDl() {
-		return endPrbDl;
-	}
-
-	public void setSubframeBitmaskDl(SubframeBitmaskDl subframeBitmaskDl) {
-		this.subframeBitmaskDl = subframeBitmaskDl;
-	}
-
-	public SubframeBitmaskDl getSubframeBitmaskDl() {
-		return subframeBitmaskDl;
-	}
-
-	public void setP0UePusch(P0UePusch p0UePusch) {
-		this.p0UePusch = p0UePusch;
-	}
-
-	public P0UePusch getP0UePusch() {
-		return p0UePusch;
-	}
-
-	public void setStartPrbUl(StartPrbUl startPrbUl) {
-		this.startPrbUl = startPrbUl;
-	}
-
-	public StartPrbUl getStartPrbUl() {
-		return startPrbUl;
-	}
-
-	public void setEndPrbUl(EndPrbUl endPrbUl) {
-		this.endPrbUl = endPrbUl;
-	}
-
-	public EndPrbUl getEndPrbUl() {
-		return endPrbUl;
-	}
-
-	public void setSubframeBitmaskUl(SubframeBitmaskUl subframeBitmaskUl) {
-		this.subframeBitmaskUl = subframeBitmaskUl;
-	}
-
-	public SubframeBitmaskUl getSubframeBitmaskUl() {
-		return subframeBitmaskUl;
-	}
-
-	public int encode(BerByteArrayOutputStream os) throws IOException {
-		return encode(os, true);
-	}
-
-	public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
-
-		if (code != null) {
-			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
-			}
-			if (withTag) {
-				return tag.encode(os) + code.length;
-			}
-			return code.length;
-		}
-
-		int codeLength = 0;
-		if (subframeBitmaskUl != null) {
-			codeLength += subframeBitmaskUl.encode(os, false);
-			// write tag: CONTEXT_CLASS, CONSTRUCTED, 9
-			os.write(0xA9);
-			codeLength += 1;
-		}
-		
-		if (endPrbUl != null) {
-			codeLength += endPrbUl.encode(os, false);
-			// write tag: CONTEXT_CLASS, CONSTRUCTED, 8
-			os.write(0xA8);
-			codeLength += 1;
-		}
-		
-		if (startPrbUl != null) {
-			codeLength += startPrbUl.encode(os, false);
-			// write tag: CONTEXT_CLASS, CONSTRUCTED, 7
-			os.write(0xA7);
-			codeLength += 1;
-		}
-		
-		if (p0UePusch != null) {
-			codeLength += p0UePusch.encode(os, false);
-			// write tag: CONTEXT_CLASS, CONSTRUCTED, 6
-			os.write(0xA6);
-			codeLength += 1;
-		}
-		
-		if (subframeBitmaskDl != null) {
-			codeLength += subframeBitmaskDl.encode(os, false);
-			// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
-			os.write(0xA5);
-			codeLength += 1;
-		}
-		
-		if (endPrbDl != null) {
-			codeLength += endPrbDl.encode(os, false);
-			// write tag: CONTEXT_CLASS, CONSTRUCTED, 4
-			os.write(0xA4);
-			codeLength += 1;
-		}
-		
-		if (startPrbDl != null) {
-			codeLength += startPrbDl.encode(os, false);
-			// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
-			os.write(0xA3);
-			codeLength += 1;
-		}
-		
-		if (pa != null) {
-			codeLength += pa.encode(os, false);
-			// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
-			os.write(0xA2);
-			codeLength += 1;
-		}
-		
-		if (crnti != null) {
-			codeLength += crnti.encode(os, false);
-			// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
-			os.write(0xA1);
-			codeLength += 1;
-		}
-		
-		codeLength += ecgi.encode(os, false);
-		// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-		os.write(0xA0);
-		codeLength += 1;
-		
-		codeLength += BerLength.encodeLength(os, codeLength);
-
-		if (withTag) {
-			codeLength += tag.encode(os);
-		}
-
-		return codeLength;
-
-	}
-
-	public int decode(InputStream is) throws IOException {
-		return decode(is, true);
-	}
-
-	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
-		int subCodeLength = 0;
-		BerTag berTag = new BerTag();
-
-		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
-		}
-
-		BerLength length = new BerLength();
-		codeLength += length.decode(is);
-
-		int totalLength = length.val;
-		codeLength += totalLength;
-
-		subCodeLength += berTag.decode(is);
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
-			ecgi = new ECGI();
-			subCodeLength += ecgi.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
-			}
-			subCodeLength += berTag.decode(is);
-		}
-		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
-			crnti = new Crnti();
-			subCodeLength += crnti.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
-			}
-			subCodeLength += berTag.decode(is);
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
-			pa = new Pa();
-			subCodeLength += pa.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
-			}
-			subCodeLength += berTag.decode(is);
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
-			startPrbDl = new StartPrbDl();
-			subCodeLength += startPrbDl.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
-			}
-			subCodeLength += berTag.decode(is);
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
-			endPrbDl = new EndPrbDl();
-			subCodeLength += endPrbDl.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
-			}
-			subCodeLength += berTag.decode(is);
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
-			subframeBitmaskDl = new SubframeBitmaskDl();
-			subCodeLength += subframeBitmaskDl.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
-			}
-			subCodeLength += berTag.decode(is);
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
-			p0UePusch = new P0UePusch();
-			subCodeLength += p0UePusch.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
-			}
-			subCodeLength += berTag.decode(is);
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
-			startPrbUl = new StartPrbUl();
-			subCodeLength += startPrbUl.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
-			}
-			subCodeLength += berTag.decode(is);
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
-			endPrbUl = new EndPrbUl();
-			subCodeLength += endPrbUl.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
-			}
-			subCodeLength += berTag.decode(is);
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
-			subframeBitmaskUl = new SubframeBitmaskUl();
-			subCodeLength += subframeBitmaskUl.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
-			}
-		}
-		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
-
-		
-	}
-
-	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
-	}
-
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		appendAsString(sb, 0);
-		return sb.toString();
-	}
-
-	public void appendAsString(StringBuilder sb, int indentLevel) {
-
-		sb.append("{");
-		sb.append("\n");
-		for (int i = 0; i < indentLevel + 1; i++) {
-			sb.append("\t");
-		}
-		if (ecgi != null) {
-			sb.append("\"ecgi\": ");
-			ecgi.appendAsString(sb, indentLevel + 1);
-		}
-		
-		if (crnti != null) {
-			sb.append(",\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			sb.append("\"crnti\": ");
-			crnti.appendAsString(sb, indentLevel + 1);
-		}
-		
-		if (pa != null) {
-			sb.append(",\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			sb.append("\"pa\": ");
-			pa.appendAsString(sb, indentLevel + 1);
-		}
-		
-		if (startPrbDl != null) {
-			sb.append(",\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			sb.append("\"startPrbDl\": ");
-			startPrbDl.appendAsString(sb, indentLevel + 1);
-		}
-		
-		if (endPrbDl != null) {
-			sb.append(",\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			sb.append("\"endPrbDl\": ");
-			endPrbDl.appendAsString(sb, indentLevel + 1);
-		}
-		
-		if (subframeBitmaskDl != null) {
-			sb.append(",\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			sb.append("\"subframeBitmaskDl\": ");
-			subframeBitmaskDl.appendAsString(sb, indentLevel + 1);
-		}
-		
-		if (p0UePusch != null) {
-			sb.append(",\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			sb.append("\"p0UePusch\": ");
-			p0UePusch.appendAsString(sb, indentLevel + 1);
-		}
-		
-		if (startPrbUl != null) {
-			sb.append(",\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			sb.append("\"startPrbUl\": ");
-			startPrbUl.appendAsString(sb, indentLevel + 1);
-		}
-		
-		if (endPrbUl != null) {
-			sb.append(",\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			sb.append("\"endPrbUl\": ");
-			endPrbUl.appendAsString(sb, indentLevel + 1);
-		}
-		
-		if (subframeBitmaskUl != null) {
-			sb.append(",\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			sb.append("\"subframeBitmaskUl\": ");
-			subframeBitmaskUl.appendAsString(sb, indentLevel + 1);
-		}
-		
-		sb.append("\n");
-		for (int i = 0; i < indentLevel; i++) {
-			sb.append("\t");
-		}
-		sb.append("}");
-	}
+        XrancPdu pdu = new XrancPdu();
+        pdu.setHdr(hdr);
+        pdu.setBody(body);
+        return pdu;
+    }
 
 }
 

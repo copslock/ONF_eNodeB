@@ -160,7 +160,7 @@ public class PDCPReportPerUE {
             e.printStackTrace();
         }
 
-        XrancApiID apiID = new XrancApiID(24);
+        XrancApiID apiID = new XrancApiID(22);
         XrancPduHdr hdr = new XrancPduHdr();
         hdr.setVer(ver);
         hdr.setApiId(apiID);

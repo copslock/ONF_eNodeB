@@ -8,7 +8,6 @@ import codecs.api.ECGI;
 import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;

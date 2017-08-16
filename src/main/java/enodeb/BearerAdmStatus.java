@@ -87,7 +87,7 @@ public class BearerAdmStatus {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        XrancApiID apiID = new XrancApiID(10);
+        XrancApiID apiID = new XrancApiID(9);
         XrancPduHdr hdr = new XrancPduHdr();
         hdr.setVer(ver);
         hdr.setApiId(apiID);

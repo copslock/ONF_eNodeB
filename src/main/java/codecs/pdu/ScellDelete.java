@@ -10,321 +10,349 @@ import codecs.api.PCIARFCN;
 import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
+import org.openmuc.jasn1.ber.types.string.BerUTF8String;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class ScellDelete implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+    private static final long serialVersionUID = 1L;
+    public byte[] code = null;
+    private CRNTI crnti = null;
+    private ECGI ecgi = null;
+    private ScellsInd scellsInd = null;
+    public ScellDelete() {
+    }
+    public ScellDelete(byte[] code) {
+        this.code = code;
+    }
 
-	public static class ScellsInd implements Serializable {
+    public static XrancPdu constructPacket(ECGI ecgi, CRNTI crnti, PCIARFCN pciarfcn) {
+        ScellDelete scellDelete = new ScellDelete();
+        scellDelete.setEcgi(ecgi);
+        scellDelete.setCrnti(crnti);
+        ScellsInd scellsInd = new ScellsInd();
+        scellsInd.addPCIARFCN(pciarfcn);
+        scellDelete.setScellsInd(scellsInd);
 
-		private static final long serialVersionUID = 1L;
+        BerUTF8String ver = null;
+        try {
+            ver = new BerUTF8String("3");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
-		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
-		private List<PCIARFCN> seqOf = null;
+        XrancApiID apiID = new XrancApiID(28);
+        XrancPduBody body = new XrancPduBody();
+        body.setScellDelete(scellDelete);
 
-		public ScellsInd() {
-			seqOf = new ArrayList<PCIARFCN>();
-		}
+        XrancPduHdr hdr = new XrancPduHdr();
+        hdr.setVer(ver);
+        hdr.setApiId(apiID);
 
-		public ScellsInd(byte[] code) {
-			this.code = code;
-		}
+        XrancPdu pdu = new XrancPdu();
+        pdu.setBody(body);
+        pdu.setHdr(hdr);
 
-		public List<PCIARFCN> getPCIARFCN() {
-			if (seqOf == null) {
-				seqOf = new ArrayList<PCIARFCN>();
-			}
-			return seqOf;
-		}
+        return pdu;
 
-		public int encode(BerByteArrayOutputStream os) throws IOException {
-			return encode(os, true);
-		}
+    }
 
-		public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+    public CRNTI getCrnti() {
+        return crnti;
+    }
 
-			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
-				}
-				if (withTag) {
-					return tag.encode(os) + code.length;
-				}
-				return code.length;
-			}
+    public void setCrnti(CRNTI crnti) {
+        this.crnti = crnti;
+    }
 
-			int codeLength = 0;
-			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
-			}
+    public ECGI getEcgi() {
+        return ecgi;
+    }
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+    public void setEcgi(ECGI ecgi) {
+        this.ecgi = ecgi;
+    }
 
-			if (withTag) {
-				codeLength += tag.encode(os);
-			}
+    public ScellsInd getScellsInd() {
+        return scellsInd;
+    }
 
-			return codeLength;
-		}
+    public void setScellsInd(ScellsInd scellsInd) {
+        this.scellsInd = scellsInd;
+    }
 
-		public int decode(InputStream is) throws IOException {
-			return decode(is, true);
-		}
+    public int encode(BerByteArrayOutputStream os) throws IOException {
+        return encode(os, true);
+    }
 
-		public int decode(InputStream is, boolean withTag) throws IOException {
-			int codeLength = 0;
-			int subCodeLength = 0;
-			if (withTag) {
-				codeLength += tag.decodeAndCheck(is);
-			}
+    public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
 
-			BerLength length = new BerLength();
-			codeLength += length.decode(is);
-			int totalLength = length.val;
+        if (code != null) {
+            for (int i = code.length - 1; i >= 0; i--) {
+                os.write(code[i]);
+            }
+            if (withTag) {
+                return tag.encode(os) + code.length;
+            }
+            return code.length;
+        }
 
-			while (subCodeLength < totalLength) {
-				PCIARFCN element = new PCIARFCN();
-				subCodeLength += element.decode(is, true);
-				seqOf.add(element);
-			}
-			if (subCodeLength != totalLength) {
-				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+        int codeLength = 0;
+        codeLength += scellsInd.encode(os, false);
+        // write tag: CONTEXT_CLASS, CONSTRUCTED, 2
+        os.write(0xA2);
+        codeLength += 1;
 
-			}
-			codeLength += subCodeLength;
+        codeLength += ecgi.encode(os, false);
+        // write tag: CONTEXT_CLASS, CONSTRUCTED, 1
+        os.write(0xA1);
+        codeLength += 1;
 
-			return codeLength;
-		}
+        codeLength += crnti.encode(os, false);
+        // write tag: CONTEXT_CLASS, PRIMITIVE, 0
+        os.write(0x80);
+        codeLength += 1;
 
-		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
-		}
+        codeLength += BerLength.encodeLength(os, codeLength);
 
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			appendAsString(sb, 0);
-			return sb.toString();
-		}
+        if (withTag) {
+            codeLength += tag.encode(os);
+        }
 
-		public void appendAsString(StringBuilder sb, int indentLevel) {
+        return codeLength;
 
-			sb.append("[\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
-			if (seqOf == null) {
+    }
+
+    public int decode(InputStream is) throws IOException {
+        return decode(is, true);
+    }
+
+    public int decode(InputStream is, boolean withTag) throws IOException {
+        int codeLength = 0;
+        int subCodeLength = 0;
+        BerTag berTag = new BerTag();
+
+        if (withTag) {
+            codeLength += tag.decodeAndCheck(is);
+        }
+
+        BerLength length = new BerLength();
+        codeLength += length.decode(is);
+
+        int totalLength = length.val;
+        codeLength += totalLength;
+
+        subCodeLength += berTag.decode(is);
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
+            crnti = new CRNTI();
+            subCodeLength += crnti.decode(is, false);
+            subCodeLength += berTag.decode(is);
+        } else {
+            throw new IOException("Tag does not match the mandatory sequence element tag.");
+        }
+
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
+            ecgi = new ECGI();
+            subCodeLength += ecgi.decode(is, false);
+            subCodeLength += berTag.decode(is);
+        } else {
+            throw new IOException("Tag does not match the mandatory sequence element tag.");
+        }
+
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
+            scellsInd = new ScellsInd();
+            subCodeLength += scellsInd.decode(is, false);
+            if (subCodeLength == totalLength) {
+                return codeLength;
+            }
+        }
+        throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
+
+
+    }
+
+    public void encodeAndSave(int encodingSizeGuess) throws IOException {
+        BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+        encode(os, false);
+        code = os.getArray();
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        appendAsString(sb, 0);
+        return sb.toString();
+    }
+
+    public void appendAsString(StringBuilder sb, int indentLevel) {
+
+        sb.append("{");
+        sb.append("\n");
+        for (int i = 0; i < indentLevel + 1; i++) {
+            sb.append("\t");
+        }
+        if (crnti != null) {
+            sb.append("\"crnti\": ").append(crnti);
+        }
+
+        sb.append(",\n");
+        for (int i = 0; i < indentLevel + 1; i++) {
+            sb.append("\t");
+        }
+        if (ecgi != null) {
+            sb.append("\"ecgi\": ");
+            ecgi.appendAsString(sb, indentLevel + 1);
+        }
+
+        sb.append(",\n");
+        for (int i = 0; i < indentLevel + 1; i++) {
+            sb.append("\t");
+        }
+        if (scellsInd != null) {
+            sb.append("\"scellsInd\": ");
+            scellsInd.appendAsString(sb, indentLevel + 1);
+        }
+
+        sb.append("\n");
+        for (int i = 0; i < indentLevel; i++) {
+            sb.append("\t");
+        }
+        sb.append("}");
+    }
+
+    public static class ScellsInd implements Serializable {
+
+        public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+        private static final long serialVersionUID = 1L;
+        public byte[] code = null;
+        private List<PCIARFCN> seqOf = null;
+
+        public ScellsInd() {
+            seqOf = new ArrayList<PCIARFCN>();
+        }
+
+        public ScellsInd(byte[] code) {
+            this.code = code;
+        }
+
+        public List<PCIARFCN> getPCIARFCN() {
+            if (seqOf == null) {
+                seqOf = new ArrayList<PCIARFCN>();
+            }
+            return seqOf;
+        }
+
+        public int encode(BerByteArrayOutputStream os) throws IOException {
+            return encode(os, true);
+        }
+
+        public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+
+            if (code != null) {
+                for (int i = code.length - 1; i >= 0; i--) {
+                    os.write(code[i]);
+                }
+                if (withTag) {
+                    return tag.encode(os) + code.length;
+                }
+                return code.length;
+            }
+
+            int codeLength = 0;
+            for (int i = (seqOf.size() - 1); i >= 0; i--) {
+                codeLength += seqOf.get(i).encode(os, true);
+            }
+
+            codeLength += BerLength.encodeLength(os, codeLength);
+
+            if (withTag) {
+                codeLength += tag.encode(os);
+            }
+
+            return codeLength;
+        }
+
+        public int decode(InputStream is) throws IOException {
+            return decode(is, true);
+        }
+
+        public int decode(InputStream is, boolean withTag) throws IOException {
+            int codeLength = 0;
+            int subCodeLength = 0;
+            if (withTag) {
+                codeLength += tag.decodeAndCheck(is);
+            }
+
+            BerLength length = new BerLength();
+            codeLength += length.decode(is);
+            int totalLength = length.val;
+
+            while (subCodeLength < totalLength) {
+                PCIARFCN element = new PCIARFCN();
+                subCodeLength += element.decode(is, true);
+                seqOf.add(element);
+            }
+            if (subCodeLength != totalLength) {
+                throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+
+            }
+            codeLength += subCodeLength;
+
+            return codeLength;
+        }
+
+        public void encodeAndSave(int encodingSizeGuess) throws IOException {
+            BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+            encode(os, false);
+            code = os.getArray();
+        }
+
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            appendAsString(sb, 0);
+            return sb.toString();
+        }
+
+        public void appendAsString(StringBuilder sb, int indentLevel) {
+
+            sb.append("[\n");
+            for (int i = 0; i < indentLevel + 1; i++) {
+                sb.append("\t");
+            }
+            if (seqOf == null) {
 //				sb.append("null");
-			}
-			else {
-				Iterator<PCIARFCN> it = seqOf.iterator();
-				if (it.hasNext()) {
-					it.next().appendAsString(sb, indentLevel + 1);
-					while (it.hasNext()) {
-						sb.append(",\n");
-						for (int i = 0; i < indentLevel + 1; i++) {
-							sb.append("\t");
-						}
-						it.next().appendAsString(sb, indentLevel + 1);
-					}
-				}
-			}
+            } else {
+                Iterator<PCIARFCN> it = seqOf.iterator();
+                if (it.hasNext()) {
+                    it.next().appendAsString(sb, indentLevel + 1);
+                    while (it.hasNext()) {
+                        sb.append(",\n");
+                        for (int i = 0; i < indentLevel + 1; i++) {
+                            sb.append("\t");
+                        }
+                        it.next().appendAsString(sb, indentLevel + 1);
+                    }
+                }
+            }
 
-			sb.append("\n");
-			for (int i = 0; i < indentLevel; i++) {
-				sb.append("\t");
-			}
-			sb.append("]");
-		}
+            sb.append("\n");
+            for (int i = 0; i < indentLevel; i++) {
+                sb.append("\t");
+            }
+            sb.append("]");
+        }
 
-	}
-
-	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-
-	public byte[] code = null;
-	private CRNTI crnti = null;
-	private ECGI ecgi = null;
-	private ScellsInd scellsInd = null;
-	
-	public ScellDelete() {
-	}
-
-	public ScellDelete(byte[] code) {
-		this.code = code;
-	}
-
-	public void setCrnti(CRNTI crnti) {
-		this.crnti = crnti;
-	}
-
-	public CRNTI getCrnti() {
-		return crnti;
-	}
-
-	public void setEcgi(ECGI ecgi) {
-		this.ecgi = ecgi;
-	}
-
-	public ECGI getEcgi() {
-		return ecgi;
-	}
-
-	public void setScellsInd(ScellsInd scellsInd) {
-		this.scellsInd = scellsInd;
-	}
-
-	public ScellsInd getScellsInd() {
-		return scellsInd;
-	}
-
-	public int encode(BerByteArrayOutputStream os) throws IOException {
-		return encode(os, true);
-	}
-
-	public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
-
-		if (code != null) {
-			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
-			}
-			if (withTag) {
-				return tag.encode(os) + code.length;
-			}
-			return code.length;
-		}
-
-		int codeLength = 0;
-		codeLength += scellsInd.encode(os, false);
-		// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
-		os.write(0xA2);
-		codeLength += 1;
-		
-		codeLength += ecgi.encode(os, false);
-		// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
-		os.write(0xA1);
-		codeLength += 1;
-		
-		codeLength += crnti.encode(os, false);
-		// write tag: CONTEXT_CLASS, PRIMITIVE, 0
-		os.write(0x80);
-		codeLength += 1;
-		
-		codeLength += BerLength.encodeLength(os, codeLength);
-
-		if (withTag) {
-			codeLength += tag.encode(os);
-		}
-
-		return codeLength;
-
-	}
-
-	public int decode(InputStream is) throws IOException {
-		return decode(is, true);
-	}
-
-	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
-		int subCodeLength = 0;
-		BerTag berTag = new BerTag();
-
-		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
-		}
-
-		BerLength length = new BerLength();
-		codeLength += length.decode(is);
-
-		int totalLength = length.val;
-		codeLength += totalLength;
-
-		subCodeLength += berTag.decode(is);
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
-			crnti = new CRNTI();
-			subCodeLength += crnti.decode(is, false);
-			subCodeLength += berTag.decode(is);
-		}
-		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
-			ecgi = new ECGI();
-			subCodeLength += ecgi.decode(is, false);
-			subCodeLength += berTag.decode(is);
-		}
-		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
-			scellsInd = new ScellsInd();
-			subCodeLength += scellsInd.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
-			}
-		}
-		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
-
-		
-	}
-
-	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
-	}
-
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		appendAsString(sb, 0);
-		return sb.toString();
-	}
-
-	public void appendAsString(StringBuilder sb, int indentLevel) {
-
-		sb.append("{");
-		sb.append("\n");
-		for (int i = 0; i < indentLevel + 1; i++) {
-			sb.append("\t");
-		}
-		if (crnti != null) {
-			sb.append("\"crnti\": ").append(crnti);
-		}
-		
-		sb.append(",\n");
-		for (int i = 0; i < indentLevel + 1; i++) {
-			sb.append("\t");
-		}
-		if (ecgi != null) {
-			sb.append("\"ecgi\": ");
-			ecgi.appendAsString(sb, indentLevel + 1);
-		}
-		
-		sb.append(",\n");
-		for (int i = 0; i < indentLevel + 1; i++) {
-			sb.append("\t");
-		}
-		if (scellsInd != null) {
-			sb.append("\"scellsInd\": ");
-			scellsInd.appendAsString(sb, indentLevel + 1);
-		}
-		
-		sb.append("\n");
-		for (int i = 0; i < indentLevel; i++) {
-			sb.append("\t");
-		}
-		sb.append("}");
-	}
+        public void addPCIARFCN(PCIARFCN pciarfcn) {
+            seqOf.add(pciarfcn);
+        }
+    }
 
 }
 

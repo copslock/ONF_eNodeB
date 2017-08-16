@@ -4,16 +4,18 @@
 
 package codecs.pdu;
 
-import codecs.api.AdmEstResponse;
-import codecs.api.CRNTI;
-import codecs.api.ECGI;
 import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
+import codecs.api.AdmEstResponse;
+import codecs.api.CRNTI;
+import codecs.api.ECGI;
+import org.openmuc.jasn1.ber.types.string.BerUTF8String;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 
 public class UEAdmissionResponse implements Serializable {
 
@@ -194,6 +196,34 @@ public class UEAdmissionResponse implements Serializable {
 			sb.append("\t");
 		}
 		sb.append("}");
+	}
+
+	public static XrancPdu constructPacket(ECGI ecgi, CRNTI crnti, boolean b) {
+		AdmEstResponse response = new AdmEstResponse(b ? 0 : 1);
+
+		UEAdmissionResponse ueAdmissionResponse = new UEAdmissionResponse();
+		ueAdmissionResponse.setCrnti(crnti);
+		ueAdmissionResponse.setEcgi(ecgi);
+		ueAdmissionResponse.setAdmEstResponse(response);
+
+		XrancPduBody body = new XrancPduBody();
+		body.setUEAdmissionResponse(ueAdmissionResponse);
+
+		BerUTF8String ver = null;
+		try {
+			ver = new BerUTF8String("3");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		XrancApiID apiID = new XrancApiID(3);
+		XrancPduHdr hdr = new XrancPduHdr();
+		hdr.setVer(ver);
+		hdr.setApiId(apiID);
+
+		XrancPdu pdu = new XrancPdu();
+		pdu.setHdr(hdr);
+		pdu.setBody(body);
+		return pdu;
 	}
 
 }

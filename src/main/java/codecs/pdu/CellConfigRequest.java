@@ -4,14 +4,16 @@
 
 package codecs.pdu;
 
-import codecs.api.ECGI;
 import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
+import codecs.api.ECGI;
+import org.openmuc.jasn1.ber.types.string.BerUTF8String;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 
 public class CellConfigRequest implements Serializable {
 
@@ -130,6 +132,27 @@ public class CellConfigRequest implements Serializable {
 			sb.append("\t");
 		}
 		sb.append("}");
+	}
+
+	public static XrancPdu constructPacket(ECGI ecgi) throws UnsupportedEncodingException {
+		CellConfigRequest cellConfigRequest = new CellConfigRequest();
+		cellConfigRequest.setEcgi(ecgi);
+
+		BerUTF8String ver = new BerUTF8String("3");
+
+		XrancApiID apiID = new XrancApiID(0);
+		XrancPduBody body = new XrancPduBody();
+		body.setCellConfigRequest(cellConfigRequest);
+
+		XrancPduHdr hdr = new XrancPduHdr();
+		hdr.setVer(ver);
+		hdr.setApiId(apiID);
+
+		XrancPdu pdu = new XrancPdu();
+		pdu.setBody(body);
+		pdu.setHdr(hdr);
+
+		return pdu;
 	}
 
 }

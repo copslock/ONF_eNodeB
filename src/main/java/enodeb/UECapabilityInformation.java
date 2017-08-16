@@ -69,7 +69,7 @@ public class UECapabilityInformation {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        XrancApiID apiID = new XrancApiID(13);
+        XrancApiID apiID = new XrancApiID(24);
         XrancPduHdr hdr = new XrancPduHdr();
         hdr.setVer(ver);
         hdr.setApiId(apiID);

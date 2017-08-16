@@ -6,16 +6,36 @@ package codecs.api;
 
 import org.openmuc.jasn1.ber.types.BerOctetString;
 
+import javax.xml.bind.DatatypeConverter;
+import java.util.Arrays;
+
 
 public class PLMNIdentity extends BerOctetString {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public PLMNIdentity() {
-	}
+    public PLMNIdentity() {
+    }
 
-	public PLMNIdentity(byte[] value) {
-		super(value);
-	}
+    public PLMNIdentity(byte[] value) {
+        super(value);
+    }
 
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(value);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof PLMNIdentity) {
+            return Arrays.equals(value, ((PLMNIdentity) obj).value);
+        }
+        return super.equals(obj);
+    }
+
+    @Override
+    public String toString() {
+        return "\"" + DatatypeConverter.printHexBinary(value) + "\"";
+    }
 }

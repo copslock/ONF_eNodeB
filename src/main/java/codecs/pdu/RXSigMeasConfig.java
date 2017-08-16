@@ -8,10 +8,12 @@ import codecs.api.*;
 import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
+import org.openmuc.jasn1.ber.types.string.BerUTF8String;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -387,6 +389,38 @@ public class RXSigMeasConfig implements Serializable {
 			sb.append("\t");
 		}
 		sb.append("}");
+	}
+
+	public static XrancPdu constructPacket(ECGI ecgi, CRNTI crnti, RXSigMeasConfig.MeasCells measCells, int interval) {
+		RXSigRepQty rxSigRepQty = new RXSigRepQty(2);
+		RXSigMeasRepInterval repInterval = new RXSigMeasRepInterval(interval);
+
+		RXSigMeasConfig sigMeasConfig = new RXSigMeasConfig();
+		sigMeasConfig.setCrnti(crnti);
+		sigMeasConfig.setEcgi(ecgi);
+		sigMeasConfig.setReportQty(rxSigRepQty);
+		sigMeasConfig.setMeasCells(measCells);
+		sigMeasConfig.setReportInterval(repInterval);
+
+		XrancPduBody body = new XrancPduBody();
+		body.setRXSigMeasConfig(sigMeasConfig);
+
+		BerUTF8String ver = null;
+		try {
+			ver = new BerUTF8String("3");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		XrancApiID apiID = new XrancApiID(15);
+		XrancPduHdr hdr = new XrancPduHdr();
+		hdr.setVer(ver);
+		hdr.setApiId(apiID);
+
+		XrancPdu pdu = new XrancPdu();
+		pdu.setHdr(hdr);
+		pdu.setBody(body);
+
+		return pdu;
 	}
 
 }

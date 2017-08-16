@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
-public class UEAttachComplete implements Serializable {
+public class UEContextUpdate implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,10 +28,10 @@ public class UEAttachComplete implements Serializable {
 	private MMEUES1APID mMEUES1APID = null;
 	private ENBUES1APID eNBUES1APID = null;
 	
-	public UEAttachComplete() {
+	public UEContextUpdate() {
 	}
 
-	public UEAttachComplete(byte[] code) {
+	public UEContextUpdate(byte[] code) {
 		this.code = code;
 	}
 

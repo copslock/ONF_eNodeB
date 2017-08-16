@@ -7,6 +7,7 @@ package codecs.api;
 import org.openmuc.jasn1.ber.types.BerInteger;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 
 
 public class ARFCNValue extends BerInteger {

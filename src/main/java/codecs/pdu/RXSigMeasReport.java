@@ -24,7 +24,7 @@ public class RXSigMeasReport implements Serializable {
 
 	public static class CellMeasReports implements Serializable {
 
-		private static final long serialVersionUID = 7L;
+		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 		public byte[] code = null;

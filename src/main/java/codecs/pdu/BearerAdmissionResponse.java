@@ -4,17 +4,17 @@
 
 package codecs.pdu;
 
-import codecs.api.CRNTI;
-import codecs.api.ECGI;
-import codecs.api.ERABResponse;
+import codecs.api.*;
 import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
 import org.openmuc.jasn1.ber.types.BerInteger;
+import org.openmuc.jasn1.ber.types.string.BerUTF8String;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 
 public class BearerAdmissionResponse implements Serializable {
 
@@ -227,6 +227,49 @@ public class BearerAdmissionResponse implements Serializable {
 			sb.append("\t");
 		}
 		sb.append("}");
+	}
+
+	public static XrancPdu constructPacket(ECGI ecgi, CRNTI crnti, ERABParams erabParams, BerInteger numParams, boolean b) {
+		ERABResponse erabResponse = new ERABResponse();
+
+		for (int i = 0; i < numParams.intValue(); i++) {
+			ERABParamsItem erabParamsItem = erabParams.getERABParamsItem().get(i);
+
+			ERABResponseItem responseItem = new ERABResponseItem();
+			responseItem.setId(erabParamsItem.getId());
+
+			// FIXME: add logic
+			responseItem.setDecision(new ERABDecision(b ? 0 : 1));
+
+			erabResponse.setERABResponse(responseItem);
+		}
+
+
+		BearerAdmissionResponse bearerAdmissionResponse = new BearerAdmissionResponse();
+		bearerAdmissionResponse.setCrnti(crnti);
+		bearerAdmissionResponse.setEcgi(ecgi);
+		bearerAdmissionResponse.setErabResponse(erabResponse);
+		bearerAdmissionResponse.setNumErabList(numParams);
+
+		XrancPduBody body = new XrancPduBody();
+		body.setBearerAdmissionResponse(bearerAdmissionResponse);
+
+		BerUTF8String ver = null;
+		try {
+			ver = new BerUTF8String("3");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		XrancApiID apiID = new XrancApiID(9);
+		XrancPduHdr hdr = new XrancPduHdr();
+		hdr.setVer(ver);
+		hdr.setApiId(apiID);
+
+		XrancPdu pdu = new XrancPdu();
+		pdu.setHdr(hdr);
+		pdu.setBody(body);
+
+		return pdu;
 	}
 
 }

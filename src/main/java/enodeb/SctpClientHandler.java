@@ -13,7 +13,6 @@ import samplemessages.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Random;
 
 public class SctpClientHandler extends ChannelInboundHandlerAdapter {
 
@@ -27,17 +26,17 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws IOException {
-        Random rand = new Random();
-        byte[] bytes = new byte[2];
-        new Random().nextBytes(bytes);
+        byte[] bytes = new byte[]{
+                (byte) 0x00, (byte) 0x01
+        };
         crnti = new CRNTI(bytes, 16);
 
-        mmeues1APID = new MMEUES1APID(rand.nextInt(99999) * 10);
-        enbues1APID = new ENBUES1APID(rand.nextInt(99999) * 10);
+        mmeues1APID = new MMEUES1APID(1);
+        enbues1APID = new ENBUES1APID(1);
 
         pciarfcn = new PCIARFCN();
-        pciarfcn.setPci(new PhysCellId(rand.nextInt(999) * 10));
-        pciarfcn.setEarfcnDl(new ARFCNValue(rand.nextInt(999) * 10));
+        pciarfcn.setPci(new PhysCellId(1));
+        pciarfcn.setEarfcnDl(new ARFCNValue(1));
     }
 
     @Override
@@ -64,22 +63,11 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
                 XrancPdu xrancPdu = ConfigReport.constructPacket(cellConfigRequest.getEcgi(), pciarfcn);
                 ctx.writeAndFlush(getSctpMessage(xrancPdu));
 
-                //FIXME: REMOVE THIS TEST
                 xrancPdu = UEAdmRequest.constructPacket(cellConfigRequest.getEcgi(), crnti);
                 ctx.writeAndFlush(getSctpMessage(xrancPdu));
 
                 break;
             }
-//            case 2: {
-//                // We don't know what will trigger the sending of this packet.
-//                // Encode UE Admission Request.
-//
-//                UEAdmRequest ueAdmRequest = new UEAdmRequest();
-//
-//                send_pdu = ueAdmRequest.setPacketProperties();
-//                ctx.writeAndFlush(getSctpMessage(send_pdu));
-//                break;
-//            }
             case 3: {
                 // Decode UE Response
 
@@ -91,22 +79,6 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
                 // Encode UE Admission Context Update/UE Attach Complete = apiID 5
                 xrancPdu = UECtxUpdate.constructPacket(ueAdmissionResponse.getEcgi(), ueAdmissionResponse.getCrnti(), mmeues1APID, enbues1APID);
                 ctx.writeAndFlush(getSctpMessage(xrancPdu));
-
-                // TODO: uncomment
-//                int rrcConnComplete = 1;
-//                if (rrcConnComplete == 1) {
-//                    UEReconfInd ueReconfInd = new UEReconfInd();
-//                    send_pdu = ueReconfInd.setPacketProperties(recv_pdu);
-//                    // Encode UE Reconfig Ind = apiID 6
-//                    ctx.writeAndFlush(getSctpMessage(send_pdu));
-//                }
-
-                // if UE goes from RRC_ACTIVE to RRC_IDLE, send UE_RELEASE_IND from eNB to xRANc
-                // FIXME: REMOVE THIS TEST
-//                if (doIt) {
-//                    xrancPdu = UERelInd.constructPacket(ueAdmissionResponse.getEcgi(), ueAdmissionResponse.getCrnti());
-//                    ctx.writeAndFlush(getSctpMessage(xrancPdu));
-//                }
 
                 // Encode and send Bearer Admission Request.
                 xrancPdu = XranCBearerAdmReq.constructPacket(ueAdmissionResponse.getEcgi(), ueAdmissionResponse.getCrnti());
@@ -128,7 +100,7 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
                 ctx.writeAndFlush(getSctpMessage(xrancPdu));
                 break;
             }
-            case 12: {
+            case 25: {
                 // Decode UECapabilityEnquiry
                 UECapabilityEnquiry capabilityEnquiry = recv_pdu.getBody().getUECapabilityEnquiry();
 
@@ -137,7 +109,7 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
                 ctx.writeAndFlush(getSctpMessage(xrancPdu));
                 break;
             }
-            case 17: {
+            case 15: {
                 // Decode RX Signal Meas Config
                 RXSigMeasConfig rxSigMeasConfig = recv_pdu.getBody().getRXSigMeasConfig();
 
@@ -146,7 +118,7 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
                 ctx.writeAndFlush(getSctpMessage(xrancPdu));
                 break;
             }
-            case 19:
+            case 17:
                 // periodically send these packets out.
                 L2MeasConfig l2MeasConfig = recv_pdu.getBody().getL2MeasConfig();
 

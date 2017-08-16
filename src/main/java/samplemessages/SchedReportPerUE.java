@@ -171,7 +171,7 @@ public class SchedReportPerUE {
             e.printStackTrace();
         }
 
-        XrancApiID apiID = new XrancApiID(22);
+        XrancApiID apiID = new XrancApiID(20);
         XrancPduHdr hdr = new XrancPduHdr();
         hdr.setVer(ver);
         hdr.setApiId(apiID);

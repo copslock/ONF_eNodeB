@@ -164,12 +164,11 @@ public class PCIARFCN implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (o instanceof PCIARFCN) {
+			return pci.equals(((PCIARFCN) o).getPci()) && earfcnDl.equals(((PCIARFCN) o).getEarfcnDl());
+		}
 
-		PCIARFCN pciarfcn = (PCIARFCN) o;
-
-		return pci.equals(pciarfcn.pci) && earfcnDl.equals(pciarfcn.earfcnDl);
+		return super.equals(o);
 	}
 
 	@Override

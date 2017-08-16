@@ -109,7 +109,7 @@ public class SchedReportPerCell {
             e.printStackTrace();
         }
 
-        XrancApiID apiID = new XrancApiID(23);
+        XrancApiID apiID = new XrancApiID(21);
         XrancPduHdr hdr = new XrancPduHdr();
         hdr.setVer(ver);
         hdr.setApiId(apiID);

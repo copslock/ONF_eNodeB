@@ -9,10 +9,12 @@ import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
 import org.openmuc.jasn1.ber.types.BerInteger;
+import org.openmuc.jasn1.ber.types.string.BerUTF8String;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 
 public class L2MeasConfig implements Serializable {
 
@@ -162,6 +164,36 @@ public class L2MeasConfig implements Serializable {
 			sb.append("\t");
 		}
 		sb.append("}");
+	}
+
+	public static XrancPdu constructPacket(ECGI ecgi, int l2MeasInterval) {
+
+		BerInteger reportIntervalMS = new BerInteger(l2MeasInterval);
+		L2MeasConfig measConfig = new L2MeasConfig();
+		measConfig.setEcgi(ecgi);
+		measConfig.setReportIntervalMs(reportIntervalMS);
+
+		BerUTF8String ver = null;
+		try {
+			ver = new BerUTF8String("3");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		XrancApiID apiID = new XrancApiID(17);
+		XrancPduBody body = new XrancPduBody();
+		body.setL2MeasConfig(measConfig);
+
+		XrancPduHdr hdr = new XrancPduHdr();
+		hdr.setVer(ver);
+		hdr.setApiId(apiID);
+
+		XrancPdu pdu = new XrancPdu();
+		pdu.setBody(body);
+		pdu.setHdr(hdr);
+
+		return pdu;
+
 	}
 
 }

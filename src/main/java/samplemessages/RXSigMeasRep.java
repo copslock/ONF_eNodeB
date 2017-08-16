@@ -88,7 +88,7 @@ public class RXSigMeasRep {
             e.printStackTrace();
         }
 
-        XrancApiID apiID = new XrancApiID(18);
+        XrancApiID apiID = new XrancApiID(16);
         XrancPduHdr hdr = new XrancPduHdr();
         hdr.setVer(ver);
         hdr.setApiId(apiID);

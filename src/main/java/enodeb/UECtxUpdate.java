@@ -19,14 +19,14 @@ public class UECtxUpdate {
         MMEUES1APID mmeues1APID = new MMEUES1APID(304549940);
         ENBUES1APID enbues1APID = new ENBUES1APID(264145);
 
-        UEAttachComplete attachComplete = new UEAttachComplete();
+        UEContextUpdate attachComplete = new UEContextUpdate();
         attachComplete.setCrnti(crnti);
         attachComplete.setEcgi(ecgi);
         attachComplete.setMMEUES1APID(mmeues1APID);
         attachComplete.setENBUES1APID(enbues1APID);
 
         XrancPduBody body = new XrancPduBody();
-        body.setUEAttachComplete(attachComplete);
+        body.setUEContextUpdate(attachComplete);
 
         BerUTF8String ver = new BerUTF8String("4");
 
@@ -44,14 +44,14 @@ public class UECtxUpdate {
     }
 
     public static XrancPdu constructPacket(ECGI ecgi, CRNTI crnti, MMEUES1APID mmeues1APID, ENBUES1APID enbues1APID) throws UnsupportedEncodingException {
-        UEAttachComplete attachComplete = new UEAttachComplete();
+        UEContextUpdate attachComplete = new UEContextUpdate();
         attachComplete.setCrnti(crnti);
         attachComplete.setEcgi(ecgi);
         attachComplete.setMMEUES1APID(mmeues1APID);
         attachComplete.setENBUES1APID(enbues1APID);
 
         XrancPduBody body = new XrancPduBody();
-        body.setUEAttachComplete(attachComplete);
+        body.setUEContextUpdate(attachComplete);
 
         BerUTF8String ver = new BerUTF8String("4");
 

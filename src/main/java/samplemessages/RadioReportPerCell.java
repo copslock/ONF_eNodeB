@@ -130,7 +130,7 @@ public class RadioReportPerCell {
             e.printStackTrace();
         }
 
-        XrancApiID apiID = new XrancApiID(21);
+        XrancApiID apiID = new XrancApiID(19);
         XrancPduHdr hdr = new XrancPduHdr();
         hdr.setVer(ver);
         hdr.setApiId(apiID);

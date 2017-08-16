@@ -158,7 +158,7 @@ public class ConfigReport {
         cellConfigReport.setMaxNumUesSchedPerTtiUl(max_num_ues_sched_per_tti_ul);
         cellConfigReport.setDlfsSchedEnable(dlfs_sched_enable);
 
-        BerUTF8String ver = new BerUTF8String("2a");
+        BerUTF8String ver = new BerUTF8String("4");
 
         XrancApiID apiID = new XrancApiID(1);
         XrancPduBody body = new XrancPduBody();

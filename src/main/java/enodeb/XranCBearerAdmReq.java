@@ -41,8 +41,8 @@ public class XranCBearerAdmReq {
         erabParamsItem1.setMbrDl(new BitRate(300));
         erabParamsItem1.setMbrUl(new BitRate(400));
 
-        erabParams.setERABParamsItem(erabParamsItem);
-        erabParams.setERABParamsItem(erabParamsItem1);
+        erabParams.addERABParamsItem(erabParamsItem);
+        erabParams.addERABParamsItem(erabParamsItem1);
 
         BearerAdmissionRequest bearerAdmissionRequest = new BearerAdmissionRequest();
         bearerAdmissionRequest.setCrnti(crnti);
@@ -99,8 +99,8 @@ public class XranCBearerAdmReq {
         erabParamsItem1.setMbrDl(new BitRate(300));
         erabParamsItem1.setMbrUl(new BitRate(400));
 
-        erabParams.setERABParamsItem(erabParamsItem);
-        erabParams.setERABParamsItem(erabParamsItem1);
+        erabParams.addERABParamsItem(erabParamsItem);
+        erabParams.addERABParamsItem(erabParamsItem1);
 
         BearerAdmissionRequest bearerAdmissionRequest = new BearerAdmissionRequest();
         bearerAdmissionRequest.setCrnti(crnti);
