@@ -55,8 +55,7 @@ public class SctpClient {
         workerGroup = new NioEventLoopGroup();
         Bootstrap b = new Bootstrap();
         b.group(workerGroup)
-                .channel(NioSctpChannel.class)
-                .option(SctpChannelOption.SCTP_NODELAY, true);
+                .channel(NioSctpChannel.class);
         return b;
     }
 

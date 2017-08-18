@@ -32,7 +32,7 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
 
     public SctpClientHandler(String host_l) {
         char lastChar = host_l.charAt(host_l.length() - 1);
-        byte[] bytes = new byte[]{(byte) 0xFF, (byte) lastChar};
+        byte[] bytes = new byte[]{(byte) 0xFF, (byte) 0xFF};
         crnti = new CRNTI(bytes, 16);
 
         mmeues1APID = new MMEUES1APID(Integer.valueOf(lastChar));
