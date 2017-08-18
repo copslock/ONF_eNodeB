@@ -8,11 +8,17 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.sctp.SctpMessage;
 import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
+import org.openmuc.jasn1.ber.types.string.BerUTF8String;
 import samplemessages.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SctpClientHandler extends ChannelInboundHandlerAdapter {
 
@@ -22,21 +28,24 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
 
     private PCIARFCN pciarfcn;
 
-//    private static boolean doIt = true;
+    private ECGI ecgi;
+
+    public SctpClientHandler(String host_l) {
+        char lastChar = host_l.charAt(host_l.length() - 1);
+        byte[] bytes = new byte[]{(byte) 0xFF, (byte) lastChar};
+        crnti = new CRNTI(bytes, 16);
+
+        mmeues1APID = new MMEUES1APID(Integer.valueOf(lastChar));
+        enbues1APID = new ENBUES1APID(Integer.valueOf(lastChar));
+
+        pciarfcn = new PCIARFCN();
+        pciarfcn.setPci(new PhysCellId(Integer.valueOf(lastChar)));
+        pciarfcn.setEarfcnDl(new ARFCNValue(Integer.valueOf(lastChar)));
+    }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws IOException {
-        byte[] bytes = new byte[]{
-                (byte) 0xFF, (byte) 0xFF
-        };
-        crnti = new CRNTI(bytes, 16);
 
-        mmeues1APID = new MMEUES1APID(12345);
-        enbues1APID = new ENBUES1APID(54321);
-
-        pciarfcn = new PCIARFCN();
-        pciarfcn.setPci(new PhysCellId(1));
-        pciarfcn.setEarfcnDl(new ARFCNValue(1));
     }
 
     @Override
@@ -59,6 +68,8 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
                 // Decoded CellConfigRequest.
                 CellConfigRequest cellConfigRequest = recv_pdu.getBody().getCellConfigRequest();
                 // Send encoded CellConfigResponse.
+
+                this.ecgi = cellConfigRequest.getEcgi();
 
                 XrancPdu xrancPdu = ConfigReport.constructPacket(cellConfigRequest.getEcgi(), pciarfcn);
                 ctx.writeAndFlush(getSctpMessage(xrancPdu));
@@ -114,29 +125,116 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
                 RXSigMeasConfig rxSigMeasConfig = recv_pdu.getBody().getRXSigMeasConfig();
 
                 // Encode and send RX Sig Meas Report
-                XrancPdu xrancPdu = RXSigMeasRep.constructPacket(rxSigMeasConfig.getEcgi(), rxSigMeasConfig.getCrnti(), rxSigMeasConfig.getMeasCells());
-                ctx.writeAndFlush(getSctpMessage(xrancPdu));
+
+                Timer timer = new Timer();
+                timer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            XrancPdu xrancPdu = RXSigMeasRep.constructPacket(rxSigMeasConfig.getEcgi(), rxSigMeasConfig.getCrnti(), rxSigMeasConfig.getMeasCells());
+                            ctx.writeAndFlush(getSctpMessage(xrancPdu));
+                        } catch (IOException ignored) {
+                        }
+                    }
+                }, rxSigMeasConfig.getReportInterval().intValue(), rxSigMeasConfig.getReportInterval().intValue());
                 break;
             }
             case 17:
                 // periodically send these packets out.
                 L2MeasConfig l2MeasConfig = recv_pdu.getBody().getL2MeasConfig();
 
-                XrancPdu xrancPdu = RadioReportPerUE.constructPacket(l2MeasConfig.getEcgi(), crnti);
-                ctx.writeAndFlush(getSctpMessage(xrancPdu));
+                Timer timer = new Timer();
+                timer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            XrancPdu xrancPdu = RadioReportPerUE.constructPacket(l2MeasConfig.getEcgi(), crnti, pciarfcn);
+                            ctx.writeAndFlush(getSctpMessage(xrancPdu));
 
-                xrancPdu = RadioReportPerCell.constructPacket(l2MeasConfig.getEcgi());
-                ctx.writeAndFlush(getSctpMessage(xrancPdu));
+                            xrancPdu = RadioReportPerCell.constructPacket(l2MeasConfig.getEcgi());
+                            ctx.writeAndFlush(getSctpMessage(xrancPdu));
 
-                xrancPdu = SchedReportPerUE.constructPacket(l2MeasConfig.getEcgi(), crnti, pciarfcn);
-                ctx.writeAndFlush(getSctpMessage(xrancPdu));
+                            xrancPdu = SchedReportPerUE.constructPacket(l2MeasConfig.getEcgi(), crnti, pciarfcn);
+                            ctx.writeAndFlush(getSctpMessage(xrancPdu));
 
-                xrancPdu = SchedReportPerCell.constructPacket(l2MeasConfig.getEcgi());
-                ctx.writeAndFlush(getSctpMessage(xrancPdu));
+                            xrancPdu = SchedReportPerCell.constructPacket(l2MeasConfig.getEcgi());
+                            ctx.writeAndFlush(getSctpMessage(xrancPdu));
 
-                xrancPdu = PDCPReportPerUE.constructPacket(l2MeasConfig.getEcgi(), crnti);
-                ctx.writeAndFlush(getSctpMessage(xrancPdu));
+                            xrancPdu = PDCPReportPerUE.constructPacket(l2MeasConfig.getEcgi(), crnti);
+                            ctx.writeAndFlush(getSctpMessage(xrancPdu));
+                        } catch (Exception ignored) {
+                        }
+                    }
+                }, l2MeasConfig.getReportIntervalMs().intValue(), l2MeasConfig.getReportIntervalMs().intValue());
+
                 break;
+
+            case 12: {
+                HORequest hoRequest = recv_pdu.getBody().getHORequest();
+
+                if (hoRequest.getEcgiT().equals(this.ecgi)) {
+                    HOComplete hoComplete = new HOComplete();
+
+                    hoComplete.setEcgiS(hoRequest.getEcgiS());
+                    hoComplete.setEcgiT(this.ecgi);
+
+                    Random random = new Random();
+                    crnti.code[0] = (byte) random.nextInt();
+
+                    hoComplete.setCrntiNew(crnti);
+
+                    XrancPduBody body = new XrancPduBody();
+                    body.setHOComplete(hoComplete);
+
+                    BerUTF8String ver = null;
+                    try {
+                        ver = new BerUTF8String("4");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
+                    XrancApiID sentapiID = new XrancApiID(14);
+                    XrancPduHdr hdr = new XrancPduHdr();
+                    hdr.setVer(ver);
+                    hdr.setApiId(sentapiID);
+
+                    XrancPdu pdu = new XrancPdu();
+                    pdu.setHdr(hdr);
+                    pdu.setBody(body);
+
+                    ctx.writeAndFlush(pdu);
+                } else {
+                    UEReleaseInd ueReleaseInd = new UEReleaseInd();
+                    ueReleaseInd.setCrnti(hoRequest.getCrnti());
+                    ueReleaseInd.setEcgi(hoRequest.getEcgiS());
+
+                    RelCause relCause = new RelCause(BigInteger.valueOf(0));
+                    ueReleaseInd.setReleaseCause(relCause);
+
+                    XrancPduBody body = new XrancPduBody();
+                    body.setUEReleaseInd(ueReleaseInd);
+
+                    BerUTF8String ver = null;
+                    try {
+                        ver = new BerUTF8String("4");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
+                    XrancApiID sentapiID = new XrancApiID(7);
+                    XrancPduHdr hdr = new XrancPduHdr();
+                    hdr.setVer(ver);
+                    hdr.setApiId(sentapiID);
+
+                    XrancPdu pdu = new XrancPdu();
+                    pdu.setHdr(hdr);
+                    pdu.setBody(body);
+
+                    ctx.writeAndFlush(pdu);
+                }
+
+                break;
+            }
         }
 
     }

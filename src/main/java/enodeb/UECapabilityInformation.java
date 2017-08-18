@@ -49,16 +49,10 @@ public class UECapabilityInformation {
     }
 
     public static XrancPdu constructPacket(ECGI ecgi, CRNTI crnti) {
-        CACap caCap = new CACap();
-        caCap.setBand(new BerInteger(100));
-        caCap.setCaclassdl(new BerEnum('a'));
-        caCap.setCaclassul(new BerEnum('b'));
-        caCap.setCrossCarrierSched(new BerBoolean(true));
-
         UECapabilityInfo capabilityInfo = new UECapabilityInfo();
         capabilityInfo.setCrnti(crnti);
         capabilityInfo.setEcgi(ecgi);
-        capabilityInfo.setCaCap(caCap);
+
 
         XrancPduBody body = new XrancPduBody();
         body.setUECapabilityInfo(capabilityInfo);

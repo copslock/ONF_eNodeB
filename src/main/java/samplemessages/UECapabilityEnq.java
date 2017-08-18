@@ -35,34 +35,4 @@ public class UECapabilityEnq {
         return pdu;
     }
 
-    public XrancPdu setPacketProperties(XrancPdu mainDecoder) {
-        CRNTI crnti = mainDecoder.getBody().getUECapabilityEnquiry().getCrnti();
-
-        //TODO: ECGI Value has to be read as CELL ID.
-        ECGI ecgi = mainDecoder.getBody().getUECapabilityEnquiry().getEcgi();
-
-        UECapabilityEnquiry capabilityEnquiry = new UECapabilityEnquiry();
-        capabilityEnquiry.setCrnti(crnti);
-        capabilityEnquiry.setEcgi(ecgi);
-
-        XrancPduBody body = new XrancPduBody();
-        body.setUECapabilityEnquiry(capabilityEnquiry);
-
-        BerUTF8String ver = null;
-        try {
-            ver = new BerUTF8String("4");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        XrancApiID apiID = new XrancApiID(12);
-        XrancPduHdr hdr = new XrancPduHdr();
-        hdr.setVer(ver);
-        hdr.setApiId(apiID);
-
-        XrancPdu pdu = new XrancPdu();
-        pdu.setHdr(hdr);
-        pdu.setBody(body);
-
-        return pdu;
-    }
 }

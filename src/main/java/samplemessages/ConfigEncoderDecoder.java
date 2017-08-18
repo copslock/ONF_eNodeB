@@ -48,38 +48,7 @@ public class ConfigEncoderDecoder {
         CellConfigRequest cellConfigRequest = new CellConfigRequest();
         cellConfigRequest.setEcgi(ecgi);
 
-        BerUTF8String ver = new BerUTF8String("2a");
-
-        XrancApiID apiID = new XrancApiID(0);
-        XrancPduBody body = new XrancPduBody();
-        body.setCellConfigRequest(cellConfigRequest);
-
-        XrancPduHdr hdr = new XrancPduHdr();
-        hdr.setVer(ver);
-        hdr.setApiId(apiID);
-
-        XrancPdu pdu = new XrancPdu();
-        pdu.setBody(body);
-        pdu.setHdr(hdr);
-
-        return pdu;
-    }
-
-    public XrancPdu setPacketProperties() throws UnsupportedEncodingException {
-        PLMNIdentity plmnIdentity = new PLMNIdentity(new byte[]{(byte) 0x22, (byte) 0x08, (byte) 0x41});
-        EUTRANCellIdentifier eutranCellIdentifier = new EUTRANCellIdentifier(new byte[]{
-                (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xF0
-        }, 28);
-
-        ECGI ecgi = new ECGI();
-
-        ecgi.setPLMNIdentity(plmnIdentity);
-        ecgi.setEUTRANcellIdentifier(eutranCellIdentifier);
-
-        CellConfigRequest cellConfigRequest = new CellConfigRequest();
-        cellConfigRequest.setEcgi(ecgi);
-
-        BerUTF8String ver = new BerUTF8String("2a");
+        BerUTF8String ver = new BerUTF8String("4");
 
         XrancApiID apiID = new XrancApiID(0);
         XrancPduBody body = new XrancPduBody();

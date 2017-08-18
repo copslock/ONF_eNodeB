@@ -21,7 +21,7 @@ public class L2MeasConf {
 
         BerUTF8String ver = null;
         try {
-            ver = new BerUTF8String("2a");
+            ver = new BerUTF8String("4");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -40,42 +40,5 @@ public class L2MeasConf {
 
         return pdu;
 
-    }
-
-    public XrancPdu setPacketProperties() {
-        PLMNIdentity plmnIdentity = new PLMNIdentity(new byte[]{(byte) 0x22, (byte) 0x08, (byte) 0x41});
-        EUTRANCellIdentifier eutranCellIdentifier = new EUTRANCellIdentifier(new byte[]{
-                (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xF0
-        }, 28);
-
-        ECGI ecgi = new ECGI();
-        ecgi.setPLMNIdentity(plmnIdentity);
-        ecgi.setEUTRANcellIdentifier(eutranCellIdentifier);
-
-        BerInteger reportIntervalMS = new BerInteger(10);
-        L2MeasConfig measConfig = new L2MeasConfig();
-        measConfig.setEcgi(ecgi);
-        measConfig.setReportIntervalMs(reportIntervalMS);
-
-        BerUTF8String ver = null;
-        try {
-            ver = new BerUTF8String("2a");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        XrancApiID apiID = new XrancApiID(19);
-        XrancPduBody body = new XrancPduBody();
-        body.setL2MeasConfig(measConfig);
-
-        XrancPduHdr hdr = new XrancPduHdr();
-        hdr.setVer(ver);
-        hdr.setApiId(apiID);
-
-        XrancPdu pdu = new XrancPdu();
-        pdu.setBody(body);
-        pdu.setHdr(hdr);
-
-        return pdu;
     }
 }
