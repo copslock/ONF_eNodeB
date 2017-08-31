@@ -14,12 +14,14 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.io.Serializable;
 
+
+
 import codecs.api.CRNTI;
 import codecs.api.ECGI;
 import codecs.api.QCI;
-import org.openmuc.jasn1.ber.*;
-import org.openmuc.jasn1.ber.types.*;
-import org.openmuc.jasn1.ber.types.string.*;
+import codecs.ber.*;
+import codecs.ber.types.*;
+import codecs.ber.types.string.*;
 
 
 
@@ -32,6 +34,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 		public byte[] code = null;
 		private List<QCI> seqOf = null;
 
@@ -42,6 +45,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 		public QciVals(byte[] code) {
 			this.code = code;
 		}
+
 
 		public List<QCI> getQCI() {
 			if (seqOf == null) {
@@ -161,7 +165,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public DataVolDl() {
@@ -172,7 +176,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -290,7 +294,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public DataVolUl() {
@@ -301,7 +305,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -419,7 +423,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public PktDelayDl() {
@@ -430,7 +434,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -548,7 +552,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public PktDelayUl() {
@@ -559,7 +563,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -677,7 +681,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public PktDiscardRateDl() {
@@ -688,7 +692,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -806,7 +810,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public PktLossRateDl() {
@@ -817,7 +821,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -935,7 +939,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public PktLossRateUl() {
@@ -946,7 +950,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -1064,7 +1068,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public ThroughputDl() {
@@ -1075,7 +1079,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -1193,7 +1197,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public ThroughputUl() {
@@ -1203,6 +1207,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 		public ThroughputUl(byte[] code) {
 			this.code = code;
 		}
+
 
 		public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
@@ -1319,7 +1324,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	 public byte[] code = null;
 	private ECGI ecgi = null;
 	private CRNTI crnti = null;
 	private QciVals qciVals = null;
@@ -1674,7 +1679,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			sb.append("\t");
 		}
 		if (ecgi != null) {
-			sb.append("\"ecgi\": ");
+			sb.append("ecgi: ");
 			ecgi.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1683,7 +1688,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			sb.append("\t");
 		}
 		if (crnti != null) {
-			sb.append("\"crnti\": ").append(crnti);
+			sb.append("crnti: ").append(crnti);
 		}
 		
 		sb.append(",\n");
@@ -1691,7 +1696,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			sb.append("\t");
 		}
 		if (qciVals != null) {
-			sb.append("\"qciVals\": ");
+			sb.append("qciVals: ");
 			qciVals.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1700,7 +1705,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			sb.append("\t");
 		}
 		if (dataVolDl != null) {
-			sb.append("\"dataVolDl\": ");
+			sb.append("dataVolDl: ");
 			dataVolDl.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1709,7 +1714,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			sb.append("\t");
 		}
 		if (dataVolUl != null) {
-			sb.append("\"dataVolUl\": ");
+			sb.append("dataVolUl: ");
 			dataVolUl.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1718,7 +1723,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			sb.append("\t");
 		}
 		if (pktDelayDl != null) {
-			sb.append("\"pktDelayDl\": ");
+			sb.append("pktDelayDl: ");
 			pktDelayDl.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1727,7 +1732,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			sb.append("\t");
 		}
 		if (pktDelayUl != null) {
-			sb.append("\"pktDelayUl\": ");
+			sb.append("pktDelayUl: ");
 			pktDelayUl.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1736,7 +1741,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			sb.append("\t");
 		}
 		if (pktDiscardRateDl != null) {
-			sb.append("\"pktDiscardRateDl\": ");
+			sb.append("pktDiscardRateDl: ");
 			pktDiscardRateDl.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1745,7 +1750,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			sb.append("\t");
 		}
 		if (pktLossRateDl != null) {
-			sb.append("\"pktLossRateDl\": ");
+			sb.append("pktLossRateDl: ");
 			pktLossRateDl.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1754,7 +1759,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			sb.append("\t");
 		}
 		if (pktLossRateUl != null) {
-			sb.append("\"pktLossRateUl\": ");
+			sb.append("pktLossRateUl: ");
 			pktLossRateUl.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1763,7 +1768,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			sb.append("\t");
 		}
 		if (throughputDl != null) {
-			sb.append("\"throughputDl\": ");
+			sb.append("throughputDl: ");
 			throughputDl.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1772,7 +1777,7 @@ public class PDCPMeasReportPerUe implements Serializable {
 			sb.append("\t");
 		}
 		if (throughputUl != null) {
-			sb.append("\"throughputUl\": ");
+			sb.append("throughputUl: ");
 			throughputUl.appendAsString(sb, indentLevel + 1);
 		}
 		

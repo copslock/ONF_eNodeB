@@ -4,12 +4,14 @@
 
 package codecs.pdu;
 
+
+
 import codecs.api.CRNTI;
 import codecs.api.ECGI;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
-import org.openmuc.jasn1.ber.types.BerEnum;
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
+import codecs.ber.types.BerEnum;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +30,7 @@ public class RRMConfigStatus implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 		public byte[] code = null;
 		private List<CRNTI> seqOf = null;
 
@@ -38,6 +41,7 @@ public class RRMConfigStatus implements Serializable {
 		public Crnti(byte[] code) {
 			this.code = code;
 		}
+
 
 		public List<CRNTI> getCRNTI() {
 			if (seqOf == null) {
@@ -154,7 +158,7 @@ public class RRMConfigStatus implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerEnum> seqOf = null;
 
 		public Status() {
@@ -164,6 +168,7 @@ public class RRMConfigStatus implements Serializable {
 		public Status(byte[] code) {
 			this.code = code;
 		}
+
 
 		public List<BerEnum> getBerEnum() {
 			if (seqOf == null) {
@@ -277,7 +282,7 @@ public class RRMConfigStatus implements Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	 public byte[] code = null;
 	private ECGI ecgi = null;
 	private Crnti crnti = null;
 	private Status status = null;
@@ -424,7 +429,7 @@ public class RRMConfigStatus implements Serializable {
 			sb.append("\t");
 		}
 		if (ecgi != null) {
-			sb.append("\"ecgi\": ");
+			sb.append("ecgi: ");
 			ecgi.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -433,7 +438,7 @@ public class RRMConfigStatus implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"crnti\": ");
+			sb.append("crnti: ");
 			crnti.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -442,7 +447,7 @@ public class RRMConfigStatus implements Serializable {
 			sb.append("\t");
 		}
 		if (status != null) {
-			sb.append("\"status\": ");
+			sb.append("status: ");
 			status.appendAsString(sb, indentLevel + 1);
 		}
 		

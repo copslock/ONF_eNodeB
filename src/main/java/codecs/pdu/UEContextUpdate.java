@@ -4,13 +4,15 @@
 
 package codecs.pdu;
 
+
 import codecs.api.CRNTI;
 import codecs.api.ECGI;
 import codecs.api.ENBUES1APID;
 import codecs.api.MMEUES1APID;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
+import codecs.ber.types.string.BerUTF8String;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,215 +20,263 @@ import java.io.Serializable;
 
 public class UEContextUpdate implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1L;
 
-	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
-	private CRNTI crnti = null;
-	private ECGI ecgi = null;
-	private MMEUES1APID mMEUES1APID = null;
-	private ENBUES1APID eNBUES1APID = null;
-	
-	public UEContextUpdate() {
-	}
 
-	public UEContextUpdate(byte[] code) {
-		this.code = code;
-	}
+		public byte[] code = null;
+		private CRNTI crnti = null;
+		private ECGI ecgi = null;
+		private MMEUES1APID mMEUES1APID = null;
+		private ENBUES1APID eNBUES1APID = null;
+		private BerUTF8String imsi = null;
 
-	public void setCrnti(CRNTI crnti) {
-		this.crnti = crnti;
-	}
+		public UEContextUpdate() {
+		}
 
-	public CRNTI getCrnti() {
-		return crnti;
-	}
+		public UEContextUpdate(byte[] code) {
+			this.code = code;
+		}
 
-	public void setEcgi(ECGI ecgi) {
-		this.ecgi = ecgi;
-	}
+		public void setCrnti(CRNTI crnti) {
+			this.crnti = crnti;
+		}
 
-	public ECGI getEcgi() {
-		return ecgi;
-	}
+		public CRNTI getCrnti() {
+			return crnti;
+		}
 
-	public void setMMEUES1APID(MMEUES1APID mMEUES1APID) {
-		this.mMEUES1APID = mMEUES1APID;
-	}
+		public void setEcgi(ECGI ecgi) {
+			this.ecgi = ecgi;
+		}
 
-	public MMEUES1APID getMMEUES1APID() {
-		return mMEUES1APID;
-	}
+		public ECGI getEcgi() {
+			return ecgi;
+		}
 
-	public void setENBUES1APID(ENBUES1APID eNBUES1APID) {
-		this.eNBUES1APID = eNBUES1APID;
-	}
+		public void setMMEUES1APID(MMEUES1APID mMEUES1APID) {
+			this.mMEUES1APID = mMEUES1APID;
+		}
 
-	public ENBUES1APID getENBUES1APID() {
-		return eNBUES1APID;
-	}
+		public MMEUES1APID getMMEUES1APID() {
+			return mMEUES1APID;
+		}
 
-	public int encode(BerByteArrayOutputStream os) throws IOException {
-		return encode(os, true);
-	}
+		public void setENBUES1APID(ENBUES1APID eNBUES1APID) {
+			this.eNBUES1APID = eNBUES1APID;
+		}
 
-	public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+		public ENBUES1APID getENBUES1APID() {
+			return eNBUES1APID;
+		}
 
-		if (code != null) {
-			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+		public void setImsi(BerUTF8String imsi) {
+			this.imsi = imsi;
+		}
+
+		public BerUTF8String getImsi() {
+			return imsi;
+		}
+
+		public int encode(BerByteArrayOutputStream os) throws IOException {
+			return encode(os, true);
+		}
+
+		public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+
+			if (code != null) {
+				for (int i = code.length - 1; i >= 0; i--) {
+					os.write(code[i]);
+				}
+				if (withTag) {
+					return tag.encode(os) + code.length;
+				}
+				return code.length;
 			}
+
+			int codeLength = 0;
+			if (imsi != null) {
+				codeLength += imsi.encode(os, false);
+				// write tag: CONTEXT_CLASS, PRIMITIVE, 4
+				os.write(0x84);
+				codeLength += 1;
+			}
+
+			codeLength += eNBUES1APID.encode(os, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 3
+			os.write(0x83);
+			codeLength += 1;
+
+			codeLength += mMEUES1APID.encode(os, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 2
+			os.write(0x82);
+			codeLength += 1;
+
+			codeLength += ecgi.encode(os, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
+			os.write(0xA1);
+			codeLength += 1;
+
+			codeLength += crnti.encode(os, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 0
+			os.write(0x80);
+			codeLength += 1;
+
+			codeLength += BerLength.encodeLength(os, codeLength);
+
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				codeLength += tag.encode(os);
 			}
-			return code.length;
+
+			return codeLength;
+
 		}
 
-		int codeLength = 0;
-		codeLength += eNBUES1APID.encode(os, false);
-		// write tag: CONTEXT_CLASS, PRIMITIVE, 3
-		os.write(0x83);
-		codeLength += 1;
-		
-		codeLength += mMEUES1APID.encode(os, false);
-		// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-		os.write(0x82);
-		codeLength += 1;
-		
-		codeLength += ecgi.encode(os, false);
-		// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
-		os.write(0xA1);
-		codeLength += 1;
-		
-		codeLength += crnti.encode(os, false);
-		// write tag: CONTEXT_CLASS, PRIMITIVE, 0
-		os.write(0x80);
-		codeLength += 1;
-		
-		codeLength += BerLength.encodeLength(os, codeLength);
-
-		if (withTag) {
-			codeLength += tag.encode(os);
+		public int decode(InputStream is) throws IOException {
+			return decode(is, true);
 		}
 
-		return codeLength;
+		public int decode(InputStream is, boolean withTag) throws IOException {
+			int codeLength = 0;
+			int subCodeLength = 0;
+			BerTag berTag = new BerTag();
 
-	}
-
-	public int decode(InputStream is) throws IOException {
-		return decode(is, true);
-	}
-
-	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
-		int subCodeLength = 0;
-		BerTag berTag = new BerTag();
-
-		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
-		}
-
-		BerLength length = new BerLength();
-		codeLength += length.decode(is);
-
-		int totalLength = length.val;
-		codeLength += totalLength;
-
-		subCodeLength += berTag.decode(is);
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
-			crnti = new CRNTI();
-			subCodeLength += crnti.decode(is, false);
-			subCodeLength += berTag.decode(is);
-		}
-		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
-			ecgi = new ECGI();
-			subCodeLength += ecgi.decode(is, false);
-			subCodeLength += berTag.decode(is);
-		}
-		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
-			mMEUES1APID = new MMEUES1APID();
-			subCodeLength += mMEUES1APID.decode(is, false);
-			subCodeLength += berTag.decode(is);
-		}
-		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
-			eNBUES1APID = new ENBUES1APID();
-			subCodeLength += eNBUES1APID.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			if (withTag) {
+				codeLength += tag.decodeAndCheck(is);
 			}
-		}
-		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
-		
-	}
+			BerLength length = new BerLength();
+			codeLength += length.decode(is);
 
-	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
-	}
+			int totalLength = length.val;
+			codeLength += totalLength;
 
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		appendAsString(sb, 0);
-		return sb.toString();
-	}
+			subCodeLength += berTag.decode(is);
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
+				crnti = new CRNTI();
+				subCodeLength += crnti.decode(is, false);
+				subCodeLength += berTag.decode(is);
+			}
+			else {
+				throw new IOException("Tag does not match the mandatory sequence element tag.");
+			}
 
-	public void appendAsString(StringBuilder sb, int indentLevel) {
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
+				ecgi = new ECGI();
+				subCodeLength += ecgi.decode(is, false);
+				subCodeLength += berTag.decode(is);
+			}
+			else {
+				throw new IOException("Tag does not match the mandatory sequence element tag.");
+			}
 
-		sb.append("{");
-		sb.append("\n");
-		for (int i = 0; i < indentLevel + 1; i++) {
-			sb.append("\t");
-		}
-		if (crnti != null) {
-			sb.append("\"crnti\": ").append(crnti);
-		}
-		
-		sb.append(",\n");
-		for (int i = 0; i < indentLevel + 1; i++) {
-			sb.append("\t");
-		}
-		if (ecgi != null) {
-			sb.append("\"ecgi\": ");
-			ecgi.appendAsString(sb, indentLevel + 1);
-		}
-		
-		sb.append(",\n");
-		for (int i = 0; i < indentLevel + 1; i++) {
-			sb.append("\t");
-		}
-		if (mMEUES1APID != null) {
-			sb.append("\"mMEUES1APID\": ").append(mMEUES1APID);
-		}
-		
-		sb.append(",\n");
-		for (int i = 0; i < indentLevel + 1; i++) {
-			sb.append("\t");
-		}
-		if (eNBUES1APID != null) {
-			sb.append("\"eNBUES1APID\": ").append(eNBUES1APID);
-		}
-		
-		sb.append("\n");
-		for (int i = 0; i < indentLevel; i++) {
-			sb.append("\t");
-		}
-		sb.append("}");
-	}
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
+				mMEUES1APID = new MMEUES1APID();
+				subCodeLength += mMEUES1APID.decode(is, false);
+				subCodeLength += berTag.decode(is);
+			}
+			else {
+				throw new IOException("Tag does not match the mandatory sequence element tag.");
+			}
 
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
+				eNBUES1APID = new ENBUES1APID();
+				subCodeLength += eNBUES1APID.decode(is, false);
+				if (subCodeLength == totalLength) {
+					return codeLength;
+				}
+				subCodeLength += berTag.decode(is);
+			}
+			else {
+				throw new IOException("Tag does not match the mandatory sequence element tag.");
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 4)) {
+				imsi = new BerUTF8String();
+				subCodeLength += imsi.decode(is, false);
+				if (subCodeLength == totalLength) {
+					return codeLength;
+				}
+			}
+			throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
+
+
+		}
+
+		public void encodeAndSave(int encodingSizeGuess) throws IOException {
+			BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+			encode(os, false);
+			code = os.getArray();
+		}
+
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			appendAsString(sb, 0);
+			return sb.toString();
+		}
+
+		public void appendAsString(StringBuilder sb, int indentLevel) {
+
+			sb.append("{");
+			sb.append("\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			if (crnti != null) {
+				sb.append("crnti: ").append(crnti);
+			}
+			else {
+				sb.append("crnti: <empty-required-field>");
+			}
+
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			if (ecgi != null) {
+				sb.append("ecgi: ");
+				ecgi.appendAsString(sb, indentLevel + 1);
+			}
+			else {
+				sb.append("ecgi: <empty-required-field>");
+			}
+
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			if (mMEUES1APID != null) {
+				sb.append("mMEUES1APID: ").append(mMEUES1APID);
+			}
+			else {
+				sb.append("mMEUES1APID: <empty-required-field>");
+			}
+
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			if (eNBUES1APID != null) {
+				sb.append("eNBUES1APID: ").append(eNBUES1APID);
+			}
+			else {
+				sb.append("eNBUES1APID: <empty-required-field>");
+			}
+
+			if (imsi != null) {
+				sb.append(",\n");
+				for (int i = 0; i < indentLevel + 1; i++) {
+					sb.append("\t");
+				}
+				sb.append("imsi: ").append(imsi);
+			}
+
+			sb.append("\n");
+			for (int i = 0; i < indentLevel; i++) {
+				sb.append("\t");
+			}
+			sb.append("}");
+		}
 }
 

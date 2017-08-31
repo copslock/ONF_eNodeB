@@ -4,10 +4,10 @@ import codecs.api.CACap;
 import codecs.api.CRNTI;
 import codecs.api.ECGI;
 import codecs.pdu.*;
-import org.openmuc.jasn1.ber.types.BerBoolean;
-import org.openmuc.jasn1.ber.types.BerEnum;
-import org.openmuc.jasn1.ber.types.BerInteger;
-import org.openmuc.jasn1.ber.types.string.BerUTF8String;
+import codecs.ber.types.BerBoolean;
+import codecs.ber.types.BerEnum;
+import codecs.ber.types.BerInteger;
+import codecs.ber.types.string.BerUTF8String;
 
 import java.io.UnsupportedEncodingException;
 

@@ -3,13 +3,14 @@
  */
 package codecs.pdu;
 
+
 import codecs.api.CACap;
 import codecs.api.CRNTI;
 import codecs.api.DCCap;
 import codecs.api.ECGI;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +22,7 @@ public class UECapabilityInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 
 	public byte[] code = null;
 	private CRNTI crnti = null;
@@ -200,7 +202,7 @@ public class UECapabilityInfo implements Serializable {
 			sb.append("\t");
 		}
 		if (crnti != null) {
-			sb.append("\"crnti\": ").append(crnti);
+			sb.append("crnti: ").append(crnti);
 		}
 		
 		sb.append(",\n");
@@ -208,7 +210,7 @@ public class UECapabilityInfo implements Serializable {
 			sb.append("\t");
 		}
 		if (ecgi != null) {
-			sb.append("\"ecgi\": ");
+			sb.append("ecgi: ");
 			ecgi.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -217,7 +219,7 @@ public class UECapabilityInfo implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"caCap\": ");
+			sb.append("caCap: ");
 			caCap.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -226,7 +228,7 @@ public class UECapabilityInfo implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"dcCap\": ");
+			sb.append("dcCap: ");
 			dcCap.appendAsString(sb, indentLevel + 1);
 		}
 		

@@ -4,9 +4,10 @@
 
 package codecs.pdu;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
+
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +18,7 @@ public class XrancPdu implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 
 	public byte[] code = null;
 	private XrancPduHdr hdr = null;
@@ -148,7 +150,7 @@ public class XrancPdu implements Serializable {
 			sb.append("\t");
 		}
 		if (hdr != null) {
-			sb.append("\"hdr\": ");
+			sb.append("hdr: ");
 			hdr.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -157,7 +159,7 @@ public class XrancPdu implements Serializable {
 			sb.append("\t");
 		}
 		if (body != null) {
-			sb.append("\"body\": ");
+			sb.append("body: ");
 			body.appendAsString(sb, indentLevel + 1);
 		}
 		

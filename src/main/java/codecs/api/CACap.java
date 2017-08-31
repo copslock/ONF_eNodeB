@@ -4,12 +4,13 @@
 
 package codecs.api;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
-import org.openmuc.jasn1.ber.types.BerBoolean;
-import org.openmuc.jasn1.ber.types.BerEnum;
-import org.openmuc.jasn1.ber.types.BerInteger;
+
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
+import codecs.ber.types.BerBoolean;
+import codecs.ber.types.BerEnum;
+import codecs.ber.types.BerInteger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +22,7 @@ public class CACap implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 
 	public byte[] code = null;
 	private BerInteger band = null;
@@ -193,7 +195,7 @@ public class CACap implements Serializable {
 			sb.append("\t");
 		}
 		if (band != null) {
-			sb.append("\"band\":").append(band);
+			sb.append("band:").append(band);
 		}
 		
 		sb.append(",\n");
@@ -201,7 +203,7 @@ public class CACap implements Serializable {
 			sb.append("\t");
 		}
 		if (caclassdl != null) {
-			sb.append("\"caclassdl\":").append(caclassdl);
+			sb.append("caclassdl:").append(caclassdl);
 		}
 		
 		sb.append(",\n");
@@ -209,7 +211,7 @@ public class CACap implements Serializable {
 			sb.append("\t");
 		}
 		if (caclassul != null) {
-			sb.append("\"caclassul\":").append(caclassul);
+			sb.append("caclassul:").append(caclassul);
 		}
 		
 		sb.append(",\n");
@@ -217,7 +219,7 @@ public class CACap implements Serializable {
 			sb.append("\t");
 		}
 		if (crossCarrierSched != null) {
-			sb.append("\"crossCarrierSched\":").append(crossCarrierSched);
+			sb.append("crossCarrierSched:").append(crossCarrierSched);
 		}
 		
 		sb.append("\n");

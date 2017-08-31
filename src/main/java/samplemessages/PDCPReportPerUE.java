@@ -4,8 +4,8 @@ import codecs.api.CRNTI;
 import codecs.api.ECGI;
 import codecs.api.QCI;
 import codecs.pdu.*;
-import org.openmuc.jasn1.ber.types.BerInteger;
-import org.openmuc.jasn1.ber.types.string.BerUTF8String;
+import codecs.ber.types.BerInteger;
+import codecs.ber.types.string.BerUTF8String;
 
 import java.io.UnsupportedEncodingException;
 

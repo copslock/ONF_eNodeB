@@ -2,10 +2,10 @@ package samplemessages;
 
 import codecs.api.*;
 import codecs.pdu.*;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.types.BerBoolean;
-import org.openmuc.jasn1.ber.types.BerInteger;
-import org.openmuc.jasn1.ber.types.string.BerUTF8String;
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.types.BerBoolean;
+import codecs.ber.types.BerInteger;
+import codecs.ber.types.string.BerUTF8String;
 
 import java.io.UnsupportedEncodingException;
 
@@ -64,7 +64,7 @@ public class ConfigReport {
         cellConfigReport.setMaxNumUesSchedPerTtiUl(max_num_ues_sched_per_tti_ul);
         cellConfigReport.setDlfsSchedEnable(dlfs_sched_enable);
 
-        BerUTF8String ver = new BerUTF8String("4");
+        BerUTF8String ver = new BerUTF8String("2");
 
         XrancApiID apiID = new XrancApiID(1);
         XrancPduBody body = new XrancPduBody();

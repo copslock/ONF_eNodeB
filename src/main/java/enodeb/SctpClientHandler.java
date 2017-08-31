@@ -1,24 +1,20 @@
 package enodeb;
 
 import codecs.api.*;
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.types.string.BerUTF8String;
 import codecs.pdu.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.sctp.SctpMessage;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.types.string.BerUTF8String;
 import samplemessages.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class SctpClientHandler extends ChannelInboundHandlerAdapter {
 
@@ -126,46 +122,28 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
 
                 // Encode and send RX Sig Meas Report
 
-                Timer timer = new Timer();
-                timer.scheduleAtFixedRate(new TimerTask() {
-                    @Override
-                    public void run() {
-                        try {
-                            XrancPdu xrancPdu = RXSigMeasRep.constructPacket(rxSigMeasConfig.getEcgi(), rxSigMeasConfig.getCrnti(), rxSigMeasConfig.getMeasCells());
-                            ctx.writeAndFlush(getSctpMessage(xrancPdu));
-                        } catch (IOException ignored) {
-                        }
-                    }
-                }, rxSigMeasConfig.getReportInterval().intValue(), rxSigMeasConfig.getReportInterval().intValue());
+                XrancPdu xrancPdu = RXSigMeasRep.constructPacket(rxSigMeasConfig.getEcgi(), rxSigMeasConfig.getCrnti(), rxSigMeasConfig.getMeasCells());
+                ctx.writeAndFlush(getSctpMessage(xrancPdu));
                 break;
             }
             case 17:
                 // periodically send these packets out.
                 L2MeasConfig l2MeasConfig = recv_pdu.getBody().getL2MeasConfig();
 
-                Timer timer = new Timer();
-                timer.scheduleAtFixedRate(new TimerTask() {
-                    @Override
-                    public void run() {
-                        try {
-                            XrancPdu xrancPdu = RadioReportPerUE.constructPacket(l2MeasConfig.getEcgi(), crnti, pciarfcn);
-                            ctx.writeAndFlush(getSctpMessage(xrancPdu));
+                XrancPdu xrancPdu = RadioReportPerUE.constructPacket(l2MeasConfig.getEcgi(), crnti, pciarfcn);
+                ctx.writeAndFlush(getSctpMessage(xrancPdu));
 
-                            xrancPdu = RadioReportPerCell.constructPacket(l2MeasConfig.getEcgi());
-                            ctx.writeAndFlush(getSctpMessage(xrancPdu));
+                xrancPdu = RadioReportPerCell.constructPacket(l2MeasConfig.getEcgi());
+                ctx.writeAndFlush(getSctpMessage(xrancPdu));
 
-                            xrancPdu = SchedReportPerUE.constructPacket(l2MeasConfig.getEcgi(), crnti, pciarfcn);
-                            ctx.writeAndFlush(getSctpMessage(xrancPdu));
+                xrancPdu = SchedReportPerUE.constructPacket(l2MeasConfig.getEcgi(), crnti, pciarfcn);
+                ctx.writeAndFlush(getSctpMessage(xrancPdu));
 
-                            xrancPdu = SchedReportPerCell.constructPacket(l2MeasConfig.getEcgi());
-                            ctx.writeAndFlush(getSctpMessage(xrancPdu));
+                xrancPdu = SchedReportPerCell.constructPacket(l2MeasConfig.getEcgi());
+                ctx.writeAndFlush(getSctpMessage(xrancPdu));
 
-                            xrancPdu = PDCPReportPerUE.constructPacket(l2MeasConfig.getEcgi(), crnti);
-                            ctx.writeAndFlush(getSctpMessage(xrancPdu));
-                        } catch (Exception ignored) {
-                        }
-                    }
-                }, l2MeasConfig.getReportIntervalMs().intValue(), l2MeasConfig.getReportIntervalMs().intValue());
+                xrancPdu = PDCPReportPerUE.constructPacket(l2MeasConfig.getEcgi(), crnti);
+                ctx.writeAndFlush(getSctpMessage(xrancPdu));
 
                 break;
 
@@ -178,8 +156,8 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
                     hoComplete.setEcgiS(hoRequest.getEcgiS());
                     hoComplete.setEcgiT(this.ecgi);
 
-                    Random random = new Random();
-                    crnti.code[0] = (byte) random.nextInt();
+                    byte[] newbytes = new byte[]{(byte) 0xAF, (byte) 0xFA};
+                    crnti = new CRNTI(newbytes, 16);
 
                     hoComplete.setCrntiNew(crnti);
 
@@ -202,35 +180,10 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
                     pdu.setHdr(hdr);
                     pdu.setBody(body);
 
-                    ctx.writeAndFlush(pdu);
-                } else {
-                    UEReleaseInd ueReleaseInd = new UEReleaseInd();
-                    ueReleaseInd.setCrnti(hoRequest.getCrnti());
-                    ueReleaseInd.setEcgi(hoRequest.getEcgiS());
+                    ctx.writeAndFlush(getSctpMessage(pdu));
 
-                    RelCause relCause = new RelCause(BigInteger.valueOf(0));
-                    ueReleaseInd.setReleaseCause(relCause);
-
-                    XrancPduBody body = new XrancPduBody();
-                    body.setUEReleaseInd(ueReleaseInd);
-
-                    BerUTF8String ver = null;
-                    try {
-                        ver = new BerUTF8String("4");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-
-                    XrancApiID sentapiID = new XrancApiID(7);
-                    XrancPduHdr hdr = new XrancPduHdr();
-                    hdr.setVer(ver);
-                    hdr.setApiId(sentapiID);
-
-                    XrancPdu pdu = new XrancPdu();
-                    pdu.setHdr(hdr);
-                    pdu.setBody(body);
-
-                    ctx.writeAndFlush(pdu);
+                    xrancPdu = UECtxUpdate.constructPacket(hoRequest.getEcgiT(), hoComplete.getCrntiNew(), mmeues1APID, enbues1APID);
+                    ctx.writeAndFlush(getSctpMessage(xrancPdu));
                 }
 
                 break;
@@ -254,7 +207,7 @@ public class SctpClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        // Close the connection when an exception is raised.
+        System.out.println(cause.toString());
         cause.printStackTrace();
         ctx.close();
     }

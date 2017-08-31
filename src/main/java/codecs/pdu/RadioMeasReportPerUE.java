@@ -4,12 +4,14 @@
 
 package codecs.pdu;
 
+
+
 import codecs.api.CRNTI;
 import codecs.api.ECGI;
 import codecs.api.RadioRepPerServCell;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +29,7 @@ public class RadioMeasReportPerUE implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 		public byte[] code = null;
 		private List<RadioRepPerServCell> seqOf = null;
 
@@ -37,6 +40,7 @@ public class RadioMeasReportPerUE implements Serializable {
 		public RadioReportServCells(byte[] code) {
 			this.code = code;
 		}
+
 
 		public List<RadioRepPerServCell> getRadioRepPerServCell() {
 			if (seqOf == null) {
@@ -153,7 +157,7 @@ public class RadioMeasReportPerUE implements Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	 public byte[] code = null;
 	private ECGI ecgi = null;
 	private CRNTI crnti = null;
 	private RadioReportServCells radioReportServCells = null;
@@ -301,7 +305,7 @@ public class RadioMeasReportPerUE implements Serializable {
 			sb.append("\t");
 		}
 		if (ecgi != null) {
-			sb.append("\"ecgi\": ");
+			sb.append("ecgi: ");
 			ecgi.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -310,7 +314,7 @@ public class RadioMeasReportPerUE implements Serializable {
 			sb.append("\t");
 		}
 		if (crnti != null) {
-			sb.append("\"crnti\": ").append(crnti);
+			sb.append("crnti: ").append(crnti);
 		}
 		
 		sb.append(",\n");
@@ -318,7 +322,7 @@ public class RadioMeasReportPerUE implements Serializable {
 			sb.append("\t");
 		}
 		if (radioReportServCells != null) {
-			sb.append("\"radioReportServCells\": ");
+			sb.append("radioReportServCells: ");
 			radioReportServCells.appendAsString(sb, indentLevel + 1);
 		}
 		

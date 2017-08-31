@@ -4,15 +4,17 @@
 
 package codecs.pdu;
 
+
+
 import codecs.api.CRNTI;
 import codecs.api.ECGI;
 import codecs.api.XICICPA;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
-import org.openmuc.jasn1.ber.types.BerBitString;
-import org.openmuc.jasn1.ber.types.BerInteger;
-import org.openmuc.jasn1.ber.types.string.BerUTF8String;
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
+import codecs.ber.types.BerBitString;
+import codecs.ber.types.BerInteger;
+import codecs.ber.types.string.BerUTF8String;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +28,7 @@ public class RRMConfig implements Serializable {
 
     public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
     private static final long serialVersionUID = 1L;
+
     public byte[] code = null;
     private ECGI ecgi = null;
     private Crnti crnti = null;
@@ -43,6 +46,28 @@ public class RRMConfig implements Serializable {
 
     public RRMConfig(byte[] code) {
         this.code = code;
+    }
+
+    public static XrancPdu constructPacket(RRMConfig config) {
+        XrancPduBody body = new XrancPduBody();
+        body.setRRMConfig(config);
+
+        BerUTF8String ver = null;
+        try {
+            ver = new BerUTF8String("3");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        XrancApiID apiID = new XrancApiID(29);
+        XrancPduHdr hdr = new XrancPduHdr();
+        hdr.setVer(ver);
+        hdr.setApiId(apiID);
+
+        XrancPdu pdu = new XrancPdu();
+        pdu.setHdr(hdr);
+        pdu.setBody(body);
+        return pdu;
     }
 
     public ECGI getEcgi() {
@@ -355,7 +380,7 @@ public class RRMConfig implements Serializable {
             sb.append("\t");
         }
         if (ecgi != null) {
-            sb.append("\"ecgi\": ");
+            sb.append("ecgi: ");
             ecgi.appendAsString(sb, indentLevel + 1);
         }
 
@@ -364,7 +389,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
-            sb.append("\"crnti\": ");
+            sb.append("crnti: ");
             crnti.appendAsString(sb, indentLevel + 1);
         }
 
@@ -373,7 +398,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
-            sb.append("\"pa\": ");
+            sb.append("pa: ");
             pa.appendAsString(sb, indentLevel + 1);
         }
 
@@ -382,7 +407,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
-            sb.append("\"startPrbDl\": ");
+            sb.append("startPrbDl: ");
             startPrbDl.appendAsString(sb, indentLevel + 1);
         }
 
@@ -391,7 +416,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
-            sb.append("\"endPrbDl\": ");
+            sb.append("endPrbDl: ");
             endPrbDl.appendAsString(sb, indentLevel + 1);
         }
 
@@ -400,7 +425,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
-            sb.append("\"subframeBitmaskDl\": ");
+            sb.append("subframeBitmaskDl: ");
             subframeBitmaskDl.appendAsString(sb, indentLevel + 1);
         }
 
@@ -409,7 +434,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
-            sb.append("\"p0UePusch\": ");
+            sb.append("p0UePusch: ");
             p0UePusch.appendAsString(sb, indentLevel + 1);
         }
 
@@ -418,7 +443,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
-            sb.append("\"startPrbUl\": ");
+            sb.append("startPrbUl: ");
             startPrbUl.appendAsString(sb, indentLevel + 1);
         }
 
@@ -427,7 +452,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
-            sb.append("\"endPrbUl\": ");
+            sb.append("endPrbUl: ");
             endPrbUl.appendAsString(sb, indentLevel + 1);
         }
 
@@ -436,7 +461,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
-            sb.append("\"subframeBitmaskUl\": ");
+            sb.append("subframeBitmaskUl: ");
             subframeBitmaskUl.appendAsString(sb, indentLevel + 1);
         }
 
@@ -451,6 +476,7 @@ public class RRMConfig implements Serializable {
 
         public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
         private static final long serialVersionUID = 1L;
+
         public byte[] code = null;
         private List<CRNTI> seqOf = null;
 
@@ -461,6 +487,7 @@ public class RRMConfig implements Serializable {
         public Crnti(byte[] code) {
             this.code = code;
         }
+
 
         public List<CRNTI> getCRNTI() {
             if (seqOf == null) {
@@ -579,6 +606,7 @@ public class RRMConfig implements Serializable {
 
         public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
         private static final long serialVersionUID = 1L;
+
         public byte[] code = null;
         private List<XICICPA> seqOf = null;
 
@@ -590,11 +618,16 @@ public class RRMConfig implements Serializable {
             this.code = code;
         }
 
+
         public List<XICICPA> getXICICPA() {
             if (seqOf == null) {
                 seqOf = new ArrayList<XICICPA>();
             }
             return seqOf;
+        }
+
+        public void setXICICPA(List<XICICPA> seqOf) {
+            this.seqOf = seqOf;
         }
 
         public int encode(BerByteArrayOutputStream os) throws IOException {
@@ -696,13 +729,13 @@ public class RRMConfig implements Serializable {
             }
             sb.append("]");
         }
-
     }
 
     public static class StartPrbDl implements Serializable {
 
         public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
         private static final long serialVersionUID = 1L;
+
         public byte[] code = null;
         private List<BerInteger> seqOf = null;
 
@@ -721,6 +754,7 @@ public class RRMConfig implements Serializable {
         public void setSeqOf(List<BerInteger> seqOf) {
             this.seqOf = seqOf;
         }
+
 
         public List<BerInteger> getBerInteger() {
             if (seqOf == null) {
@@ -838,6 +872,7 @@ public class RRMConfig implements Serializable {
 
         public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
         private static final long serialVersionUID = 1L;
+
         public byte[] code = null;
         private List<BerInteger> seqOf = null;
 
@@ -848,6 +883,7 @@ public class RRMConfig implements Serializable {
         public EndPrbDl(byte[] code) {
             this.code = code;
         }
+
 
         public List<BerInteger> getBerInteger() {
             if (seqOf == null) {
@@ -973,6 +1009,7 @@ public class RRMConfig implements Serializable {
 
         public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
         private static final long serialVersionUID = 1L;
+
         public byte[] code = null;
         private List<BerBitString> seqOf = null;
 
@@ -984,12 +1021,18 @@ public class RRMConfig implements Serializable {
             this.code = code;
         }
 
+        public void setSeqOf(List<BerBitString> seqOf) {
+            this.seqOf = seqOf;
+        }
+
+
         public List<BerBitString> getBerBitString() {
             if (seqOf == null) {
                 seqOf = new ArrayList<BerBitString>();
             }
             return seqOf;
         }
+
 
         public void addBerBitString(BerBitString berBitString) {
             seqOf.add(berBitString);
@@ -1077,13 +1120,13 @@ public class RRMConfig implements Serializable {
             } else {
                 Iterator<BerBitString> it = seqOf.iterator();
                 if (it.hasNext()) {
-                    sb.append("\"" + it.next() + "\"");
+                    sb.append("" + it.next() + "");
                     while (it.hasNext()) {
                         sb.append(",\n");
                         for (int i = 0; i < indentLevel + 1; i++) {
                             sb.append("\t");
                         }
-                        sb.append("\"" + it.next() + "\"");
+                        sb.append("" + it.next() + "");
                     }
                 }
             }
@@ -1094,13 +1137,13 @@ public class RRMConfig implements Serializable {
             }
             sb.append("]");
         }
-
     }
 
     public static class P0UePusch implements Serializable {
 
         public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
         private static final long serialVersionUID = 1L;
+
         public byte[] code = null;
         private List<BerInteger> seqOf = null;
 
@@ -1111,6 +1154,7 @@ public class RRMConfig implements Serializable {
         public P0UePusch(byte[] code) {
             this.code = code;
         }
+
 
         public List<BerInteger> getBerInteger() {
             if (seqOf == null) {
@@ -1219,12 +1263,16 @@ public class RRMConfig implements Serializable {
             sb.append("]");
         }
 
+        public void setSeqOf(List<BerInteger> seqOf) {
+            this.seqOf = seqOf;
+        }
     }
 
     public static class StartPrbUl implements Serializable {
 
         public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
         private static final long serialVersionUID = 1L;
+
         public byte[] code = null;
         private List<BerInteger> seqOf = null;
 
@@ -1235,6 +1283,7 @@ public class RRMConfig implements Serializable {
         public StartPrbUl(byte[] code) {
             this.code = code;
         }
+
 
         public List<BerInteger> getBerInteger() {
             if (seqOf == null) {
@@ -1360,6 +1409,7 @@ public class RRMConfig implements Serializable {
 
         public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
         private static final long serialVersionUID = 1L;
+
         public byte[] code = null;
         private List<BerInteger> seqOf = null;
 
@@ -1370,6 +1420,7 @@ public class RRMConfig implements Serializable {
         public EndPrbUl(byte[] code) {
             this.code = code;
         }
+
 
         public List<BerInteger> getBerInteger() {
             if (seqOf == null) {
@@ -1495,6 +1546,7 @@ public class RRMConfig implements Serializable {
 
         public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
         private static final long serialVersionUID = 1L;
+
         public byte[] code = null;
         private List<BerBitString> seqOf = null;
 
@@ -1505,6 +1557,11 @@ public class RRMConfig implements Serializable {
         public SubframeBitmaskUl(byte[] code) {
             this.code = code;
         }
+
+        public void setSeqOf(List<BerBitString> seqOf) {
+            this.seqOf = seqOf;
+        }
+
 
         public List<BerBitString> getBerBitString() {
             if (seqOf == null) {
@@ -1613,28 +1670,6 @@ public class RRMConfig implements Serializable {
             sb.append("]");
         }
 
-    }
-
-    public static XrancPdu constructPacket(RRMConfig config) {
-        XrancPduBody body = new XrancPduBody();
-        body.setRRMConfig(config);
-
-        BerUTF8String ver = null;
-        try {
-            ver = new BerUTF8String("3");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        XrancApiID apiID = new XrancApiID(29);
-        XrancPduHdr hdr = new XrancPduHdr();
-        hdr.setVer(ver);
-        hdr.setApiId(apiID);
-
-        XrancPdu pdu = new XrancPdu();
-        pdu.setHdr(hdr);
-        pdu.setBody(body);
-        return pdu;
     }
 
 }

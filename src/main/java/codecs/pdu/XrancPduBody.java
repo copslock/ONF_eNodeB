@@ -4,8 +4,9 @@
 
 package codecs.pdu;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerTag;
+
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerTag;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +15,7 @@ import java.io.Serializable;
 public class XrancPduBody implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
 
 	public byte[] code = null;
 	private CellConfigRequest cellConfigRequest = null;
@@ -882,211 +884,211 @@ public class XrancPduBody implements Serializable {
 	public void appendAsString(StringBuilder sb, int indentLevel) {
 
 		if (cellConfigRequest != null) {
-			sb.append("\"cellConfigRequest\": ");
+			sb.append("cellConfigRequest: ");
 			cellConfigRequest.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (cellConfigReport != null) {
-			sb.append("\"cellConfigReport\": ");
+			sb.append("cellConfigReport: ");
 			cellConfigReport.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (uEAdmissionRequest != null) {
-			sb.append("\"uEAdmissionRequest\": ");
+			sb.append("uEAdmissionRequest: ");
 			uEAdmissionRequest.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (uEAdmissionResponse != null) {
-			sb.append("\"uEAdmissionResponse\": ");
+			sb.append("uEAdmissionResponse: ");
 			uEAdmissionResponse.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (uEContextUpdate != null) {
-			sb.append("\"uEContextUpdate\": ");
+			sb.append("uEContextUpdate: ");
 			uEContextUpdate.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (uEAdmissionStatus != null) {
-			sb.append("\"uEAdmissionStatus\": ");
+			sb.append("uEAdmissionStatus: ");
 			uEAdmissionStatus.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (uEReconfigInd != null) {
-			sb.append("\"uEReconfigInd\": ");
+			sb.append("uEReconfigInd: ");
 			uEReconfigInd.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (uEReleaseInd != null) {
-			sb.append("\"uEReleaseInd\": ");
+			sb.append("uEReleaseInd: ");
 			uEReleaseInd.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (bearerAdmissionRequest != null) {
-			sb.append("\"bearerAdmissionRequest\": ");
+			sb.append("bearerAdmissionRequest: ");
 			bearerAdmissionRequest.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (bearerAdmissionResponse != null) {
-			sb.append("\"bearerAdmissionResponse\": ");
+			sb.append("bearerAdmissionResponse: ");
 			bearerAdmissionResponse.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (bearerAdmissionStatus != null) {
-			sb.append("\"bearerAdmissionStatus\": ");
+			sb.append("bearerAdmissionStatus: ");
 			bearerAdmissionStatus.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (bearerReleaseInd != null) {
-			sb.append("\"bearerReleaseInd\": ");
+			sb.append("bearerReleaseInd: ");
 			bearerReleaseInd.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (uECapabilityEnquiry != null) {
-			sb.append("\"uECapabilityEnquiry\": ");
+			sb.append("uECapabilityEnquiry: ");
 			uECapabilityEnquiry.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (uECapabilityInfo != null) {
-			sb.append("\"uECapabilityInfo\": ");
+			sb.append("uECapabilityInfo: ");
 			uECapabilityInfo.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (hORequest != null) {
-			sb.append("\"hORequest\": ");
+			sb.append("hORequest: ");
 			hORequest.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (hOFailure != null) {
-			sb.append("\"hOFailure\": ");
+			sb.append("hOFailure: ");
 			hOFailure.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (hOComplete != null) {
-			sb.append("\"hOComplete\": ");
+			sb.append("hOComplete: ");
 			hOComplete.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (rXSigMeasConfig != null) {
-			sb.append("\"rXSigMeasConfig\": ");
+			sb.append("rXSigMeasConfig: ");
 			rXSigMeasConfig.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (rXSigMeasReport != null) {
-			sb.append("\"rXSigMeasReport\": ");
+			sb.append("rXSigMeasReport: ");
 			rXSigMeasReport.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (l2MeasConfig != null) {
-			sb.append("\"l2MeasConfig\": ");
+			sb.append("l2MeasConfig: ");
 			l2MeasConfig.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (radioMeasReportPerUE != null) {
-			sb.append("\"radioMeasReportPerUE\": ");
+			sb.append("radioMeasReportPerUE: ");
 			radioMeasReportPerUE.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (radioMeasReportPerCell != null) {
-			sb.append("\"radioMeasReportPerCell\": ");
+			sb.append("radioMeasReportPerCell: ");
 			radioMeasReportPerCell.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (schedMeasReportPerUE != null) {
-			sb.append("\"schedMeasReportPerUE\": ");
+			sb.append("schedMeasReportPerUE: ");
 			schedMeasReportPerUE.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (schedMeasReportPerCell != null) {
-			sb.append("\"schedMeasReportPerCell\": ");
+			sb.append("schedMeasReportPerCell: ");
 			schedMeasReportPerCell.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (pDCPMeasReportPerUe != null) {
-			sb.append("\"pDCPMeasReportPerUe\": ");
+			sb.append("pDCPMeasReportPerUe: ");
 			pDCPMeasReportPerUe.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (xICICConfig != null) {
-			sb.append("\"xICICConfig\": ");
+			sb.append("xICICConfig: ");
 			xICICConfig.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (rRMConfig != null) {
-			sb.append("\"rRMConfig\": ");
+			sb.append("rRMConfig: ");
 			rRMConfig.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (rRMConfigStatus != null) {
-			sb.append("\"rRMConfigStatus\": ");
+			sb.append("rRMConfigStatus: ");
 			rRMConfigStatus.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (scellAdd != null) {
-			sb.append("\"scellAdd\": ");
+			sb.append("scellAdd: ");
 			scellAdd.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (scellAddStatus != null) {
-			sb.append("\"scellAddStatus\": ");
+			sb.append("scellAddStatus: ");
 			scellAddStatus.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (scellDelete != null) {
-			sb.append("\"scellDelete\": ");
+			sb.append("scellDelete: ");
 			scellDelete.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (seNBAdd != null) {
-			sb.append("\"seNBAdd\": ");
+			sb.append("seNBAdd: ");
 			seNBAdd.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (seNBAddStatus != null) {
-			sb.append("\"seNBAddStatus\": ");
+			sb.append("seNBAddStatus: ");
 			seNBAddStatus.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (seNBDelete != null) {
-			sb.append("\"seNBDelete\": ");
+			sb.append("seNBDelete: ");
 			seNBDelete.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 
 		if (trafficSplitConfig != null) {
-			sb.append("\"trafficSplitConfig\": ");
+			sb.append("trafficSplitConfig: ");
 			trafficSplitConfig.appendAsString(sb, indentLevel + 1);
 			return;
 		}

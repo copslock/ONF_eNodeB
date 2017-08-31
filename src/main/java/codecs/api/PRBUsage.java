@@ -13,9 +13,12 @@ import java.util.Iterator;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.io.Serializable;
-import org.openmuc.jasn1.ber.*;
-import org.openmuc.jasn1.ber.types.*;
-import org.openmuc.jasn1.ber.types.string.*;
+
+
+
+import codecs.ber.*;
+import codecs.ber.types.*;
+import codecs.ber.types.string.*;
 
 
 public class PRBUsage implements Serializable {
@@ -27,6 +30,7 @@ public class PRBUsage implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 		public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
@@ -38,7 +42,7 @@ public class PRBUsage implements Serializable {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -156,7 +160,7 @@ public class PRBUsage implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public PrbUsageUl() {
@@ -167,7 +171,7 @@ public class PRBUsage implements Serializable {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -282,7 +286,7 @@ public class PRBUsage implements Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	 public byte[] code = null;
 	private PrbUsageDl prbUsageDl = null;
 	private PrbUsageUl prbUsageUl = null;
 	
@@ -407,7 +411,7 @@ public class PRBUsage implements Serializable {
 			sb.append("\t");
 		}
 		if (prbUsageDl != null) {
-			sb.append("\"prbUsageDl\": ");
+			sb.append("prbUsageDl: ");
 			prbUsageDl.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -416,7 +420,7 @@ public class PRBUsage implements Serializable {
 			sb.append("\t");
 		}
 		if (prbUsageUl != null) {
-			sb.append("\"prbUsageUl\": ");
+			sb.append("prbUsageUl: ");
 			prbUsageUl.appendAsString(sb, indentLevel + 1);
 		}
 		

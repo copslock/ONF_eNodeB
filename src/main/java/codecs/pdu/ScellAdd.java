@@ -4,16 +4,18 @@
 
 package codecs.pdu;
 
+
+
 import codecs.api.CRNTI;
 import codecs.api.ECGI;
 import codecs.api.PropScell;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
-import org.openmuc.jasn1.ber.types.BerBoolean;
-import org.openmuc.jasn1.ber.types.BerEnum;
-import org.openmuc.jasn1.ber.types.BerInteger;
-import org.openmuc.jasn1.ber.types.string.BerUTF8String;
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
+import codecs.ber.types.BerBoolean;
+import codecs.ber.types.BerEnum;
+import codecs.ber.types.BerInteger;
+import codecs.ber.types.string.BerUTF8String;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +30,7 @@ public class ScellAdd implements Serializable {
 
     public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
     private static final long serialVersionUID = 1L;
+
     public byte[] code = null;
     private CRNTI crnti = null;
     private ECGI ecgi = null;
@@ -205,7 +208,7 @@ public class ScellAdd implements Serializable {
             sb.append("\t");
         }
         if (crnti != null) {
-            sb.append("\"crnti\": ").append(crnti);
+            sb.append("crnti: ").append(crnti);
         }
 
         sb.append(",\n");
@@ -213,7 +216,7 @@ public class ScellAdd implements Serializable {
             sb.append("\t");
         }
         if (ecgi != null) {
-            sb.append("\"ecgi\": ");
+            sb.append("ecgi: ");
             ecgi.appendAsString(sb, indentLevel + 1);
         }
 
@@ -222,7 +225,7 @@ public class ScellAdd implements Serializable {
             sb.append("\t");
         }
         if (scellsProp != null) {
-            sb.append("\"scellsProp\": ");
+            sb.append("scellsProp: ");
             scellsProp.appendAsString(sb, indentLevel + 1);
         }
 
@@ -237,7 +240,7 @@ public class ScellAdd implements Serializable {
 
         public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
         private static final long serialVersionUID = 1L;
-        public byte[] code = null;
+         public byte[] code = null;
         private List<PropScell> seqOf = null;
 
         public ScellsProp() {
@@ -247,6 +250,7 @@ public class ScellAdd implements Serializable {
         public ScellsProp(byte[] code) {
             this.code = code;
         }
+
 
         public List<PropScell> getPropScell() {
             if (seqOf == null) {

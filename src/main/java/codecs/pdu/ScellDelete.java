@@ -4,13 +4,15 @@
 
 package codecs.pdu;
 
+
+
 import codecs.api.CRNTI;
 import codecs.api.ECGI;
 import codecs.api.PCIARFCN;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
-import org.openmuc.jasn1.ber.types.string.BerUTF8String;
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
+import codecs.ber.types.string.BerUTF8String;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +26,7 @@ public class ScellDelete implements Serializable {
 
     public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
     private static final long serialVersionUID = 1L;
+
     public byte[] code = null;
     private CRNTI crnti = null;
     private ECGI ecgi = null;
@@ -199,7 +202,7 @@ public class ScellDelete implements Serializable {
             sb.append("\t");
         }
         if (crnti != null) {
-            sb.append("\"crnti\": ").append(crnti);
+            sb.append("crnti: ").append(crnti);
         }
 
         sb.append(",\n");
@@ -207,7 +210,7 @@ public class ScellDelete implements Serializable {
             sb.append("\t");
         }
         if (ecgi != null) {
-            sb.append("\"ecgi\": ");
+            sb.append("ecgi: ");
             ecgi.appendAsString(sb, indentLevel + 1);
         }
 
@@ -216,7 +219,7 @@ public class ScellDelete implements Serializable {
             sb.append("\t");
         }
         if (scellsInd != null) {
-            sb.append("\"scellsInd\": ");
+            sb.append("scellsInd: ");
             scellsInd.appendAsString(sb, indentLevel + 1);
         }
 
@@ -231,7 +234,7 @@ public class ScellDelete implements Serializable {
 
         public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
         private static final long serialVersionUID = 1L;
-        public byte[] code = null;
+         public byte[] code = null;
         private List<PCIARFCN> seqOf = null;
 
         public ScellsInd() {
@@ -241,6 +244,7 @@ public class ScellDelete implements Serializable {
         public ScellsInd(byte[] code) {
             this.code = code;
         }
+
 
         public List<PCIARFCN> getPCIARFCN() {
             if (seqOf == null) {

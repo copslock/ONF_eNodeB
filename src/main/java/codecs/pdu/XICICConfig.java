@@ -3,16 +3,17 @@
  */
 package codecs.pdu;
 
+
 import codecs.api.CRNTI;
 import codecs.api.ECGI;
 import codecs.api.PCIARFCN;
 import codecs.api.XICICPA;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
-import org.openmuc.jasn1.ber.types.BerBitString;
-import org.openmuc.jasn1.ber.types.BerInteger;
-import org.openmuc.jasn1.ber.types.string.BerUTF8String;
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
+import codecs.ber.types.BerBitString;
+import codecs.ber.types.BerInteger;
+import codecs.ber.types.string.BerUTF8String;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +25,7 @@ public class XICICConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 
 	public byte[] code = null;
 	private ECGI ecgi = null;
@@ -374,7 +376,7 @@ public class XICICConfig implements Serializable {
 			sb.append("\t");
 		}
 		if (ecgi != null) {
-			sb.append("\"ecgi: \"");
+			sb.append("ecgi: ");
 			ecgi.appendAsString(sb, indentLevel + 1);
 		}
 
@@ -383,7 +385,7 @@ public class XICICConfig implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"pciArfcn: \"");
+			sb.append("pciArfcn: ");
 			pciArfcn.appendAsString(sb, indentLevel + 1);
 		}
 
@@ -392,7 +394,7 @@ public class XICICConfig implements Serializable {
 			sb.append("\t");
 		}
 		if (crnti != null) {
-			sb.append("\"crnti: \"").append(crnti);
+			sb.append("crnti: ").append(crnti);
 		}
 
 		if (pa != null) {
@@ -400,7 +402,7 @@ public class XICICConfig implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"pa: \"").append(pa);
+			sb.append("pa: ").append(pa);
 		}
 
 		if (startPrbDl != null) {
@@ -408,7 +410,7 @@ public class XICICConfig implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"startPrbDl: \"").append(startPrbDl);
+			sb.append("startPrbDl: ").append(startPrbDl);
 		}
 
 		if (endPrbDl != null) {
@@ -416,7 +418,7 @@ public class XICICConfig implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"endPrbDl: \"").append(endPrbDl);
+			sb.append("endPrbDl: ").append(endPrbDl);
 		}
 
 		if (subframeBitmaskDl != null) {
@@ -424,7 +426,7 @@ public class XICICConfig implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"subframeBitmaskDl: \"").append(subframeBitmaskDl);
+			sb.append("subframeBitmaskDl: ").append(subframeBitmaskDl);
 		}
 
 		if (p0UePusch != null) {
@@ -432,7 +434,7 @@ public class XICICConfig implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"p0UePusch: \"").append(p0UePusch);
+			sb.append("p0UePusch: ").append(p0UePusch);
 		}
 
 		if (startPrbUl != null) {
@@ -440,7 +442,7 @@ public class XICICConfig implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"startPrbUl: \"").append(startPrbUl);
+			sb.append("startPrbUl: ").append(startPrbUl);
 		}
 
 		if (endPrbUl != null) {
@@ -448,7 +450,7 @@ public class XICICConfig implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"endPrbUl: \"").append(endPrbUl);
+			sb.append("endPrbUl: ").append(endPrbUl);
 		}
 
 		if (subframeBitmaskUl != null) {
@@ -456,7 +458,7 @@ public class XICICConfig implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"subframeBitmaskUl: \"").append(subframeBitmaskUl);
+			sb.append("subframeBitmaskUl: ").append(subframeBitmaskUl);
 		}
 
 		sb.append("\n");
@@ -466,25 +468,48 @@ public class XICICConfig implements Serializable {
 		sb.append("}");
 	}
 
-	public static XrancPdu constructPacket(RRMConfig config) {
+	public static XrancPdu constructPacket(RRMConfig config, CellConfigReport cellConfigReport) {
 		XrancPduBody body = new XrancPduBody();
         
 		XICICConfig xicicConfig = new XICICConfig();
 
-		xicicConfig.setCrnti(config.getCrnti().getCRNTI().get(0));
 		xicicConfig.setEcgi(config.getEcgi());
+		xicicConfig.setCrnti(config.getCrnti().getCRNTI().get(0));
 
 		try {
-            xicicConfig.setEndPrbDl(config.getEndPrbDl().getSeqOf().get(0));
-        } catch (Exception ignored) {}
+			PCIARFCN pciarfcn = new PCIARFCN();
+			pciarfcn.setPci(cellConfigReport.getPci());
+			pciarfcn.setEarfcnDl(cellConfigReport.getEarfcnDl());
+			xicicConfig.setPciArfcn(pciarfcn);
+		} catch (Exception ignored) {}
 
-        try {
-            xicicConfig.setEndPrbUl(config.getEndPrbUl().getSeqOf().get(0));
-        } catch (Exception ignored) {}
+		try {
+			xicicConfig.setPa(config.getPa().getXICICPA().get(0));
+		} catch (Exception ignored) {}
 
-        try {
-            xicicConfig.setStartPrbDl(config.getStartPrbDl().getSeqOf().get(0));
-        } catch (Exception ignored) {}
+		try {
+			xicicConfig.setStartPrbDl(config.getStartPrbDl().getSeqOf().get(0));
+		} catch (Exception ignored) {}
+
+		try {
+			xicicConfig.setEndPrbDl(config.getEndPrbDl().getSeqOf().get(0));
+		} catch (Exception ignored) {}
+
+		try {
+			xicicConfig.setSubframeBitmaskDl(config.getSubframeBitmaskDl().getBerBitString().get(0));
+		} catch (Exception ignored) {}
+
+		try {
+			xicicConfig.setSubframeBitmaskUl(config.getSubframeBitmaskUl().getBerBitString().get(0));
+		} catch (Exception ignored) {}
+
+		try {
+			xicicConfig.setP0UePusch(config.getP0UePusch().getBerInteger().get(0));
+		} catch (Exception ignored) {}
+
+		try {
+			xicicConfig.setEndPrbUl(config.getEndPrbUl().getSeqOf().get(0));
+		} catch (Exception ignored) {}
 
         try {
             xicicConfig.setEndPrbUl(config.getStartPrbUl().getSeqOf().get(0));

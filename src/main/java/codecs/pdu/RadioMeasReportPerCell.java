@@ -4,11 +4,13 @@
 
 package codecs.pdu;
 
+
+
 import codecs.api.ECGI;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
-import org.openmuc.jasn1.ber.types.BerInteger;
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
+import codecs.ber.types.BerInteger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +29,7 @@ public class RadioMeasReportPerCell implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 		public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
@@ -38,7 +41,7 @@ public class RadioMeasReportPerCell implements Serializable {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -157,7 +160,7 @@ public class RadioMeasReportPerCell implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public PucchIntfPowerHist() {
@@ -167,6 +170,7 @@ public class RadioMeasReportPerCell implements Serializable {
 		public PucchIntfPowerHist(byte[] code) {
 			this.code = code;
 		}
+
 
 		public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
@@ -283,7 +287,7 @@ public class RadioMeasReportPerCell implements Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	 public byte[] code = null;
 	private ECGI ecgi = null;
 	private PuschIntfPowerHist puschIntfPowerHist = null;
 	private PucchIntfPowerHist pucchIntfPowerHist = null;
@@ -431,7 +435,7 @@ public class RadioMeasReportPerCell implements Serializable {
 			sb.append("\t");
 		}
 		if (ecgi != null) {
-			sb.append("\"ecgi\": ");
+			sb.append("ecgi: ");
 			ecgi.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -440,7 +444,7 @@ public class RadioMeasReportPerCell implements Serializable {
 			sb.append("\t");
 		}
 		if (puschIntfPowerHist != null) {
-			sb.append("\"puschIntfPowerHist\": ");
+			sb.append("puschIntfPowerHist: ");
 			puschIntfPowerHist.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -449,7 +453,7 @@ public class RadioMeasReportPerCell implements Serializable {
 			sb.append("\t");
 		}
 		if (pucchIntfPowerHist != null) {
-			sb.append("\"pucchIntfPowerHist\": ");
+			sb.append("pucchIntfPowerHist: ");
 			pucchIntfPowerHist.appendAsString(sb, indentLevel + 1);
 		}
 		

@@ -4,10 +4,11 @@
 
 package codecs.api;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
-import org.openmuc.jasn1.ber.types.BerEnum;
+
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
+import codecs.ber.types.BerEnum;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +20,7 @@ public class DCCap implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 
 	public byte[] code = null;
 	private BerEnum drbTypeSplit = null;
@@ -122,7 +124,7 @@ public class DCCap implements Serializable {
 			sb.append("\t");
 		}
 		if (drbTypeSplit != null) {
-			sb.append("\"drbTypeSplit\": ").append(drbTypeSplit);
+			sb.append("drbTypeSplit: ").append(drbTypeSplit);
 		}
 		
 		sb.append("\n");

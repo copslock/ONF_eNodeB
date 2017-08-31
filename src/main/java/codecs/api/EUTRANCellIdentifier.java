@@ -4,7 +4,7 @@
 
 package codecs.api;
 
-import org.openmuc.jasn1.ber.types.*;
+import codecs.ber.types.BerBitString;
 
 import javax.xml.bind.DatatypeConverter;
 import java.util.Arrays;
@@ -36,10 +36,5 @@ public class EUTRANCellIdentifier extends BerBitString {
 			return Arrays.equals(value, ((EUTRANCellIdentifier) obj).value);
 		}
 		return super.equals(obj);
-	}
-
-	@Override
-	public String toString() {
-		return "\"" + DatatypeConverter.printHexBinary(value) + "\"";
 	}
 }

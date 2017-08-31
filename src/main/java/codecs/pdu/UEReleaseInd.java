@@ -3,9 +3,10 @@
  */
 package codecs.pdu;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
+
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
 import codecs.api.CRNTI;
 import codecs.api.ECGI;
 import codecs.api.RelCause;
@@ -19,6 +20,7 @@ public class UEReleaseInd implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 
 	public byte[] code = null;
 	private CRNTI crnti = null;
@@ -168,7 +170,7 @@ public class UEReleaseInd implements Serializable {
 			sb.append("\t");
 		}
 		if (crnti != null) {
-			sb.append("\"crnti\": ").append(crnti);
+			sb.append("crnti: ").append(crnti);
 		}
 		
 		sb.append(",\n");
@@ -176,7 +178,7 @@ public class UEReleaseInd implements Serializable {
 			sb.append("\t");
 		}
 		if (ecgi != null) {
-			sb.append("\"ecgi\": ");
+			sb.append("ecgi: ");
 			ecgi.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -185,7 +187,7 @@ public class UEReleaseInd implements Serializable {
 			sb.append("\t");
 		}
 		if (releaseCause != null) {
-			sb.append("\"releaseCause\": ").append(releaseCause);
+			sb.append("releaseCause: ").append(releaseCause);
 		}
 		
 		sb.append("\n");

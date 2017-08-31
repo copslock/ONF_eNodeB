@@ -4,10 +4,12 @@
 
 package codecs.pdu;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
-import org.openmuc.jasn1.ber.types.BerInteger;
+
+
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
+import codecs.ber.types.BerInteger;
 import codecs.api.CRNTI;
 import codecs.api.ECGI;
 import codecs.api.ERABID;
@@ -28,6 +30,7 @@ public class BearerReleaseInd implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 		public byte[] code = null;
 		private List<ERABID> seqOf = null;
 
@@ -38,6 +41,7 @@ public class BearerReleaseInd implements Serializable {
 		public ErabIds(byte[] code) {
 			this.code = code;
 		}
+
 
 		public List<ERABID> getERABID() {
 			if (seqOf == null) {
@@ -151,7 +155,7 @@ public class BearerReleaseInd implements Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	 public byte[] code = null;
 	private CRNTI crnti = null;
 	private ECGI ecgi = null;
 	private BerInteger numErabs = null;
@@ -322,7 +326,7 @@ public class BearerReleaseInd implements Serializable {
 			sb.append("\t");
 		}
 		if (crnti != null) {
-			sb.append("\"crnti\": ").append(crnti);
+			sb.append("crnti: ").append(crnti);
 		}
 		
 		sb.append(",\n");
@@ -330,7 +334,7 @@ public class BearerReleaseInd implements Serializable {
 			sb.append("\t");
 		}
 		if (ecgi != null) {
-			sb.append("\"ecgi\": ");
+			sb.append("ecgi: ");
 			ecgi.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -339,7 +343,7 @@ public class BearerReleaseInd implements Serializable {
 			sb.append("\t");
 		}
 		if (numErabs != null) {
-			sb.append("\"numErabs\": ").append(numErabs);
+			sb.append("numErabs: ").append(numErabs);
 		}
 		
 		sb.append(",\n");
@@ -347,7 +351,7 @@ public class BearerReleaseInd implements Serializable {
 			sb.append("\t");
 		}
 		if (erabIds != null) {
-			sb.append("\"erabIds\": ");
+			sb.append("erabIds: ");
 			erabIds.appendAsString(sb, indentLevel + 1);
 		}
 		

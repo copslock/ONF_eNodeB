@@ -4,9 +4,10 @@
 
 package codecs.api;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
+
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +19,7 @@ public class CandScell implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 
 	public byte[] code = null;
 	private PhysCellId pci = null;
@@ -144,7 +146,7 @@ public class CandScell implements Serializable {
 			sb.append("\t");
 		}
 		if (pci != null) {
-			sb.append("\"pci\": ").append(pci);
+			sb.append("pci: ").append(pci);
 		}
 		
 		sb.append(",\n");
@@ -152,7 +154,7 @@ public class CandScell implements Serializable {
 			sb.append("\t");
 		}
 		if (earfcnDl != null) {
-			sb.append("\"earfcnDl\": ").append(earfcnDl);
+			sb.append("earfcnDl: ").append(earfcnDl);
 		}
 		sb.append("\n");
 		for (int i = 0; i < indentLevel; i++) {

@@ -13,9 +13,11 @@ import java.util.Iterator;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.io.Serializable;
-import org.openmuc.jasn1.ber.*;
-import org.openmuc.jasn1.ber.types.*;
-import org.openmuc.jasn1.ber.types.string.*;
+
+
+import codecs.ber.*;
+import codecs.ber.types.*;
+import codecs.ber.types.string.*;
 
 
 public class TrafficSplitPercentage implements Serializable {
@@ -23,6 +25,7 @@ public class TrafficSplitPercentage implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 
 	public byte[] code = null;
 	private ECGI ecgi = null;
@@ -179,7 +182,7 @@ public class TrafficSplitPercentage implements Serializable {
 			sb.append("\t");
 		}
 		if (ecgi != null) {
-			sb.append("\"ecgi\": ");
+			sb.append("ecgi: ");
 			ecgi.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -188,7 +191,7 @@ public class TrafficSplitPercentage implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"trafficPercentDl\": ").append(trafficPercentDl);
+			sb.append("trafficPercentDl: ").append(trafficPercentDl);
 		}
 		
 		if (trafficPercentUl != null) {
@@ -196,7 +199,7 @@ public class TrafficSplitPercentage implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"trafficPercentUl\": ").append(trafficPercentUl);
+			sb.append("trafficPercentUl: ").append(trafficPercentUl);
 		}
 		
 		sb.append("\n");

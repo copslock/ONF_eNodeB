@@ -4,11 +4,12 @@
 
 package codecs.pdu;
 
+
 import codecs.api.CRNTI;
 import codecs.api.ECGI;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +21,7 @@ public class HOComplete implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 
 	public byte[] code = null;
 	private ECGI ecgiT = null;
@@ -169,7 +171,7 @@ public class HOComplete implements Serializable {
 			sb.append("\t");
 		}
 		if (ecgiT != null) {
-			sb.append("\"ecgiT\": ");
+			sb.append("ecgiT: ");
 			ecgiT.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -178,7 +180,7 @@ public class HOComplete implements Serializable {
 			sb.append("\t");
 		}
 		if (ecgiS != null) {
-			sb.append("\"ecgiS\": ");
+			sb.append("ecgiS: ");
 			ecgiS.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -187,7 +189,7 @@ public class HOComplete implements Serializable {
 			sb.append("\t");
 		}
 		if (crntiNew != null) {
-			sb.append("\"crntiNew\": ").append(crntiNew);
+			sb.append("crntiNew: ").append(crntiNew);
 		}
 		
 		sb.append("\n");

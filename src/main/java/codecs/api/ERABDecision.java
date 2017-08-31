@@ -13,9 +13,9 @@ import java.util.Iterator;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.io.Serializable;
-import org.openmuc.jasn1.ber.*;
-import org.openmuc.jasn1.ber.types.*;
-import org.openmuc.jasn1.ber.types.string.*;
+import codecs.ber.*;
+import codecs.ber.types.*;
+import codecs.ber.types.string.*;
 
 
 public class ERABDecision extends BerEnum {

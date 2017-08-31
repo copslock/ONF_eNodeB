@@ -4,10 +4,11 @@
 
 package codecs.pdu;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
-import org.openmuc.jasn1.ber.types.string.BerUTF8String;
+
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
+import codecs.ber.types.string.BerUTF8String;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +19,7 @@ public class XrancPduHdr implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 
 	public byte[] code = null;
 	private BerUTF8String ver = null;
@@ -144,7 +146,7 @@ public class XrancPduHdr implements Serializable {
 			sb.append("\t");
 		}
 		if (ver != null) {
-			sb.append("\"ver\": ").append(ver);
+			sb.append("ver: ").append(ver);
 		}
 		
 		sb.append(",\n");
@@ -152,7 +154,7 @@ public class XrancPduHdr implements Serializable {
 			sb.append("\t");
 		}
 		if (apiId != null) {
-			sb.append("\"apiId\": ").append(apiId);
+			sb.append("apiId: ").append(apiId);
 		}
 		
 		sb.append("\n");

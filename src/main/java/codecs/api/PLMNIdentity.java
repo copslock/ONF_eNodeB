@@ -4,9 +4,8 @@
 
 package codecs.api;
 
-import org.openmuc.jasn1.ber.types.BerOctetString;
+import codecs.ber.types.BerOctetString;
 
-import javax.xml.bind.DatatypeConverter;
 import java.util.Arrays;
 
 
@@ -34,8 +33,4 @@ public class PLMNIdentity extends BerOctetString {
         return super.equals(obj);
     }
 
-    @Override
-    public String toString() {
-        return "\"" + DatatypeConverter.printHexBinary(value) + "\"";
-    }
 }

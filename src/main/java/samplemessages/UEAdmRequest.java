@@ -2,8 +2,8 @@ package samplemessages;
 
 import codecs.api.*;
 import codecs.pdu.*;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.types.string.BerUTF8String;
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.types.string.BerUTF8String;
 
 import java.io.UnsupportedEncodingException;
 

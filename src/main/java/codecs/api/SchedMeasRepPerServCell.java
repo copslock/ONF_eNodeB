@@ -13,9 +13,12 @@ import java.util.Iterator;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.io.Serializable;
-import org.openmuc.jasn1.ber.*;
-import org.openmuc.jasn1.ber.types.*;
-import org.openmuc.jasn1.ber.types.string.*;
+
+
+
+import codecs.ber.*;
+import codecs.ber.types.*;
+import codecs.ber.types.string.*;
 
 
 public class SchedMeasRepPerServCell implements Serializable {
@@ -27,6 +30,7 @@ public class SchedMeasRepPerServCell implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 		public byte[] code = null;
 		private List<QCI> seqOf = null;
 
@@ -37,6 +41,7 @@ public class SchedMeasRepPerServCell implements Serializable {
 		public QciVals(byte[] code) {
 			this.code = code;
 		}
+
 
 		public List<QCI> getQCI() {
 			if (seqOf == null) {
@@ -157,7 +162,7 @@ public class SchedMeasRepPerServCell implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public McsDl() {
@@ -168,7 +173,7 @@ public class SchedMeasRepPerServCell implements Serializable {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -287,7 +292,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public NumSchedTtisDl() {
@@ -298,7 +303,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -417,7 +422,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public McsUl() {
@@ -428,7 +433,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -547,7 +552,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public NumSchedTtisUl() {
@@ -558,7 +563,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -677,7 +682,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public RankDl1() {
@@ -688,7 +693,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 			this.code = code;
 		}
 
-		public List<BerInteger> getBerInteger() {
+		 public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
 				seqOf = new ArrayList<BerInteger>();
 			}
@@ -807,7 +812,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		 public byte[] code = null;
 		private List<BerInteger> seqOf = null;
 
 		public RankDl2() {
@@ -817,6 +822,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 		public RankDl2(byte[] code) {
 			this.code = code;
 		}
+
 
 		public List<BerInteger> getBerInteger() {
 			if (seqOf == null) {
@@ -934,7 +940,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	 public byte[] code = null;
 	private PCIARFCN pciArfcn = null;
 	private QciVals qciVals = null;
 	private PRBUsage prbUsage = null;
@@ -1220,7 +1226,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 			sb.append("\t");
 		}
 		if (pciArfcn != null) {
-			sb.append("\"pciArfcn\": ");
+			sb.append("pciArfcn: ");
 			pciArfcn.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1229,7 +1235,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 			sb.append("\t");
 		}
 		if (qciVals != null) {
-			sb.append("\"qciVals\": ");
+			sb.append("qciVals: ");
 			qciVals.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1238,7 +1244,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 			sb.append("\t");
 		}
 		if (prbUsage != null) {
-			sb.append("\"prbUsage\": ");
+			sb.append("prbUsage: ");
 			prbUsage.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1247,7 +1253,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 			sb.append("\t");
 		}
 		if (mcsDl != null) {
-			sb.append("\"mcsDl\": ");
+			sb.append("mcsDl: ");
 			mcsDl.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1256,7 +1262,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 			sb.append("\t");
 		}
 		if (numSchedTtisDl != null) {
-			sb.append("\"numSchedTtisDl\": ");
+			sb.append("numSchedTtisDl: ");
 			numSchedTtisDl.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1265,7 +1271,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 			sb.append("\t");
 		}
 		if (mcsUl != null) {
-			sb.append("\"mcsUl\": ");
+			sb.append("mcsUl: ");
 			mcsUl.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1274,7 +1280,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 			sb.append("\t");
 		}
 		if (numSchedTtisUl != null) {
-			sb.append("\"numSchedTtisUl\": ");
+			sb.append("numSchedTtisUl: ");
 			numSchedTtisUl.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1283,7 +1289,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 			sb.append("\t");
 		}
 		if (rankDl1 != null) {
-			sb.append("\"rankDl1\": ");
+			sb.append("rankDl1: ");
 			rankDl1.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -1292,7 +1298,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 			sb.append("\t");
 		}
 		if (rankDl2 != null) {
-			sb.append("\"rankDl2\": ");
+			sb.append("rankDl2: ");
 			rankDl2.appendAsString(sb, indentLevel + 1);
 		}
 		

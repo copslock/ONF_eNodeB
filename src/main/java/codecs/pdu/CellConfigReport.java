@@ -4,11 +4,13 @@
 
 package codecs.pdu;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
-import org.openmuc.jasn1.ber.types.BerBoolean;
-import org.openmuc.jasn1.ber.types.BerInteger;
+
+
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
+import codecs.ber.types.BerBoolean;
+import codecs.ber.types.BerInteger;
 import codecs.api.*;
 
 import java.io.IOException;
@@ -27,6 +29,7 @@ public class CellConfigReport implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 		public byte[] code = null;
 		private List<CandScell> seqOf = null;
 
@@ -37,6 +40,7 @@ public class CellConfigReport implements Serializable {
 		public CandScells(byte[] code) {
 			this.code = code;
 		}
+
 
 		public List<CandScell> getCandScells() {
 			if (seqOf == null) {
@@ -154,7 +158,7 @@ public class CellConfigReport implements Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	 public byte[] code = null;
 	private ECGI ecgi = null;
 	private PhysCellId pci = null;
 	private CandScells candScells = null;
@@ -599,7 +603,7 @@ public class CellConfigReport implements Serializable {
 			sb.append("\t");
 		}
 		if (ecgi != null) {
-			sb.append("\"ecgi\": ");
+			sb.append("ecgi: ");
 			ecgi.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -608,7 +612,7 @@ public class CellConfigReport implements Serializable {
 			sb.append("\t");
 		}
 		if (pci != null) {
-			sb.append("\"pci\": ").append(pci);
+			sb.append("pci: ").append(pci);
 		}
 		
 		sb.append(",\n");
@@ -616,7 +620,7 @@ public class CellConfigReport implements Serializable {
 			sb.append("\t");
 		}
 		if (candScells != null) {
-			sb.append("\"candScells\": ");
+			sb.append("candScells: ");
 			candScells.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -625,7 +629,7 @@ public class CellConfigReport implements Serializable {
 			sb.append("\t");
 		}
 		if (earfcnDl != null) {
-			sb.append("\"earfcnDl\": ").append(earfcnDl);
+			sb.append("earfcnDl: ").append(earfcnDl);
 		}
 		
 		sb.append(",\n");
@@ -633,7 +637,7 @@ public class CellConfigReport implements Serializable {
 			sb.append("\t");
 		}
 		if (earfcnUl != null) {
-			sb.append("\"earfcnUl\": ").append(earfcnUl);
+			sb.append("earfcnUl: ").append(earfcnUl);
 		}
 		
 		sb.append(",\n");
@@ -641,7 +645,7 @@ public class CellConfigReport implements Serializable {
 			sb.append("\t");
 		}
 		if (rbsPerTtiDl != null) {
-			sb.append("\"rbsPerTtiDl\": ").append(rbsPerTtiDl);
+			sb.append("rbsPerTtiDl: ").append(rbsPerTtiDl);
 		}
 		
 		sb.append(",\n");
@@ -649,7 +653,7 @@ public class CellConfigReport implements Serializable {
 			sb.append("\t");
 		}
 		if (rbsPerTtiUl != null) {
-			sb.append("\"rbsPerTtiUl\": ").append(rbsPerTtiUl);
+			sb.append("rbsPerTtiUl: ").append(rbsPerTtiUl);
 		}
 		
 		sb.append(",\n");
@@ -657,7 +661,7 @@ public class CellConfigReport implements Serializable {
 			sb.append("\t");
 		}
 		if (numTxAntenna != null) {
-			sb.append("\"numTxAntenna\": ").append(numTxAntenna);
+			sb.append("numTxAntenna: ").append(numTxAntenna);
 		}
 		
 		sb.append(",\n");
@@ -665,7 +669,7 @@ public class CellConfigReport implements Serializable {
 			sb.append("\t");
 		}
 		if (duplexMode != null) {
-			sb.append("\"duplexMode\": ").append(duplexMode);
+			sb.append("duplexMode: ").append(duplexMode);
 		}
 		
 		if (tddConfig != null) {
@@ -673,7 +677,7 @@ public class CellConfigReport implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"tddConfig\": ").append(tddConfig);
+			sb.append("tddConfig: ").append(tddConfig);
 		}
 		
 		if (tddSplSfConfig != null) {
@@ -681,7 +685,7 @@ public class CellConfigReport implements Serializable {
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("\"tddSplSfConfig\": ").append(tddSplSfConfig);
+			sb.append("tddSplSfConfig: ").append(tddSplSfConfig);
 		}
 		
 		sb.append(",\n");
@@ -689,7 +693,7 @@ public class CellConfigReport implements Serializable {
 			sb.append("\t");
 		}
 		if (maxNumConnectedUes != null) {
-			sb.append("\"maxNumConnectedUes\": ").append(maxNumConnectedUes);
+			sb.append("maxNumConnectedUes: ").append(maxNumConnectedUes);
 		}
 		
 		sb.append(",\n");
@@ -697,7 +701,7 @@ public class CellConfigReport implements Serializable {
 			sb.append("\t");
 		}
 		if (maxNumConnectedBearers != null) {
-			sb.append("\"maxNumConnectedBearers\": ").append(maxNumConnectedBearers);
+			sb.append("maxNumConnectedBearers: ").append(maxNumConnectedBearers);
 		}
 		
 		sb.append(",\n");
@@ -705,7 +709,7 @@ public class CellConfigReport implements Serializable {
 			sb.append("\t");
 		}
 		if (maxNumUesSchedPerTtiDl != null) {
-			sb.append("\"maxNumUesSchedPerTtiDl\": ").append(maxNumUesSchedPerTtiDl);
+			sb.append("maxNumUesSchedPerTtiDl: ").append(maxNumUesSchedPerTtiDl);
 		}
 
 		sb.append(",\n");
@@ -713,7 +717,7 @@ public class CellConfigReport implements Serializable {
 			sb.append("\t");
 		}
 		if (maxNumUesSchedPerTtiUl != null) {
-			sb.append("\"maxNumUesSchedPerTtiUl\": ").append(maxNumUesSchedPerTtiUl);
+			sb.append("maxNumUesSchedPerTtiUl: ").append(maxNumUesSchedPerTtiUl);
 		}
 		
 		sb.append(",\n");
@@ -721,7 +725,7 @@ public class CellConfigReport implements Serializable {
 			sb.append("\t");
 		}
 		if (dlfsSchedEnable != null) {
-			sb.append("\"dlfsSchedEnable\": ").append(dlfsSchedEnable);
+			sb.append("dlfsSchedEnable: ").append(dlfsSchedEnable);
 		}
 
 		sb.append("\n");

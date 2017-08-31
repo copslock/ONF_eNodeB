@@ -4,7 +4,7 @@
 
 package codecs.api;
 
-import org.openmuc.jasn1.ber.types.BerEnum;
+import codecs.ber.types.BerEnum;
 
 import java.math.BigInteger;
 

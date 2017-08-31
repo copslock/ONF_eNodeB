@@ -3,12 +3,14 @@
  */
 package codecs.pdu;
 
+
+
 import codecs.api.CRNTI;
 import codecs.api.ECGI;
 import codecs.api.TrafficSplitPercentage;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
-import org.openmuc.jasn1.ber.BerLength;
-import org.openmuc.jasn1.ber.BerTag;
+import codecs.ber.BerByteArrayOutputStream;
+import codecs.ber.BerLength;
+import codecs.ber.BerTag;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +28,7 @@ public class TrafficSplitConfig implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
 		public byte[] code = null;
 		private List<TrafficSplitPercentage> seqOf = null;
 
@@ -36,6 +39,7 @@ public class TrafficSplitConfig implements Serializable {
 		public TrafficSplitPercent(byte[] code) {
 			this.code = code;
 		}
+
 
 		public List<TrafficSplitPercentage> getTrafficSplitPercentage() {
 			if (seqOf == null) {
@@ -149,7 +153,7 @@ public class TrafficSplitConfig implements Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	 public byte[] code = null;
 	private CRNTI crnti = null;
 	private ECGI ecgi = null;
 	private TrafficSplitPercent trafficSplitPercent = null;
@@ -297,7 +301,7 @@ public class TrafficSplitConfig implements Serializable {
 			sb.append("\t");
 		}
 		if (crnti != null) {
-			sb.append("\"crnti\": ").append(crnti);
+			sb.append("crnti: ").append(crnti);
 		}
 		
 		sb.append(",\n");
@@ -305,7 +309,7 @@ public class TrafficSplitConfig implements Serializable {
 			sb.append("\t");
 		}
 		if (ecgi != null) {
-			sb.append("\"ecgi\": ");
+			sb.append("ecgi: ");
 			ecgi.appendAsString(sb, indentLevel + 1);
 		}
 		
@@ -314,7 +318,7 @@ public class TrafficSplitConfig implements Serializable {
 			sb.append("\t");
 		}
 		if (trafficSplitPercent != null) {
-			sb.append("\"trafficSplitPercent\": ");
+			sb.append("trafficSplitPercent: ");
 			trafficSplitPercent.appendAsString(sb, indentLevel + 1);
 		}
 		

@@ -4,41 +4,40 @@
 
 package codecs.api;
 
-import org.openmuc.jasn1.ber.types.BerInteger;
+import codecs.ber.types.BerInteger;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 
 
 public class ARFCNValue extends BerInteger {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public ARFCNValue() {
-	}
+    public ARFCNValue() {
+    }
 
-	public ARFCNValue(byte[] code) {
-		super(code);
-	}
+    public ARFCNValue(byte[] code) {
+        super(code);
+    }
 
-	public ARFCNValue(BigInteger value) {
-		super(value);
-	}
+    public ARFCNValue(BigInteger value) {
+        super(value);
+    }
 
-	public ARFCNValue(long value) {
-		super(value);
-	}
+    public ARFCNValue(long value) {
+        super(value);
+    }
 
-	@Override
-	public int hashCode() {
-		return value.intValue();
-	}
+    @Override
+    public int hashCode() {
+        return value.intValue();
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof ARFCNValue) {
-			return value.intValue() == ((ARFCNValue) obj).value.intValue();
-		}
-		return super.equals(obj);
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ARFCNValue) {
+            return value.intValue() == ((ARFCNValue) obj).value.intValue();
+        }
+        return super.equals(obj);
+    }
 }
