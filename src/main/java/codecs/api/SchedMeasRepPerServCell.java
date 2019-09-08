@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 
 
@@ -940,8 +942,11 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	 public byte[] code = null;
-	private PCIARFCN pciArfcn = null;
+	@JsonIgnore
+	public byte[] code = null;
+	private ECGI ecgi = null;
+	//private PCIARFCN pciArfcn = null;
+
 	private QciVals qciVals = null;
 	private PRBUsage prbUsage = null;
 	private McsDl mcsDl = null;
@@ -958,12 +963,22 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 		this.code = code;
 	}
 
+	/*
+	Shubham: Removing PCIARFCN Replacing it with ECGI as mentioned in V5 Spec Docs
 	public void setPciArfcn(PCIARFCN pciArfcn) {
 		this.pciArfcn = pciArfcn;
 	}
 
 	public PCIARFCN getPciArfcn() {
 		return pciArfcn;
+	}*/
+
+	public void setEcgi(ECGI ecgi) {
+		this.ecgi = ecgi;
+	}
+
+	public ECGI getEcgi() {
+		return ecgi;
 	}
 
 	public void setQciVals(QciVals qciVals) {
@@ -1087,7 +1102,7 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 		os.write(0xA1);
 		codeLength += 1;
 		
-		codeLength += pciArfcn.encode(os, false);
+		codeLength += ecgi.encode(os, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
 		os.write(0xA0);
 		codeLength += 1;
@@ -1123,8 +1138,8 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 
 		subCodeLength += berTag.decode(is);
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
-			pciArfcn = new PCIARFCN();
-			subCodeLength += pciArfcn.decode(is, false);
+			ecgi = new ECGI();
+			subCodeLength += ecgi.decode(is, false);
 			subCodeLength += berTag.decode(is);
 		}
 		else {
@@ -1225,9 +1240,9 @@ public void appendAsString(StringBuilder sb, int indentLevel) {
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
 		}
-		if (pciArfcn != null) {
-			sb.append("pciArfcn: ");
-			pciArfcn.appendAsString(sb, indentLevel + 1);
+		if (ecgi != null) {
+			sb.append("ecgi: ");
+			ecgi.appendAsString(sb, indentLevel + 1);
 		}
 		
 		sb.append(",\n");

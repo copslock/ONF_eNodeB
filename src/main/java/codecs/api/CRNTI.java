@@ -17,6 +17,7 @@ import java.io.Serializable;
 import codecs.ber.*;
 import codecs.ber.types.*;
 import codecs.ber.types.string.*;
+import codecs.util.HexConverter;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -31,6 +32,10 @@ public class CRNTI extends BerBitString {
 	public CRNTI(byte[] code) {
 		super(code);
 	}
+
+
+
+
 
 	public CRNTI(byte[] value, int numBits) {
 		super(value, numBits);

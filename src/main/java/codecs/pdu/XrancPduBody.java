@@ -53,7 +53,8 @@ public class XrancPduBody implements Serializable {
 	private SeNBAddStatus seNBAddStatus = null;
 	private SeNBDelete seNBDelete = null;
 	private TrafficSplitConfig trafficSplitConfig = null;
-
+	private HOCause hOCause = null;
+	private RRCMeasConfig rRCMeasConfig = null;
 	public XrancPduBody() {
 	}
 
@@ -179,6 +180,14 @@ public class XrancPduBody implements Serializable {
 
 	public HOComplete getHOComplete() {
 		return hOComplete;
+	}
+
+	public void setRRCMeasConfig(RRCMeasConfig rRCMeasConfig) {
+		this.rRCMeasConfig = rRCMeasConfig;
+	}
+
+	public RRCMeasConfig getRRCMeasConfig() {
+		return rRCMeasConfig;
 	}
 
 	public void setRXSigMeasConfig(RXSigMeasConfig rXSigMeasConfig) {
@@ -351,6 +360,23 @@ public class XrancPduBody implements Serializable {
 		}
 
 		int codeLength = 0;
+		if (rRCMeasConfig != null) {
+			codeLength += rRCMeasConfig.encode(os, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 36
+			os.write(0x24);
+			os.write(0xBF);
+			codeLength += 2;
+			return codeLength;
+		}
+		if (hOCause != null) {
+			codeLength += hOCause.encode(os, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 35
+			os.write(0x23);
+			os.write(0xBF);
+			codeLength += 2;
+			return codeLength;
+		}
+
 		if (trafficSplitConfig != null) {
 			codeLength += trafficSplitConfig.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 34
@@ -816,7 +842,8 @@ public class XrancPduBody implements Serializable {
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 27)) {
 			scellAddStatus = new ScellAddStatus();
-			codeLength += scellAddStatus.decode(is, false);
+			System.out.println("!!!!! Calling Decode from XRANCPDUBody + 819");
+			codeLength += scellAddStatus.decode(is, false);//--------------------
 			return codeLength;
 		}
 
@@ -859,6 +886,18 @@ public class XrancPduBody implements Serializable {
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 34)) {
 			trafficSplitConfig = new TrafficSplitConfig();
 			codeLength += trafficSplitConfig.decode(is, false);
+			return codeLength;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 35)) {
+			hOCause = new HOCause();
+			codeLength += hOCause.decode(is, false);
+			return codeLength;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 36)) {
+			rRCMeasConfig = new RRCMeasConfig();
+			codeLength += rRCMeasConfig.decode(is, false);
 			return codeLength;
 		}
 
@@ -1093,6 +1132,17 @@ public class XrancPduBody implements Serializable {
 			return;
 		}
 
+		if (hOCause != null) {
+			sb.append("hOCause: ");
+			hOCause.appendAsString(sb, indentLevel + 1);
+			return;
+		}
+
+		if (rRCMeasConfig != null) {
+			sb.append("rRCMeasConfig: ");
+			rRCMeasConfig.appendAsString(sb, indentLevel + 1);
+			return;
+		}
 		sb.append("<none>");
 	}
 

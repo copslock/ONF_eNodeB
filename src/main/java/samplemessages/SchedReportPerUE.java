@@ -52,7 +52,9 @@ public class SchedReportPerUE {
         rankDl2.setBerInteger(new BerInteger(1));
         rankDl2.setBerInteger(new BerInteger(1));
 
-        schedMeasRepPerServCell.setPciArfcn(pciarfcn);
+        //schedMeasRepPerServCell.setPciArfcn(pciarfcn);
+        // shubham: setting ecgi instead of PCIARFCN
+        schedMeasRepPerServCell.setEcgi(ecgi);
         schedMeasRepPerServCell.setQciVals(qciVals);
         schedMeasRepPerServCell.setPrbUsage(prbUsage);
         schedMeasRepPerServCell.setMcsDl(mcsDl);

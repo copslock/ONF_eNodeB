@@ -6,18 +6,25 @@ package codecs.pdu;
 
 
 import codecs.api.ECGI;
+import codecs.api.CRNTI;
 import codecs.ber.BerByteArrayOutputStream;
 import codecs.ber.BerLength;
 import codecs.ber.BerTag;
 import codecs.ber.types.BerInteger;
 import codecs.ber.types.string.BerUTF8String;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-
-public class L2MeasConfig implements Serializable {
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import codecs.api.L2MeasReportInterval;
+import codecs.api.L2ReportInterval;
+/*public class L2MeasConfig implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,7 +33,7 @@ public class L2MeasConfig implements Serializable {
 
 	public byte[] code = null;
 	private ECGI ecgi = null;
-	private BerInteger  reportIntervalMs = null;
+	private L2ReportInterval  reportIntervalMs = null;
 	
 	public L2MeasConfig() {
 	}
@@ -158,7 +165,8 @@ public class L2MeasConfig implements Serializable {
 			sb.append("\t");
 		}
 		if (reportIntervalMs != null) {
-			sb.append("reportIntervalMs: ").append(reportIntervalMs);
+			sb.append("reportIntervalMs: ");
+			reportIntervalMs.appendAsString(sb, indentLevel + 1);
 		}
 		
 		sb.append("\n");
@@ -195,6 +203,356 @@ public class L2MeasConfig implements Serializable {
 		pdu.setHdr(hdr);
 
 		return pdu;
+
+	}
+
+}
+*/
+public class L2MeasConfig implements Serializable {
+
+	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+	private static final long serialVersionUID = 1L;
+	@JsonIgnore
+	public byte[] code = null;
+	private ECGI ecgi = null;
+	private Crnti crnti = null;
+	private L2ReportInterval reportIntervals = null;
+
+	public L2MeasConfig() {
+	}
+
+	public L2MeasConfig(byte[] code) {
+		this.code = code;
+	}
+
+	public static XrancPdu constructPacket(ECGI ecgi, int l2MeasInterval) {
+		L2MeasConfig measConfig = new L2MeasConfig();
+		measConfig.setEcgi(ecgi);
+
+		L2ReportInterval l2ReportInterval = new L2ReportInterval();
+		L2MeasReportInterval l2MeasReportInterval = new L2MeasReportInterval(l2MeasInterval);
+		l2ReportInterval.setTPdcpMeasReportPerUe(l2MeasReportInterval);
+		l2ReportInterval.setTRadioMeasReportPerCell(l2MeasReportInterval);
+		l2ReportInterval.setTRadioMeasReportPerUe(l2MeasReportInterval);
+		l2ReportInterval.setTRadioSchedReportPerUe(l2MeasReportInterval);
+		l2ReportInterval.setTRadioSchedReportPerCell(l2MeasReportInterval);
+
+		measConfig.setReportIntervals(l2ReportInterval);
+
+		BerUTF8String ver = null;
+		try {
+			ver = new BerUTF8String("5");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		XrancApiID apiID = new XrancApiID(17);
+		XrancPduBody body = new XrancPduBody();
+		body.setL2MeasConfig(measConfig);
+
+		XrancPduHdr hdr = new XrancPduHdr();
+		hdr.setVer(ver);
+		hdr.setApiId(apiID);
+
+		XrancPdu pdu = new XrancPdu();
+		pdu.setBody(body);
+		pdu.setHdr(hdr);
+
+		return pdu;
+
+	}
+
+	public ECGI getEcgi() {
+		return ecgi;
+	}
+
+	public void setEcgi(ECGI ecgi) {
+		this.ecgi = ecgi;
+	}
+
+	public Crnti getCrnti() {
+		return crnti;
+	}
+
+	public void setCrnti(Crnti crnti) {
+		this.crnti = crnti;
+	}
+
+	public L2ReportInterval getReportIntervals() {
+		return reportIntervals;
+	}
+
+	public void setReportIntervals(L2ReportInterval reportIntervals) {
+		this.reportIntervals = reportIntervals;
+	}
+
+	public int encode(BerByteArrayOutputStream os) throws IOException {
+		return encode(os, true);
+	}
+
+	public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+
+		if (code != null) {
+			for (int i = code.length - 1; i >= 0; i--) {
+				os.write(code[i]);
+			}
+			if (withTag) {
+				return tag.encode(os) + code.length;
+			}
+			return code.length;
+		}
+
+		int codeLength = 0;
+		codeLength += reportIntervals.encode(os, false);
+		// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
+		os.write(0xA2);
+		codeLength += 1;
+
+		if (crnti != null) {
+			codeLength += crnti.encode(os, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
+			os.write(0xA1);
+			codeLength += 1;
+		}
+
+		codeLength += ecgi.encode(os, false);
+		// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
+		os.write(0xA0);
+		codeLength += 1;
+
+		codeLength += BerLength.encodeLength(os, codeLength);
+
+		if (withTag) {
+			codeLength += tag.encode(os);
+		}
+
+		return codeLength;
+
+	}
+
+	public int decode(InputStream is) throws IOException {
+		return decode(is, true);
+	}
+
+	public int decode(InputStream is, boolean withTag) throws IOException {
+		int codeLength = 0;
+		int subCodeLength = 0;
+		BerTag berTag = new BerTag();
+
+		if (withTag) {
+			codeLength += tag.decodeAndCheck(is);
+		}
+
+		BerLength length = new BerLength();
+		codeLength += length.decode(is);
+
+		int totalLength = length.val;
+		codeLength += totalLength;
+
+		subCodeLength += berTag.decode(is);
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
+			ecgi = new ECGI();
+			subCodeLength += ecgi.decode(is, false);
+			subCodeLength += berTag.decode(is);
+		} else {
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
+			crnti = new Crnti();
+			subCodeLength += crnti.decode(is, false);
+			subCodeLength += berTag.decode(is);
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
+			reportIntervals = new L2ReportInterval();
+			subCodeLength += reportIntervals.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+		}
+		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
+
+
+	}
+
+	public void encodeAndSave(int encodingSizeGuess) throws IOException {
+		BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+		encode(os, false);
+		code = os.getArray();
+	}
+
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		appendAsString(sb, 0);
+		return sb.toString();
+	}
+
+	public void appendAsString(StringBuilder sb, int indentLevel) {
+
+		sb.append("{");
+		sb.append("\n");
+		for (int i = 0; i < indentLevel + 1; i++) {
+			sb.append("\t");
+		}
+		if (ecgi != null) {
+			sb.append("ecgi: ");
+			ecgi.appendAsString(sb, indentLevel + 1);
+		} else {
+			sb.append("ecgi: <empty-required-field>");
+		}
+
+		if (crnti != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("crnti: ");
+			crnti.appendAsString(sb, indentLevel + 1);
+		}
+
+		sb.append(",\n");
+		for (int i = 0; i < indentLevel + 1; i++) {
+			sb.append("\t");
+		}
+		if (reportIntervals != null) {
+			sb.append("reportIntervals: ");
+			reportIntervals.appendAsString(sb, indentLevel + 1);
+		} else {
+			sb.append("reportIntervals: <empty-required-field>");
+		}
+
+		sb.append("\n");
+		for (int i = 0; i < indentLevel; i++) {
+			sb.append("\t");
+		}
+		sb.append("}");
+	}
+
+	public static class Crnti implements Serializable {
+
+		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+		private static final long serialVersionUID = 1L;
+		@JsonIgnore
+		public byte[] code = null;
+		private List<CRNTI> seqOf = null;
+
+		public Crnti() {
+			seqOf = new ArrayList<CRNTI>();
+		}
+
+		public Crnti(byte[] code) {
+			this.code = code;
+		}
+
+
+		@JsonValue
+		public List<CRNTI> getCRNTI() {
+			if (seqOf == null) {
+				seqOf = new ArrayList<CRNTI>();
+			}
+			return seqOf;
+		}
+
+		public int encode(BerByteArrayOutputStream os) throws IOException {
+			return encode(os, true);
+		}
+
+		public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+
+			if (code != null) {
+				for (int i = code.length - 1; i >= 0; i--) {
+					os.write(code[i]);
+				}
+				if (withTag) {
+					return tag.encode(os) + code.length;
+				}
+				return code.length;
+			}
+
+			int codeLength = 0;
+			for (int i = (seqOf.size() - 1); i >= 0; i--) {
+				codeLength += seqOf.get(i).encode(os, true);
+			}
+
+			codeLength += BerLength.encodeLength(os, codeLength);
+
+			if (withTag) {
+				codeLength += tag.encode(os);
+			}
+
+			return codeLength;
+		}
+
+		public int decode(InputStream is) throws IOException {
+			return decode(is, true);
+		}
+
+		public int decode(InputStream is, boolean withTag) throws IOException {
+			int codeLength = 0;
+			int subCodeLength = 0;
+			if (withTag) {
+				codeLength += tag.decodeAndCheck(is);
+			}
+
+			BerLength length = new BerLength();
+			codeLength += length.decode(is);
+			int totalLength = length.val;
+
+			while (subCodeLength < totalLength) {
+				CRNTI element = new CRNTI();
+				subCodeLength += element.decode(is, true);
+				seqOf.add(element);
+			}
+			if (subCodeLength != totalLength) {
+				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+
+			}
+			codeLength += subCodeLength;
+
+			return codeLength;
+		}
+
+		public void encodeAndSave(int encodingSizeGuess) throws IOException {
+			BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+			encode(os, false);
+			code = os.getArray();
+		}
+
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			appendAsString(sb, 0);
+			return sb.toString();
+		}
+
+		public void appendAsString(StringBuilder sb, int indentLevel) {
+
+			sb.append("{\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			if (seqOf == null) {
+				sb.append("null");
+			} else {
+				Iterator<CRNTI> it = seqOf.iterator();
+				if (it.hasNext()) {
+					sb.append(it.next());
+					while (it.hasNext()) {
+						sb.append(",\n");
+						for (int i = 0; i < indentLevel + 1; i++) {
+							sb.append("\t");
+						}
+						sb.append(it.next());
+					}
+				}
+			}
+
+			sb.append("\n");
+			for (int i = 0; i < indentLevel; i++) {
+				sb.append("\t");
+			}
+			sb.append("}");
+		}
 
 	}
 
