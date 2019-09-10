@@ -27,6 +27,7 @@ do
 	${cmd} > /tmp/${ip-1}_eNB.txt 2>&1 &
 	ip=$((ip+1))
 	port=$((port+1))
+	sleep 1s
 	echo "Running: ${cmd}"
 done
 
