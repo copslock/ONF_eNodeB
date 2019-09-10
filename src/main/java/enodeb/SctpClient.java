@@ -27,7 +27,7 @@ public class SctpClient {
 
 		if (args.length == 4) {
 			//File csvFile = new File(System.getProperty("user.home")+"/file_test13.csv");
-			File csvFile = new File("/tmp/file_test13.csv");
+			File csvFile = new File("/tmp/file_test21.csv");
 			FileReader fReader = null;
 			try {
 				fReader = new FileReader(csvFile);
