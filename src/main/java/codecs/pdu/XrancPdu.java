@@ -88,8 +88,8 @@ public class XrancPdu implements Serializable {
 
 	}
 
-	public int 	decode(InputStream is) throws IOException {
-		return decode(is, true);//--------------------
+	public int decode(InputStream is) throws IOException {
+		return decode(is, true);
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
@@ -120,7 +120,7 @@ public class XrancPdu implements Serializable {
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
 			subCodeLength += length.decode(is);
 			body = new XrancPduBody();
-			subCodeLength += body.decode(is, null);//--------------------
+			subCodeLength += body.decode(is, null);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}

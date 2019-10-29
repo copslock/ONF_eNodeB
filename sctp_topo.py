@@ -46,7 +46,7 @@ class SCTP_CLIENT(Host):
             for addr in attrs['ipAddrs']:
                 self.cmd('ip addr add %s dev %s' % (addr, intf))
 
-        self.cmd('java -jar /home/shubham/enodeb/target/sctpclient-1.0-SNAPSHOT-jar-with-dependencies.jar &> /dev/null &')
+        self.cmd('java -jar /home/dimitris/enodeb/target/sctpclient-1.0-SNAPSHOT-jar-with-dependencies.jar &> /dev/null &')
 
     def terminate(self):
         Host.terminate(self)

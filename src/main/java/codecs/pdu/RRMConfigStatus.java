@@ -123,7 +123,7 @@ public class RRMConfigStatus implements Serializable {
 
 		public void appendAsString(StringBuilder sb, int indentLevel) {
 
-			sb.append("{\n");
+			sb.append("[\n");
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
@@ -148,7 +148,7 @@ public class RRMConfigStatus implements Serializable {
 			for (int i = 0; i < indentLevel; i++) {
 				sb.append("\t");
 			}
-			sb.append("}");
+			sb.append("]");
 		}
 
 	}
@@ -250,7 +250,7 @@ public class RRMConfigStatus implements Serializable {
 
 		public void appendAsString(StringBuilder sb, int indentLevel) {
 
-			sb.append("{\n");
+			sb.append("[\n");
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
@@ -275,18 +275,18 @@ public class RRMConfigStatus implements Serializable {
 			for (int i = 0; i < indentLevel; i++) {
 				sb.append("\t");
 			}
-			sb.append("}");
+			sb.append("]");
 		}
 
 	}
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	 public byte[] code = null;
 	private ECGI ecgi = null;
 	private Crnti crnti = null;
 	private Status status = null;
-
+	
 	public RRMConfigStatus() {
 	}
 
@@ -339,19 +339,19 @@ public class RRMConfigStatus implements Serializable {
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
 		os.write(0xA2);
 		codeLength += 1;
-
+		
 		if (crnti != null) {
 			codeLength += crnti.encode(os, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
 			os.write(0xA1);
 			codeLength += 1;
 		}
-
+		
 		codeLength += ecgi.encode(os, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
 		os.write(0xA0);
 		codeLength += 1;
-
+		
 		codeLength += BerLength.encodeLength(os, codeLength);
 
 		if (withTag) {
@@ -390,13 +390,13 @@ public class RRMConfigStatus implements Serializable {
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
-
+		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
 			crnti = new Crnti();
 			subCodeLength += crnti.decode(is, false);
 			subCodeLength += berTag.decode(is);
 		}
-
+		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
 			status = new Status();
 			subCodeLength += status.decode(is, false);
@@ -406,7 +406,7 @@ public class RRMConfigStatus implements Serializable {
 		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
-
+		
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
@@ -432,7 +432,7 @@ public class RRMConfigStatus implements Serializable {
 			sb.append("ecgi: ");
 			ecgi.appendAsString(sb, indentLevel + 1);
 		}
-
+		
 		if (crnti != null) {
 			sb.append(",\n");
 			for (int i = 0; i < indentLevel + 1; i++) {
@@ -441,7 +441,7 @@ public class RRMConfigStatus implements Serializable {
 			sb.append("crnti: ");
 			crnti.appendAsString(sb, indentLevel + 1);
 		}
-
+		
 		sb.append(",\n");
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
@@ -450,7 +450,7 @@ public class RRMConfigStatus implements Serializable {
 			sb.append("status: ");
 			status.appendAsString(sb, indentLevel + 1);
 		}
-
+		
 		sb.append("\n");
 		for (int i = 0; i < indentLevel; i++) {
 			sb.append("\t");

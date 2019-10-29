@@ -8,7 +8,6 @@ package codecs.pdu;
 
 import codecs.api.CRNTI;
 import codecs.api.ECGI;
-import codecs.api.PCIARFCN;
 import codecs.api.XICICPA;
 import codecs.ber.BerByteArrayOutputStream;
 import codecs.ber.BerLength;
@@ -16,8 +15,6 @@ import codecs.ber.BerTag;
 import codecs.ber.types.BerBitString;
 import codecs.ber.types.BerInteger;
 import codecs.ber.types.string.BerUTF8String;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +32,6 @@ public class RRMConfig implements Serializable {
     public byte[] code = null;
     private ECGI ecgi = null;
     private Crnti crnti = null;
-    private PCIARFCN pciArfcn = null;
     private Pa pa = null;
     private StartPrbDl startPrbDl = null;
     private EndPrbDl endPrbDl = null;
@@ -88,14 +84,6 @@ public class RRMConfig implements Serializable {
 
     public void setCrnti(Crnti crnti) {
         this.crnti = crnti;
-    }
-
-    public PCIARFCN getPciArfcn() {
-        return pciArfcn;
-    }
-
-    public void setPciArfcn(PCIARFCN pciArfcn) {
-        this.pciArfcn = pciArfcn;
     }
 
     public Pa getPa() {
@@ -181,62 +169,55 @@ public class RRMConfig implements Serializable {
         int codeLength = 0;
         if (subframeBitmaskUl != null) {
             codeLength += subframeBitmaskUl.encode(os, false);
-            // write tag: CONTEXT_CLASS, CONSTRUCTED, 10
-            os.write(0xAA);
-            codeLength += 1;
-        }
-
-        if (endPrbUl != null) {
-            codeLength += endPrbUl.encode(os, false);
             // write tag: CONTEXT_CLASS, CONSTRUCTED, 9
             os.write(0xA9);
             codeLength += 1;
         }
 
-        if (startPrbUl != null) {
-            codeLength += startPrbUl.encode(os, false);
+        if (endPrbUl != null) {
+            codeLength += endPrbUl.encode(os, false);
             // write tag: CONTEXT_CLASS, CONSTRUCTED, 8
             os.write(0xA8);
             codeLength += 1;
         }
 
-        if (p0UePusch != null) {
-            codeLength += p0UePusch.encode(os, false);
+        if (startPrbUl != null) {
+            codeLength += startPrbUl.encode(os, false);
             // write tag: CONTEXT_CLASS, CONSTRUCTED, 7
             os.write(0xA7);
             codeLength += 1;
         }
 
-        if (subframeBitmaskDl != null) {
-            codeLength += subframeBitmaskDl.encode(os, false);
+        if (p0UePusch != null) {
+            codeLength += p0UePusch.encode(os, false);
             // write tag: CONTEXT_CLASS, CONSTRUCTED, 6
             os.write(0xA6);
             codeLength += 1;
         }
 
-        if (endPrbDl != null) {
-            codeLength += endPrbDl.encode(os, false);
+        if (subframeBitmaskDl != null) {
+            codeLength += subframeBitmaskDl.encode(os, false);
             // write tag: CONTEXT_CLASS, CONSTRUCTED, 5
             os.write(0xA5);
             codeLength += 1;
         }
 
-        if (startPrbDl != null) {
-            codeLength += startPrbDl.encode(os, false);
+        if (endPrbDl != null) {
+            codeLength += endPrbDl.encode(os, false);
             // write tag: CONTEXT_CLASS, CONSTRUCTED, 4
             os.write(0xA4);
             codeLength += 1;
         }
 
-        if (pa != null) {
-            codeLength += pa.encode(os, false);
+        if (startPrbDl != null) {
+            codeLength += startPrbDl.encode(os, false);
             // write tag: CONTEXT_CLASS, CONSTRUCTED, 3
             os.write(0xA3);
             codeLength += 1;
         }
 
-        if (pciArfcn != null) {
-            codeLength += pciArfcn.encode(os, false);
+        if (pa != null) {
+            codeLength += pa.encode(os, false);
             // write tag: CONTEXT_CLASS, CONSTRUCTED, 2
             os.write(0xA2);
             codeLength += 1;
@@ -305,15 +286,6 @@ public class RRMConfig implements Serializable {
         }
 
         if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
-            pciArfcn = new PCIARFCN();
-            subCodeLength += pciArfcn.decode(is, false);
-            if (subCodeLength == totalLength) {
-                return codeLength;
-            }
-            subCodeLength += berTag.decode(is);
-        }
-
-        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
             pa = new Pa();
             subCodeLength += pa.decode(is, false);
             if (subCodeLength == totalLength) {
@@ -322,7 +294,7 @@ public class RRMConfig implements Serializable {
             subCodeLength += berTag.decode(is);
         }
 
-        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
             startPrbDl = new StartPrbDl();
             subCodeLength += startPrbDl.decode(is, false);
             if (subCodeLength == totalLength) {
@@ -331,7 +303,7 @@ public class RRMConfig implements Serializable {
             subCodeLength += berTag.decode(is);
         }
 
-        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
             endPrbDl = new EndPrbDl();
             subCodeLength += endPrbDl.decode(is, false);
             if (subCodeLength == totalLength) {
@@ -340,7 +312,7 @@ public class RRMConfig implements Serializable {
             subCodeLength += berTag.decode(is);
         }
 
-        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
             subframeBitmaskDl = new SubframeBitmaskDl();
             subCodeLength += subframeBitmaskDl.decode(is, false);
             if (subCodeLength == totalLength) {
@@ -349,7 +321,7 @@ public class RRMConfig implements Serializable {
             subCodeLength += berTag.decode(is);
         }
 
-        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
             p0UePusch = new P0UePusch();
             subCodeLength += p0UePusch.decode(is, false);
             if (subCodeLength == totalLength) {
@@ -358,7 +330,7 @@ public class RRMConfig implements Serializable {
             subCodeLength += berTag.decode(is);
         }
 
-        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
             startPrbUl = new StartPrbUl();
             subCodeLength += startPrbUl.decode(is, false);
             if (subCodeLength == totalLength) {
@@ -367,7 +339,7 @@ public class RRMConfig implements Serializable {
             subCodeLength += berTag.decode(is);
         }
 
-        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
             endPrbUl = new EndPrbUl();
             subCodeLength += endPrbUl.decode(is, false);
             if (subCodeLength == totalLength) {
@@ -376,7 +348,7 @@ public class RRMConfig implements Serializable {
             subCodeLength += berTag.decode(is);
         }
 
-        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
+        if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
             subframeBitmaskUl = new SubframeBitmaskUl();
             subCodeLength += subframeBitmaskUl.decode(is, false);
             if (subCodeLength == totalLength) {
@@ -625,7 +597,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel; i++) {
                 sb.append("\t");
             }
-            sb.append("}");
+            sb.append("]");
         }
 
     }
@@ -755,7 +727,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel; i++) {
                 sb.append("\t");
             }
-            sb.append("}");
+            sb.append("]");
         }
     }
 
@@ -763,7 +735,7 @@ public class RRMConfig implements Serializable {
 
         public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
         private static final long serialVersionUID = 1L;
-        @JsonIgnore
+
         public byte[] code = null;
         private List<BerInteger> seqOf = null;
 
@@ -783,7 +755,7 @@ public class RRMConfig implements Serializable {
             this.seqOf = seqOf;
         }
 
-        @JsonValue
+
         public List<BerInteger> getBerInteger() {
             if (seqOf == null) {
                 seqOf = new ArrayList<BerInteger>();
@@ -864,7 +836,7 @@ public class RRMConfig implements Serializable {
 
         public void appendAsString(StringBuilder sb, int indentLevel) {
 
-            sb.append("{\n");
+            sb.append("[\n");
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
@@ -888,7 +860,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel; i++) {
                 sb.append("\t");
             }
-            sb.append("}");
+            sb.append("]");
         }
 
         public void addBerInteger(BerInteger berInteger) {
@@ -900,7 +872,7 @@ public class RRMConfig implements Serializable {
 
         public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
         private static final long serialVersionUID = 1L;
-        @JsonIgnore
+
         public byte[] code = null;
         private List<BerInteger> seqOf = null;
 
@@ -912,7 +884,7 @@ public class RRMConfig implements Serializable {
             this.code = code;
         }
 
-        @JsonValue
+
         public List<BerInteger> getBerInteger() {
             if (seqOf == null) {
                 seqOf = new ArrayList<BerInteger>();
@@ -993,7 +965,7 @@ public class RRMConfig implements Serializable {
 
         public void appendAsString(StringBuilder sb, int indentLevel) {
 
-            sb.append("{\n");
+            sb.append("[\n");
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
@@ -1017,7 +989,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel; i++) {
                 sb.append("\t");
             }
-            sb.append("}");
+            sb.append("]");
         }
 
         public void addBerInteger(BerInteger berInteger) {
@@ -1139,7 +1111,7 @@ public class RRMConfig implements Serializable {
 
         public void appendAsString(StringBuilder sb, int indentLevel) {
 
-            sb.append("{\n");
+            sb.append("[\n");
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
@@ -1163,7 +1135,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel; i++) {
                 sb.append("\t");
             }
-            sb.append("}");
+            sb.append("]");
         }
     }
 
@@ -1264,7 +1236,7 @@ public class RRMConfig implements Serializable {
 
         public void appendAsString(StringBuilder sb, int indentLevel) {
 
-            sb.append("{\n");
+            sb.append("[\n");
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
@@ -1288,7 +1260,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel; i++) {
                 sb.append("\t");
             }
-            sb.append("}");
+            sb.append("]");
         }
 
         public void setSeqOf(List<BerInteger> seqOf) {
@@ -1393,7 +1365,7 @@ public class RRMConfig implements Serializable {
 
         public void appendAsString(StringBuilder sb, int indentLevel) {
 
-            sb.append("{\n");
+            sb.append("[\n");
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
@@ -1417,7 +1389,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel; i++) {
                 sb.append("\t");
             }
-            sb.append("}");
+            sb.append("]");
         }
 
         public void addBerInteger(BerInteger berInteger) {
@@ -1530,7 +1502,7 @@ public class RRMConfig implements Serializable {
 
         public void appendAsString(StringBuilder sb, int indentLevel) {
 
-            sb.append("{\n");
+            sb.append("[\n");
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
@@ -1554,7 +1526,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel; i++) {
                 sb.append("\t");
             }
-            sb.append("}");
+            sb.append("]");
         }
 
         public void addBerInteger(BerInteger berInteger) {
@@ -1671,7 +1643,7 @@ public class RRMConfig implements Serializable {
 
         public void appendAsString(StringBuilder sb, int indentLevel) {
 
-            sb.append("{\n");
+            sb.append("[\n");
             for (int i = 0; i < indentLevel + 1; i++) {
                 sb.append("\t");
             }
@@ -1695,7 +1667,7 @@ public class RRMConfig implements Serializable {
             for (int i = 0; i < indentLevel; i++) {
                 sb.append("\t");
             }
-            sb.append("}");
+            sb.append("]");
         }
 
     }

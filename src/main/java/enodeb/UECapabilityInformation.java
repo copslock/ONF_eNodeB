@@ -36,7 +36,7 @@ public class UECapabilityInformation {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        XrancApiID apiID = new XrancApiID(24);
+        XrancApiID apiID = new XrancApiID(13);
         XrancPduHdr hdr = new XrancPduHdr();
         hdr.setVer(ver);
         hdr.setApiId(apiID);
@@ -63,7 +63,7 @@ public class UECapabilityInformation {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        XrancApiID apiID = new XrancApiID(25);
+        XrancApiID apiID = new XrancApiID(24);
         XrancPduHdr hdr = new XrancPduHdr();
         hdr.setVer(ver);
         hdr.setApiId(apiID);

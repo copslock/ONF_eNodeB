@@ -53,7 +53,7 @@ public class RadioMeasReportPerUE implements Serializable {
 			return encode(os, true);
 		}
 
-	public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+		public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
@@ -67,7 +67,6 @@ public class RadioMeasReportPerUE implements Serializable {
 
 			int codeLength = 0;
 			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				//System.out.println("!!!!!!!!!!! Encoding  = " + seqOf.get(i).toString());
 				codeLength += seqOf.get(i).encode(os, true);
 			}
 
@@ -158,7 +157,7 @@ public class RadioMeasReportPerUE implements Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	 public byte[] code = null;
 	private ECGI ecgi = null;
 	private CRNTI crnti = null;
 	private RadioReportServCells radioReportServCells = null;

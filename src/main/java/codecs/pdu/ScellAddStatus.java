@@ -287,7 +287,7 @@ public class ScellAddStatus implements Serializable {
 	private ECGI ecgi = null;
 	private ScellsInd scellsInd = null;
 	private Status status = null;
-
+	
 	public ScellAddStatus() {
 	}
 
@@ -348,22 +348,22 @@ public class ScellAddStatus implements Serializable {
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
 		os.write(0xA3);
 		codeLength += 1;
-
+		
 		codeLength += scellsInd.encode(os, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
 		os.write(0xA2);
 		codeLength += 1;
-
+		
 		codeLength += ecgi.encode(os, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
 		os.write(0xA1);
 		codeLength += 1;
-
+		
 		codeLength += crnti.encode(os, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 0
 		os.write(0x80);
 		codeLength += 1;
-
+		
 		codeLength += BerLength.encodeLength(os, codeLength);
 
 		if (withTag) {
@@ -379,7 +379,6 @@ public class ScellAddStatus implements Serializable {
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
-		System.out.println("!!!! in decode of ScellAddStatus + 382");
 		int codeLength = 0;
 		int subCodeLength = 0;
 		BerTag berTag = new BerTag();
@@ -393,38 +392,35 @@ public class ScellAddStatus implements Serializable {
 
 		int totalLength = length.val;
 		codeLength += totalLength;
-		System.out.println("!!!! in decode of ScellAddStatus + 396 with codelength = "+codeLength);
+
 		subCodeLength += berTag.decode(is);
-		System.out.println("!!!!! berTag:\t" +berTag );
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
 			crnti = new CRNTI();
-			System.out.println("!!!!! Calling Decode from ScellAddStatus with BerTag.CONTEXT_CLASS = "+BerTag.CONTEXT_CLASS+", " +
-									   " and BerTag.PRIMITIVE= "+BerTag.PRIMITIVE+" at  400");
 			subCodeLength += crnti.decode(is, false);
 			subCodeLength += berTag.decode(is);
 		}
 		else {
-			throw new IOException("CRNTI Tag does not match the mandatory sequence element tag.");//--------------------
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
-
+		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
 			ecgi = new ECGI();
 			subCodeLength += ecgi.decode(is, false);
 			subCodeLength += berTag.decode(is);
 		}
 		else {
-			throw new IOException("ECGI Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
-
+		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
 			scellsInd = new ScellsInd();
 			subCodeLength += scellsInd.decode(is, false);
 			subCodeLength += berTag.decode(is);
 		}
 		else {
-			throw new IOException("ScellsInd Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
-
+		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
 			status = new Status();
 			subCodeLength += status.decode(is, false);
@@ -432,9 +428,9 @@ public class ScellAddStatus implements Serializable {
 				return codeLength;
 			}
 		}
-		throw new IOException("Status Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
+		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
-
+		
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
@@ -459,7 +455,7 @@ public class ScellAddStatus implements Serializable {
 		if (crnti != null) {
 			sb.append("crnti: ").append(crnti);
 		}
-
+		
 		sb.append(",\n");
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
@@ -468,7 +464,7 @@ public class ScellAddStatus implements Serializable {
 			sb.append("ecgi: ");
 			ecgi.appendAsString(sb, indentLevel + 1);
 		}
-
+		
 		sb.append(",\n");
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
@@ -477,7 +473,7 @@ public class ScellAddStatus implements Serializable {
 			sb.append("scellsInd: ");
 			scellsInd.appendAsString(sb, indentLevel + 1);
 		}
-
+		
 		sb.append(",\n");
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
@@ -495,3 +491,4 @@ public class ScellAddStatus implements Serializable {
 	}
 
 }
+

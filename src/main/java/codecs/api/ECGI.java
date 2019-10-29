@@ -8,9 +8,7 @@ package codecs.api;
 import codecs.ber.BerByteArrayOutputStream;
 import codecs.ber.BerLength;
 import codecs.ber.BerTag;
-import codecs.util.HexConverter;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -32,21 +30,6 @@ public class ECGI implements Serializable {
 
 	public ECGI(byte[] code) {
 		this.code = code;
-	}
-	//Shubham: Adding this constructor
-	public static ECGI hextoECGI(String plmnid, String eci){
-
-
-		byte [] bytes = HexConverter.fromShortHexString(plmnid);
-		byte [] bytearray = DatatypeConverter.parseHexBinary(eci);
-
-		PLMNIdentity plmnIdentity = new PLMNIdentity(bytes);
-		EUTRANCellIdentifier eutranCellIdentifier = new EUTRANCellIdentifier(bytearray,28);
-
-		ECGI ecgi = new ECGI();
-		ecgi.setEUTRANcellIdentifier(eutranCellIdentifier);
-		ecgi.setPLMNIdentity(plmnIdentity);
-		return ecgi;
 	}
 
 	public void setPLMNIdentity(PLMNIdentity pLMNIdentity) {
