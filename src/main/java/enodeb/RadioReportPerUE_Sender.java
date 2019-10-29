@@ -71,7 +71,7 @@ public class RadioReportPerUE_Sender extends Thread{
 	}
 	public void run() {
 		try {
-			sleep(20000);
+			sleep(30000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -82,10 +82,9 @@ public class RadioReportPerUE_Sender extends Thread{
 				for (int i=index;i<SctpClient.allData.size()-1; i++){
 					xrancPdu = RadioReportPerUE1.constructPacket(SctpClientHandler.ecgiList.get(i), checkcrnti, pciarfcn, SctpClientHandler.cqiList.get(i));
 					try{
-						sleep(1);
 						ctx.writeAndFlush(getSctpMessage(xrancPdu));
 					}
-					catch(Exception e){
+					catch(IOException e){
 						System.out.println(e.getStackTrace());
 					}
 					if ( i >= index+9){
@@ -98,9 +97,9 @@ public class RadioReportPerUE_Sender extends Thread{
 				System.out.println("#### => Not sending 18= ");
 			}
 
-			System.out.println("Sleeping the thread for 1.1 sec");
+			System.out.println("Sleeping the thread for 0.5 sec");
 			try{
-				Thread.sleep(1000);
+				Thread.sleep(500);
 			}
 			catch (InterruptedException e){
 				System.out.println(e);
